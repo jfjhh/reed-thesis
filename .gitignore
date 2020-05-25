@@ -1,0 +1,15 @@
+*.log
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+*.lof
+*.lot
+*-blx.bib
+*.synctex.gz
+_minted*
+*.ipynb_checkpoints
+

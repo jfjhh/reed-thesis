@@ -1,0 +1,213 @@
+\documentclass[12pt,draft]{reedthesis}
+
+\overfullrule=1mm
+
+% Core packages
+\usepackage[intlimits]{mathtools} % Load before newtxmath
+\mathtoolsset{%
+  mathic,
+}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{natbib}
+\usepackage{ifdraft} % final: for printing (set bw, etc.)
+
+% Layout and styling
+\usepackage[final]{microtype}
+\usepackage{setspace} 
+\usepackage{booktabs}
+
+\usepackage{sectsty}
+% \allsectionsfont{\normalfont\sffamily\bfseries}
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{post}{Postulate}
+
+\setlength{\parskip}{0pt}
+
+% Graphics
+\usepackage{graphicx}
+% \usepackage[usenames,dvipsnames]{xcolor}
+% \usepackage{tikz}
+
+% Fonts
+\usepackage{fontspec}
+\usepackage[semibold,osf]{libertine}
+% \usepackage{garamondx}
+% \setmainfont{Cardo}
+\usepackage[libertine,vvarbb]{newtxmath}
+\usepackage[scr=boondoxo,cal=esstix]{mathalfa}
+\usepackage{bm} % Load after math font configuration
+\renewcommand\mathrm\textnormal%
+\setmonofont[Scale=MatchLowercase]{Inconsolata}
+
+\usepackage{Zallman,lettrine}
+\renewcommand\LettrineFontHook{\Zallmanfamily}
+
+\usepackage[switch*]{lineno} % Before minted
+\linenumbers%
+
+% Code highlighting
+\usepackage{minted}
+\setminted{%
+  mathescape,
+  linenos,
+  breaklines,
+}
+\setminted[wolfram]{style=mathematica}
+\ifoptionfinal{\setminted{style=bw}}{\setminted{style=friendly}}
+
+% Other
+\usepackage{lipsum}
+\ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.95}}{}
+
+% Reference management (order-sensitive)
+\usepackage[pdfusetitle]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{autonum}
+\hypersetup{%
+  allcolors=Violet,
+  citecolor=OliveGreen,
+  urlcolor=MidnightBlue,
+}
+\urlstyle{same}
+\ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
+
+
+% Resources
+\graphicspath{{figs/}}
+
+
+% Math commands
+% Subscript text
+\newcommand*\sub[1]{\textit{#1}}
+
+% Variant symbols
+\renewcommand\leq\leqslant%
+\renewcommand\geq\geqslant%
+\renewcommand\phi\varphi%
+\renewcommand\epsilon\varepsilon%
+
+% Common algebraic objects
+\newcommand\ZZ{\mathbb{Z}}
+\newcommand\QQ{\mathbb{Q}}
+\newcommand\CC{\mathbb{C}}
+\newcommand\RR{\mathbb{R}}
+
+% Named operations and special constants
+\newcommand\im{\mathrm{i}\mkern1mu}
+\renewcommand\ln{\operatorname{\mathrm{ln}}}
+\renewcommand\log{\operatorname{\mathrm{log}}}
+\renewcommand\exp{\operatorname{\mathrm{exp}}}
+\renewcommand\tr{\operatorname{\mathrm{tr}}}
+\renewcommand\det{\operatorname{\mathrm{det}}}
+
+% Operators
+\newcommand\tp\otimes%
+\newcommand{\opr}[1]{\mathsf{#1}}%
+\newcommand\idsopr{\mathbb{1}}
+\newcommand\idopr{\opr{I}}
+\newcommand\sopr\mathcal%
+
+% Categories
+\newcommand\cat\mathsf%
+
+% Quantum mechanics
+\newcommand\hilb{\mathcal{H}}
+\newcommand\liou{\mathcal{L}}
+\newcommand\ham{\opr{H}}
+\newcommand\dop{\opr{ρ}}
+\newcommand\ensavg[2][\dop]{\ev{#2}_{\mkern-1.5mu{#1}}}
+\newcommand\sensavg[2][\dop]{\ev*{#2}_{\mkern-1.5mu{#1}}}
+
+
+\title{\textbf{\large
+  Thicular Development of Flampion Coupling
+}\ifdraft{\\\textsc{Draft}}{}
+}
+\author{Alex Striff}
+% The month and year that you submit your final draft to the library
+% (May or December)
+\date{\ifoptionfinal{May 2021}{\today}}
+\division{Mathematics and Natural Sciences}
+\advisor{Advisor F. Name}
+\department{Physics}
+
+\begin{document}
+\maketitle
+\frontmatter
+\pagestyle{empty}
+
+\chapter*{Acknowledgements} % Optional
+I want to thank a few people.
+
+% \chapter*{Preface} % Optional
+
+\chapter*{Abstract}
+The preface pretty much says it all.
+
+% \chapter*{Dedication} % Optional
+
+
+\mainmatter%
+\pagestyle{fancyplain}
+\tableofcontents
+% \listoffigures
+% \listoftables
+
+\ifdraft{\setstretch{1.5}}{}
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\chaptermark{Introduction}
+\markboth{Introduction}{Introduction}
+
+Introductory content.
+
+\chapter{The First}
+
+\lettrine{T}{his} is the first page of the first chapter. You may delete the
+contents of this chapter so you can add your own text; it's just here to show
+you some examples.
+\begin{equation}
+  f(y)
+  = \int_0^\infty \dd{x}\sum_{k=0}^\infty \frac{{(x + y)}^k}{k!}
+  \label{eq:banan}
+\end{equation}
+Wow look at~\cref{eq:banan}.
+\begin{minted}{python}
+def identity(x):
+    return x # This is "just" the argument.
+\end{minted}
+\lipsum%
+
+
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+\chaptermark{Conclusion}
+\markboth{Conclusion}{Conclusion}
+
+Here's a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
+
+
+\appendix
+\chapter{The First Appendix}
+
+Appendix!
+
+
+\backmatter% Adds index and bibliography to TOC
+
+\nocite{*}
+\bibliographystyle{plainnat}
+\bibliography{thesis}
+
+\end{document}
+
