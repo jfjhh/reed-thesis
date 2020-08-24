@@ -1,4 +1,4 @@
-\documentclass[12pt,draft]{reedthesis}
+\documentclass[12pt]{reedthesis}
 
 \overfullrule=1mm
 
@@ -19,7 +19,7 @@
 \usepackage{booktabs}
 
 \usepackage{sectsty}
-% \allsectionsfont{\normalfont\sffamily\bfseries}
+\allsectionsfont{\normalfont\sffamily}
 
 \usepackage{amsthm}
 \theoremstyle{plain}
@@ -47,11 +47,12 @@
 \renewcommand\mathrm\textnormal%
 \setmonofont[Scale=MatchLowercase]{Inconsolata}
 
-\usepackage{Zallman,lettrine}
-\renewcommand\LettrineFontHook{\Zallmanfamily}
+\usepackage{lettrine}
+% \usepackage{Zallman} % Even fancier
+% \renewcommand\LettrineFontHook{\Zallmanfamily}
 
-\usepackage[switch*]{lineno} % Before minted
-\linenumbers%
+\usepackage[switch*,pagewise]{lineno} % Before minted
+\ifdraft{\linenumbers}{}
 
 % Code highlighting
 \usepackage{minted}
@@ -59,21 +60,22 @@
   mathescape,
   linenos,
   breaklines,
+  fontsize=\small,
 }
 \setminted[wolfram]{style=mathematica}
 \ifoptionfinal{\setminted{style=bw}}{\setminted{style=friendly}}
 
 % Other
-\usepackage{lipsum}
+\usepackage{kantlipsum}
 \ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.95}}{}
 
 % Reference management (order-sensitive)
-\usepackage[pdfusetitle]{hyperref}
+\usepackage[pdfusetitle,final]{hyperref}
 \usepackage[all]{hypcap}
 \usepackage[capitalize,nameinlink]{cleveref}
 \usepackage{autonum}
 \hypersetup{%
-  allcolors=Violet,
+  allcolors=MidnightBlue,
   citecolor=OliveGreen,
   urlcolor=MidnightBlue,
 }
@@ -127,11 +129,10 @@
 \newcommand\ensavg[2][\dop]{\ev{#2}_{\mkern-1.5mu{#1}}}
 \newcommand\sensavg[2][\dop]{\ev*{#2}_{\mkern-1.5mu{#1}}}
 
-
-\title{\textbf{\large
-  Thicular Development of Flampion Coupling
-}\ifdraft{\\\textsc{Draft}}{}
-}
+  \title{\textbf{\large
+      Thicular Development of Flampion Coupling
+    }\ifdraft{\\\textsc{\textbf{Draft}}}{}
+    }
 \author{Alex Striff}
 % The month and year that you submit your final draft to the library
 % (May or December)
@@ -142,7 +143,9 @@
 
 \begin{document}
 \maketitle
+\pagenumbering{roman}
 \frontmatter
+\pagenumbering{arabic}
 \pagestyle{empty}
 
 \chapter*{Acknowledgements} % Optional
@@ -175,10 +178,10 @@ Introductory content.
 
 \lettrine{T}{his} is the first page of the first chapter. You may delete the
 contents of this chapter so you can add your own text; it's just here to show
-you some examples.
+you some examples. Here is a new sentence.
 \begin{equation}
   f(y)
-  = \int_0^\infty \dd{x}\sum_{k=0}^\infty \frac{{(x + y)}^k}{k!}
+  = \int_0^\infty \dd{x}\frac{1}{Z}\sum_{k=0}^\infty \frac{-{E(x)}^k}{k!}
   \label{eq:banan}
 \end{equation}
 Wow look at~\cref{eq:banan}.
@@ -186,7 +189,7 @@ Wow look at~\cref{eq:banan}.
 def identity(x):
     return x # This is "just" the argument.
 \end{minted}
-\lipsum%
+\kant%
 
 
 \chapter*{Conclusion}
@@ -194,7 +197,7 @@ def identity(x):
 \chaptermark{Conclusion}
 \markboth{Conclusion}{Conclusion}
 
-Here's a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
+\lettrine{H}{ere's} a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
 
 
 \appendix

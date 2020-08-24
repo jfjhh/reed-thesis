@@ -13,3 +13,5 @@
 _minted*
 *.ipynb_checkpoints
 
+HEAD.tex
+
