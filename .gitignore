@@ -9,9 +9,13 @@
 *.lof
 *.lot
 *-blx.bib
+*.brf
 *.synctex.gz
 _minted*
 *.ipynb_checkpoints
+
+*.pdf
+!thesis.pdf
 
 HEAD.tex
 
