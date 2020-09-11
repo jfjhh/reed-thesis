@@ -1,0 +1,168 @@
+\documentclass[11pt]{article} % Document font size and paper size
+
+\usepackage{fontspec} % Allows the use of OpenType fonts
+\usepackage{microtype} % Subliminal refinements towards typographical perfection
+\usepackage{siunitx} % SI units
+\usepackage{physics}
+\usepackage{enumitem} % Customize lists
+\setlist[itemize]{noitemsep}
+\usepackage{geometry} % Allows the configuration of document margins
+% \geometry{a4paper} % Document margin settings
+\geometry{a4paper, margin=1in} % Document margin settings
+% \setlength\parindent{0in} % Remove paragraph indentation
+\usepackage[usenames,dvipsnames]{xcolor} % Custom colors
+\usepackage{setspace} % For double-spacing
+\usepackage[labelfont=bf,center]{caption}
+\usepackage[normalem]{ulem} % Custom underlining
+\usepackage{xunicode} % Allows generation of unicode characters from accented glyphs
+\defaultfontfeatures{Mapping=tex-text} % Converts LaTeX specials (``quotes'' --- dashes etc.) to unicode
+
+\usepackage[style=numeric,doi=false,url=false,isbn=false]{biblatex}
+\addbibresource{references.bib}
+
+\newbibmacro{string+doiurlisbn}[1]{%
+  \iffieldundef{doi}{%
+    \iffieldundef{url}{%
+      \iffieldundef{isbn}{%
+        \iffieldundef{issn}{%
+          #1%
+        }{%
+          \href{http://books.google.com/books?vid=ISSN\thefield{issn}}{#1}%
+        }%
+      }{%
+        \href{http://books.google.com/books?vid=ISBN\thefield{isbn}}{#1}%
+      }%
+    }{%
+      \href{\thefield{url}}{#1}%
+    }%
+  }{%
+    \href{http://dx.doi.org/\thefield{doi}}{#1}%
+  }%
+}
+
+\DeclareFieldFormat{title}{\usebibmacro{string+doiurlisbn}{\mkbibemph{#1}}}
+\DeclareFieldFormat[article,incollection]{title}%
+    {\usebibmacro{string+doiurlisbn}{\mkbibquote{#1}}}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[L]{Alex Striff}
+\fancyhead[C]{\textsc{Physics Thesis Proposal \liningnums{\thesection}}}
+\fancyhead[R]{September 11, 2020}
+
+% Linux Libertine Font (default)
+% \setromanfont[Ligatures={Common}, Numbers={OldStyle}]{Linux Libertine O} % Main text font
+% \setsansfont[Ligatures={Common}, Numbers={OldStyle}]{Linux Biolinum O} % Main text font
+\usepackage[semibold,osf]{libertinus}
+\setmonofont[Scale=0.8]{Monaco} % Set mono font (e.g. phone numbers)
+
+\usepackage{sectsty}
+\allsectionsfont{\normalfont\sffamily}
+
+\renewcommand{\&}{}
+
+\newcommand{\im}{\mathrm{i}}
+\newcommand{\ham}{\mathsf{H}}
+\newcommand{\dop}{\mathsf{ρ}}
+\newcommand{\spin}{\mathsf{σ}}
+\newcommand{\idopr}{\mathsf{I}}
+
+\usepackage[xetex, unicode, bookmarks, colorlinks, breaklinks,
+pdftitle={Physics Thesis Proposals},
+pdfauthor={Alexander Striff}]{hyperref}
+\hypersetup{linkcolor=MidnightBlue,citecolor=MidnightBlue,filecolor=black,urlcolor=MidnightBlue} % Link colors
+\urlstyle{same}
+
+\usepackage{kantlipsum}
+
+\begin{document}
+\title{Physics Thesis Proposals}
+\author{Alex Striff}
+\date{September 11, 2020}
+% \pagenumbering{gobble}
+
+\section{Toy Systems and Quantum Master Equations
+\\ \large \emph{Darrell Schroeter}}
+
+\begin{refsection}
+How do quantum systems behave when interacting with their environments? This
+question is usually addressed by considering Markovian quantum master equations
+like the Lindblad equation. However, the assumptions of memoryless dynamics or
+being able to average over some environment behavior are often invalid. To
+assess the validity of these assumptions and to understand the more general
+dynamics, I propose to find exact (numerical) solutions for at least one toy
+system and to evaluate the effect of the environment.
+
+In particular, I propose to start with a transverse-field Ising model with the
+Hamiltonian
+\[
+  \ham
+  = -\sum_{i \in \mathbf{Z}_n} \qty(J_i \spin_{iz} \spin_{(i+1)z}
+  + \mu_0 h_i \spin_{ix}),
+\]
+where $\spin_{1z} = \spin_z \otimes \idopr \otimes \cdots \otimes \idopr$, etc.
+and $\spin_{i0} = \idopr$ that is coupled to a Markovian bath so that
+\[
+  \dot\dop
+  = \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{i\in\mathbf{Z}_n,\, a\in\{x,z\}} \gamma_{ia} \qty(\mathsf{L}_{ia}
+  \dop \mathsf{L}_{ia}^\dag
+  - \frac{1}{2}\acomm{\mathsf{L}_{ia}\mathsf{L}_{ia}^\dag}{\dop}),
+\]
+where $\mathsf{L}_{iz} = \qty(\spin_{ix} - \im\spin_{iy})/2$ and
+$\mathsf{L}_{iz} = \qty(\spin_{iy} - \im\spin_{iz})/2$, similar to
+in~\cite{yoshiokaConstructingNeuralStationary2019,jinPhaseDiagramDissipative2018}.
+
+I would consider one or a few spins as a subsystem, and the rest as the (inner)
+environment. First, I would exactly diagonalize the closed system with
+$\Gamma_{ia} = 0$ and study the behavior of the subsystem as the size $n$ of the
+full system grows, which I expect will reach to about 16. What are the
+stationary states and what is the time evolution of the expectation values of
+quantities like the subsystem Hamiltonian, net magnetization, and von Neumann
+entropy? Does the closed system thermalize any of these quantities as it grows?
+
+I would then study how the quantities mentioned behave differently as the
+interaction with a Markovian environment is turned on in three regimes where
+\begin{itemize}
+  \item the isolated subsystem of a few spins interacts with the bath,
+  \item the full Ising chain including subsystem interacts with the bath, and
+  \item the environment Ising chain but not subsystem interacts with the bath.
+\end{itemize}
+That is, how do different kinds of composite environments effect the behavior of
+the few-spin subsystem in question?
+
+While I have proposed this investigation for the Ising model, the target system
+and desired quantities may change as I research the Ising model, various
+generalizations like the Heisenberg or Potts models, and other possible target
+systems like coupled harmonic oscillators or discrete-level systems, like
+in~\cite{bhattacharyaUnderstandingDampingQuantum2012}.
+
+\printbibliography[heading=subbibliography]%
+\end{refsection}
+
+\clearpage
+\section{Dynamics of an electronic oscillator with step nonlinearity and bandpassed delayed feedback
+\\ \large \emph{Lucas Illing}}
+
+\begin{refsection}
+This thesis would extend and verify the work of Kees and myself from prior
+summers. While Colleen Werkheiser's thesis has shown that fast-oscillating
+periodic solutions in a time-delayed system with lowpass filtering are unstable,
+it is possible that these fast solutions may be stabilized with the use of
+bandpass feedback.
+
+The use of a programmable time-delay device enables the experiments with an
+electronic circuit to potentially be automated. Thus, a detailed examination of
+the parameter space would be possible. This experimental approach would also be
+checked against theoretical predictions and similarly detailed numerical computations.
+
+By forming a full understanding of fast-oscillating solutions in this system, we
+inform the study of more complex systems and the conditions which give rise to
+so-called virtual chimera states~\cite{largerVirtualChimeraStates2013}.
+
+\printbibliography[heading=subbibliography]%
+\end{refsection}
+
+\end{document}
+
