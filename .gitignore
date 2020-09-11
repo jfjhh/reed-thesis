@@ -17,5 +17,3 @@ _minted*
 *.pdf
 !thesis.pdf
 
-HEAD.tex
-
