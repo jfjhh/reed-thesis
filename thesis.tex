@@ -1,4 +1,4 @@
-\documentclass[12pt]{reedthesis}
+\documentclass[12pt,draft]{reedthesis}
 
 \overfullrule=1mm
 
@@ -10,11 +10,12 @@
 \usepackage{physics}
 \usepackage{siunitx}
 \usepackage[numbers]{natbib}
+
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
 \usepackage{subfiles}
 
 \AtEndDocument{%
-  \bibliographystyle{plainnat}
+  \bibliographystyle{unsrtnat}
   \bibliography{thesis}
 }
 
@@ -52,9 +53,30 @@
 \usepackage{lettrine}
 % \usepackage{Zallman} % Even fancier
 % \renewcommand\LettrineFontHook{\Zallmanfamily}
+% \newcommand{\dropcap}[2]{\lettrine{#1}{#2}}
+\newcommand{\dropcap}[2]{\textsc{#1#2}}
 
 \usepackage[switch*,pagewise]{lineno} % Before minted
 \ifdraft{\linenumbers}{}
+
+% Patch amsmath environments to work with lineno
+\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
+  \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
+  \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
+  \renewenvironment{#1}%
+  {\linenomath\csname old#1\endcsname}%
+{\csname oldend#1\endcsname\endlinenomath}}%
+\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
+  \patchAmsMathEnvironmentForLineno{#1}%
+\patchAmsMathEnvironmentForLineno{#1*}}%
+\AtBeginDocument{%
+  \patchBothAmsMathEnvironmentsForLineno{equation}%
+  \patchBothAmsMathEnvironmentsForLineno{align}%
+  \patchBothAmsMathEnvironmentsForLineno{flalign}%
+  \patchBothAmsMathEnvironmentsForLineno{alignat}%
+  \patchBothAmsMathEnvironmentsForLineno{gather}%
+  \patchBothAmsMathEnvironmentsForLineno{multline}%
+}
 
 % Code highlighting
 \usepackage{minted}
@@ -69,7 +91,7 @@
 
 % Other
 \usepackage{kantlipsum}
-\ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.95}}{}
+% \ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.95}}{}
 
 % Reference management (order-sensitive)
 \usepackage[pdfusetitle,final,backref]{hyperref}
@@ -119,6 +141,7 @@
 \newcommand\idsopr{\mathbb{1}}
 \newcommand\idopr{\opr{I}}
 \newcommand\sopr\mathcal%
+\newcommand\herm{\operatorname{\mathrm{He}}}
 
 % Categories
 \newcommand\cat\mathsf%
@@ -128,12 +151,14 @@
 \newcommand\liou{\mathcal{L}}
 \newcommand\ham{\opr{H}}
 \newcommand\dop{\opr{ρ}}
+\newcommand\tprod\otimes%
+\newcommand\lprod\ip%
 \newcommand\ensavg[2][\dop]{\ev{#2}_{\mkern-1.5mu{#1}}}
 \newcommand\sensavg[2][\dop]{\ev*{#2}_{\mkern-1.5mu{#1}}}
 
   \title{\textbf{\large
-      Thicular Development of Flampion Coupling
-    }\ifdraft{\\\textsc{\textbf{Draft}}}{}
+      Toy Systems and Quantum Master Equations
+    }\ifdraft{\\\textsc{(Provisional Title) \textbf{Draft}}}{}
     }
 \author{Alex Striff}
 % The month and year that you submit your final draft to the library
@@ -161,10 +186,10 @@
 % \listoffigures
 % \listoftables
 
-\ifdraft{\setstretch{1.5}}{}
+% \ifdraft{\setstretch{1.5}}{}
 
 \subfile{introduction}
-\subfile{first}
+\subfile{dop-theory/main}
 \subfile{conclusion}
 
 \appendix

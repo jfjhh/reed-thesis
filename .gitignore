@@ -10,7 +10,9 @@
 *.lot
 *-blx.bib
 *.brf
+*.bcf
 *.synctex.gz
+*.run.xml
 _minted*
 *.ipynb_checkpoints
 

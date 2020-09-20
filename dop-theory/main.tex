@@ -1,0 +1,737 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+
+\chapter{Density operator theory}
+
+\dropcap{I}{f quantum mechanics} is so weird, then why aren't we? The answer lies in the
+phenomenon of \emph{decoherence}, which was first considered in depth in the
+1970's by Zeh~\cite{zeh}. Despite being a late comer to the history of quantum
+mechanics, the theory of decoherence is crucial to understanding how classical
+results are obtained from many interacting quantum systems. While there are
+other routes to decoherence, the most common is through interaction with a
+memoryless (Markovian) environment~\cite{decoherence}. This leads to the theory
+of quantum Markovian master equations, which describe transformations of a
+system in the presence of such an environment. The most general form of these
+transformations was first extended to quantum mechanics by Gorini, Kossakowski,
+Lindblad, and Sudarshan to give the \textsc{gkls} or \emph{Lindblad
+equation}~\cite{gks,lindblad}.
+
+This chapter will explain the relevant theoretical background in
+Secs.~\ref{sec:dop} and~\ref{sec:composite}, before presenting the general
+theory which leads to the Lindblad equation in Sec.~\ref{sec:lindblad},
+following the text of Breuer and Petruccione~\cite{opensys} and to a lesser
+extent~\cite{intro} (which has some flaws). This leads us to consider the
+weak-coupling limit in Sec.~\ref{sec:interaction} and an application to atomic
+physics in Sec.~\ref{sec:example}. Issues with the method are discussed briefly
+in Sec.~\ref{sec:limitations}.
+
+\section{Different perspectives on density operators\label{sec:dop}}
+
+For a statistical perspective on quantum mechanics, we will make two postulates.
+The mathematical background is the \emph{Liouville space} $\liou(\hilb)$ for the
+Hilbert space $\hilb$.
+\begin{defn}[Liouville space]
+  The space $\liou(\hilb)$ is the complex Hilbert space of operators $\opr{A}$
+  on $\hilb$ for which the norm induced by the inner product
+  $\ip{\opr{A}}{\opr{B}} \equiv \tr(\opr{A}^\dag \opr{B})$ is finite.
+\end{defn}
+
+\begin{post}\label{post:ensemble}
+  A quantum system may be understood as a statistical ensemble
+  $\dop$ with observables $\opr{O}$ which are both described by elements of
+  $\liou(\hilb)$, where the ensemble average of $\opr{O}$ is $\ensavg{\opr{O}}
+  \equiv \ip{\opr{O}}{\dop}$ and $\opr{O}$ is Hermitian.
+\end{post}
+The usual properties of the \emph{density operator} $\dop$ follow from
+considering various averages. The only way for $\ensavg{\alpha\idopr} = \alpha$
+for all physical constants $\alpha \in \CC$ is if $\tr\dop = 1$. For
+$\ensavg{\opr{O}}$ to be real, $\dop$ must be \emph{self-adjoint}, and if
+$\opr{O}$ is also positive, then $\dop$ must be \emph{positive} for
+$\ensavg{\opr{O}}$ to be positive~\cite{nostatevecs}.
+
+\begin{post}\label{post:time}
+  The density operator for an isolated system with Hamiltonian $\ham$ evolves
+  unitarily in time according to the \emph{Liouville-von Neumann equation}
+  \begin{equation}
+    \dot{\dop}
+    = \flatfrac{\comm{\ham}{\dop}}{\im\hbar}\!.
+    \label{eq:liouville}
+  \end{equation}
+\end{post}
+
+While we usually consider the density operator to change in time, the time
+dependence may be shifted onto the observables. Consider a quantum system with
+unitary time-evolution operator $\opr{U}(t)$, so that we may express the density
+operator for the system as $\dop(t) = \opr{U}(t) \dop \opr{U}^\dag(t)$, where
+$\dop = \dop(0)$. If we compute the ensemble average of an observable
+$\opr{O}(t)$ and cycle the trace, we find
+\begin{align}
+  \ensavg[\dop(t)]{\opr{O}(t)}
+  &= \tr(\opr{O}(t)\opr{U}(t)\dop\opr{U}^\dag(t)) \label{eq:preheis} \\
+  &= \tr(\opr{U}^\dag(t)\opr{O}(t)\opr{U}(t)\dop)
+  \equiv \ensavg{\opr{O}_H(t)}
+  \label{eq:heisenbergpic}
+\end{align}
+where $\opr{O}_H$ is the observable in the \emph{Heisenberg picture}, as opposed
+to the usual \emph{Schr\"odinger picture}. If we can split the Hamiltonian into
+the form $\ham = \ham_0 + \ham_I(t)$, then $\opr{U}(t)$ splits into the product
+of $\opr{U}_0(t) = e^{\ham_0 t / \im\hbar}$ and $\opr{U}_I(t) =
+\opr{U}_0^\dag(t)\opr{U}(t)$. Cycling over only $\opr{U}_I(t)$
+in~\eqref{eq:preheis} gives the \emph{interaction picture} operators
+\begin{subequations}\label{eq:intpic}
+\begin{align}
+  \opr{O}_I(t)
+  &= \opr{U}_0^\dag(t) \opr{O}(t) \opr{U}_0(t)
+  \label{eq:intobs} \\
+  \dop_I(t)
+  &= \opr{U}_I(t) \dop \opr{U}_I^\dag(t).
+  \label{eq:intdop}
+\end{align}
+\end{subequations}
+Without $\ham_I(t)$,~\eqref{eq:intpic} reduces to the Schr\"odinger picture, and
+without $\ham_0$,~\eqref{eq:intpic} reduces to the Heisenberg picture. The
+time-dependence of the interaction picture density operator from
+differentiating~\eqref{eq:intdop} is (suppressing time dependences)
+\begin{align}
+  \im\hbar\mkern1mu\dot{\dop}_I(t)
+  &= \im\hbar\dv{t} \qty(\opr{U}_0^\dag\dop(t)\opr{U}_0) \nonumber \\
+  &= -\opr{U}_0^\dag\ham_0^\dag\dop(t)\opr{U}_0
+  + \opr{U}_0^\dag\dop(t)\ham_0\opr{U}_0 \nonumber \\
+  &+ \opr{U}_0^\dag\comm{\ham_0}{\dop(t)}\opr{U}_0
+  + \opr{U}_0^\dag\comm{\ham_I}{\dop(t)}\opr{U}_0 \nonumber \\
+  &= \opr{U}_0^\dag\comm{\opr{U}_0\ham_I'\opr{U}_0^\dag}{\dop(t)}\opr{U}_0
+  \nonumber \\
+  &= \comm{\ham_I'}{\dop_I(t)},
+  \label{eq:intliou}
+\end{align}
+where $\ham_I'$ denotes the interaction Hamiltonian $\ham_I(t)$ in the
+interaction picture. This is just~\eqref{eq:liouville} with the interaction
+Hamiltonian.
+
+With this understanding of the behavior of isolated systems, it may be
+surprising that postulates~\ref{post:ensemble} and~\ref{post:time} are actually
+insufficient to describe common systems. For example, the allowed energies for
+the harmonic oscillator are unbounded, so the Hamiltonian is not an element of
+the Liouville space. We will see later how this issue is related to the dynamics
+of a composite quantum system in Sec.~\ref{sec:limitations}, but will now move
+on to considering the more general dynamics of interacting quantum systems.
+
+\section{Composite quantum systems\label{sec:composite}}
+
+Consider two quantum systems in Hilbert spaces $\hilb_A$ and $\hilb_B$. 
+The Hilbert space of the composite system is the \emph{tensor product}
+$\hilb = \hilb_A \tprod \hilb_B$ (Def.~\ref{def:tensors}). How might a density operator $\dop$ for the
+composite system admit a \emph{reduced density operator} $\dop_A$ for system $A$?
+Consider an observable $\opr{O}$ of system $A$, for which the corresponding
+composite observable is $\opr{O} \tprod \idopr$. Regardless of the
+representation (composite or subsystem), the ensemble average of $\opr{O}$
+should be the same:
+\begin{equation}
+  \ensavg{\opr{O}_A \tprod \idopr}
+  = \ensavg[\dop_A]{\opr{O}_A}.
+  \label{eq:sameavg}
+\end{equation}
+Suppose that there is a map $\sopr{P}$ that sends $\dop$ to $\dop_A$. To see
+what this is, take an orthonormal complete basis $\qty{\opr{A}_i}$ of Hermitian
+operators for $\liou(\hilb_A)$ and $\qty{\opr{B}_k}$ for $\liou(\hilb_B)$, so
+the density operator may be expressed as
+\[
+  \dop
+  = \sum_{jk} \opr{A}_j\lprod{\opr{A}_j}{\dop}
+  \tprod \opr{B}_k\lprod{\opr{B}_k}{\dop}.
+\]
+We may then compute that (summing over repeated indices)
+\begin{align}
+  \sopr{P}\dop
+  &= \opr{A}_i\tr(\opr{A}_i\sopr{P}\dop) \\
+  &= \opr{A}_i\tr[\qty(\opr{A}_i \tprod \idopr)
+  \qty(\opr{A}_j\lprod{\opr{A}_j}{\dop} \tprod
+  \opr{B}_k\lprod{\opr{B}_k}{\dop})]
+  \qq{(by~\eqref{eq:sameavg})} \\
+  &= \opr{A}_i\tr(\opr{A}_i\opr{A}_j\lprod{\opr{A}_j}{\dop})
+  \tr(\opr{B}_k\lprod{\opr{B}_k}{\dop}) \\
+  &= \opr{A}_i\lprod{\opr{A}_i}{\opr{A}_j\lprod{\opr{A}_j}{\dop}}
+  \tr(\opr{B}_k\lprod{\opr{B}_k}{\dop}) \\
+  &= \opr{A}_j\lprod{\opr{A}_j}{\dop}
+  \tr(\opr{B}_k\lprod{\opr{B}_k}{\dop}) \\
+  &\equiv \tr_B\qty(\opr{A}_j\lprod{\opr{A}_j}{\dop}
+  \tprod \opr{B}_k\lprod{\opr{B}_k}{\dop})
+  = \tr_B\dop
+  = \dop_A,
+\end{align}
+which is the \emph{partial trace} defined by $\tr_B(\opr{A}_j \tprod \opr{B}_k)
+\equiv \opr{A}_j\tr\opr{B}_k$ and extending linearly.
+
+However, the reduction of the density operator by ``tracing over'' $B$ comes at
+the cost of losing information about the correlation between $A$ and $B$.
+Quantitatively, the \emph{relative entropy} between the correlated and
+uncorrelated density operators is
+\begin{align}
+  &S(\dop \| \dop_A \tprod \dop_B) \\
+  &\equiv \tr\dop(\ln\dop - \ln(\dop_A \tprod \dop_B)) \\
+  &= \tr(\dop\ln\dop)
+  - \tr_A\tr_B\qty(\dop\ln(\dop_A \tprod \idopr))
+  - \tr_B\tr_A\qty(\dop\ln(\idopr \tprod \dop_B)) \\
+  &= S(\dop_A) + S(\dop_B) - S(\dop).
+  \label{eq:relentropy}
+\end{align}
+Together with the Klein inequality which states that relative entropies are
+non-negative (Thm.~\ref{thm:klein}), we have that
+\begin{equation}
+  S(\dop)
+  \leq S(\dop_A) + S(\dop_B),
+  \label{eq:infoloss}
+\end{equation}
+with equality when $\dop = \dop_A \tprod \dop_B$. Other expected properties
+hold, such as that the relative entropy is invariant under unitary
+transformations (Thm.~\ref{thm:relSunitary}), or that the relative entropy
+between subsystems is less than that between combined systems
+(Thm.~\ref{thm:relSsubsys}).
+
+We would like to know the \emph{reduced dynamics} of the quantum system $S$ when
+in contact with an \emph{environment} system $B$. We suppose that the composite
+system has a Hamiltonian of the form
+\begin{equation}
+  \ham_{SB}(t)
+  = \ham_S \tprod \idopr
+  + \idopr \tprod \ham_B
+  + \ham_I(t)
+  \label{eq:fullham}
+\end{equation}
+and that the environment is in equilibrium, so the composite density operator is
+$\dop(t) = \dop_S(t) \tprod \dop_B$. In terms of the unitary time-evolution
+operator $\opr{U}(t)$ for the system,~\eqref{eq:liouville} becomes $\dop(t) =
+\opr{U}(t)\dop(0)\opr{U}^\dag(t)$. Taking the partial trace over the environment
+gives the time-evolved system density operator
+\begin{equation}
+  \dop_S(t)
+  = \tr_B\qty(\opr{U}(t)\qty(\dop_S(0) \tprod \dop_B)\opr{U}^\dag(t)).
+  \label{eq:evolveddop}
+\end{equation}
+
+Whatever~\eqref{eq:evolveddop} evaluates to, it will be an example of a
+\emph{dynamical map} $\sopr{V}(t)$ that time-evolves the system according to
+$\dop_S(t) = \sopr{V}(t)\dop_S(0)$. While $\sopr{V}(t)$ seems abstract, we know
+it should output a density operator. Then for $\sopr{V}(t)$ to be a valid map on
+system density operators, it should \emph{preserve the trace} of the input
+density operator. In fact, as a valid map $\sopr{V}(t) \tprod \idsopr$ on the
+composite system, the composite density operator should remain positive. This
+property of $\sopr{V}(t)$ is called \emph{complete positivity}. Thus the valid
+maps on system density operators are \emph{completely positive and
+trace-preserving} (\textsc{cptp}).
+
+\section{The Lindblad equation\label{sec:lindblad}}
+
+With the idea of random interactions with an environment in mind, we will assume
+that the maps $\qty{\sopr{V}(t) : t \geq 0}$ are also \emph{memoryless} or
+\emph{Markovian}, so that they form a \emph{quantum dynamical semigroup}
+satisfying
+\begin{equation}
+  \sopr{V}(t_1)\sopr{V}(t_2)
+  = \sopr{V}(t_1 + t_2)
+  \qfor t_1,\, t_2 \geq 0.
+  \label{eq:semigroup}
+\end{equation}
+The action of the dynamical semigroup on the system describes an irreversible
+process. As such, the relative entropy between an arbitrary system ensemble
+$\dop(t)$ and an equilibrium ensemble $\dop_0$ cannot decrease
+(by~\eqref{eq:evolveddop} and theorems~\ref{thm:relSunitary}
+and~\ref{thm:relSsubsys}):
+\begin{align}
+  S\qty(\sopr{V}(t)\dop \| \sopr{V}(t)\dop_0)
+  &= S\qty(\tr_B\qty[\opr{U}(t)\qty(\dop \tprod \dop_B)\opr{U}^\dag(t)] \| \dop_0) \\
+  &\leq S\qty(\opr{U}(t)\qty(\dop \tprod \dop_B)\opr{U}^\dag(t) \| \dop_0 \tprod \dop_B) \\
+  &= S\qty(\dop \tprod \dop_B \| \dop_0 \tprod \dop_B) \\
+  &= S\qty(\dop \| \dop_0).
+\end{align}
+
+We would like to determine the \emph{infinitesimal generator} $\liou$ for the
+quantum dynamical semigroup which allows the dynamical maps to be expressed as
+$\sopr{V}(t) = e^{\liou t}$, analogously to how a time-independent Hamiltonian
+is a generator for the unitary time-evolution operator $e^{\ham t/\im\hbar}$.
+Following this analogy, the Schr\"odinger equation is replaced by the
+\emph{Markovian quantum master equation} $\dot{\dop}_S = \liou\dop_S$, which
+generalizes~\eqref{eq:liouville} to typically non-unitary \textsc{ctcp} maps of
+density operators, provided that they are Markovian.
+
+We will find that the most general form of $\liou$ is given by the
+\emph{Lindblad equation}~\eqref{eq:lindblad}. To obtain this result, first
+consider diagonalizing $\dop_B$ as $\dop_B = \sum_j \lambda_j \op*{\phi_j}$ with
+orthonormal vectors $\phi_j \in \hilb_B$, where $\sum_j\lambda_j = 1$.
+Then~\eqref{eq:evolveddop} becomes (writing $\dop_S$ as $\dop$)
+\begin{align}
+  \dop(t)
+  &= \sum_{ij} \mel{\phi_i}{\opr{U}(t)\qty(\dop(0) \tprod
+  \lambda_j\op*{\phi_j}{\phi_j})\opr{U}^\dag(t)}{\phi_i}
+  \label{eq:krauspre} \\
+  &= \sum_{ij} \lambda_j\mel{\phi_i}{\opr{U}(t)}{\phi_j}\dop(0)
+  \mel{\phi_j}{\opr{U}^\dag(t)}{\phi_i}
+  \label{eq:krauspost} \\
+  &= \sum_{ij} \opr{M}_{ij}(t)\dop(0)\opr{M}_{ij}^\dag(t),
+  \label{eq:krausrep}
+\end{align}
+where $\opr{M}_{ij}(t) \equiv \sqrt{\lambda_j} \mel*{\phi_i}{\opr{U}(t)}{\phi_j}$.
+This decomposition in terms of the $\opr{M}_{ij}$ is an instance of the
+Choi-Kraus representation theorem (Thm.~\ref{thm:kraus}). We can express the
+$\opr{M}_{ij}$ in terms of an orthonormal complete basis $\{\opr{F}_n\}$ for
+$\liou(\hilb_S)$ as $\opr{M}_{ij} = \sum_k \opr{F}_k
+\ip*{\opr{F}_k}{\opr{M}_{ij}}$. Then~\eqref{eq:krausrep} becomes
+\begin{equation}
+  \dop(t)
+  = \sum_{mn} c_{mn}(t) \opr{F}_m\dop\opr{F}_n^\dag,
+  \label{eq:Fintro}
+\end{equation}
+where
+\begin{equation}
+  c_{mn}(t)
+  \equiv \sum_{ij} \ip{\opr{F}_m}{\opr{M}_{ij}(t)}\ip{\opr{M}_{ij}(t)}{\opr{F}_n}.
+  \label{eq:coeffs}
+\end{equation}
+For convenience, we may choose $\opr{F}_{d^2} = \idopr / \sqrt{d}$, where $d =
+\dim(\hilb_S)$. With an eye towards simplifying~\eqref{eq:Vderiv}, we eliminate
+the explicit time dependence of~\eqref{eq:coeffs} by defining
+\begin{equation}
+  a_{mn}
+  \equiv \lim_{t \to 0^+} \frac{c_{mn}(t) - d\delta_{d^2 d^2}}{t}
+  \label{eq:limcoeffs}
+\end{equation}
+and introduce the sum of Kraus operators
+\begin{align}
+  \opr{F}
+  &= \frac{1}{\sqrt{d}}\sum_{n=1}^{d^2 - 1} a_{n d^2} \opr{F}_n
+  \label{eq:kraussum} \\
+  &= \frac{\opr{F} + \opr{F}^\dag}{2}
+  + \im \frac{\opr{F} - \opr{F}^\dag}{2\im}
+  \equiv \opr{G} + \flatfrac{\ham}{\im\hbar}\!,
+  \label{eq:kraussherm}
+\end{align}
+where we have decomposed the sum $\opr{F}$ into Hermitian and anti-Hermitian
+parts and included $\hbar$ so that $\ham$ will have dimensions of energy. Now we
+may write the master equation $\liou\dop = \dot{\dop}$ as
+\begin{align}
+  \dot{\dop}
+  &= \lim_{\Delta t \to 0^+} \frac{\sopr{V}(\Delta t)\dop - \dop}{\Delta t}
+  \nonumber \\
+  %
+  &= \lim_{\Delta t \to 0^+} \Bigg(
+  \frac{c_{d^2 d^2} - d}{d\Delta t} \dop
+  + \sum_{m,n=1}^{d^2 - 1}
+  \frac{c_{mn}(\Delta t)}{\Delta t}\opr{F}_m \dop \opr{F}_n^\dag
+  \nonumber \\
+  &+ \frac{1}{\sqrt{d}} \sum_{n=1}^{d^2 - 1} \qty(%
+  \frac{c_{nd^2}(\Delta t)}{\Delta t} \opr{F}_n \dop
+  + \frac{c_{d^2 n}(\Delta t)}{\Delta t} \dop \opr{F}_n^\dag)
+  \Bigg) \label{eq:Vderiv} \\
+  %
+  &= \frac{a_{d^2 d^2}}{d} \dop 
+  + \opr{F}\dop + \dop\opr{F}^\dag
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag
+  \nonumber \\
+  %
+  &= \frac{a_{d^2 d^2}}{d} \dop 
+  + \acomm{\opr{G}}{\dop}
+  + \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag
+  \nonumber \\
+  %
+  &= \acomm{\opr{G}'}{\dop}
+  + \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag,
+  \label{eq:GHform}
+\end{align}
+where $\opr{G}' = \opr{G} + \flatfrac{a_{d^2 d^2} \idopr}{d}$. Since
+$\sopr{V}(t)$ is trace-preserving, $\tr\dot{\dop} = 0$. Applying this
+condition to~\eqref{eq:GHform} and cycling the trace gives
+\[
+  0
+  = \tr\qty(2\opr{G}'\dop
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag \opr{F}_m \dop)\mkern1mu,
+\]
+so $\opr{G}' = -\sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag\opr{F}_m / 2$. This
+allows us to write~\eqref{eq:GHform} as
+\begin{equation}
+  \dot{\dop}
+  = \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn}\qty(\opr{F}_m\dop\opr{F}_n^\dag -
+  \frac{1}{2}\acomm{\opr{F}_n^\dag \opr{F}_m}{\dop}),
+  \label{eq:markovian}
+\end{equation}
+which is the first form of the \emph{Lindblad equation}. This may be simplified
+further if we diagonalize the coefficient matrix $\opr{a}$ by applying a unitary
+transformation $\opr{u}$ to give $\opr{a} = \opr{u}\opr{γ}\opr{u}^\dag$, where
+the $\qty{\gamma_k}_{k=1}^{d^2 - 1}$ are the non-negative eigenvalues of
+$\opr{a}$. This is possible since the coefficient matrix $\opr{c}$ is seen
+from~\eqref{eq:coeffs} to be Hermitian, and~\eqref{eq:limcoeffs} then gives that
+$\opr{a}$ is Hermitian. We may then express $\opr{F}_{n \neq d^2} =
+\sum_{k=1}^{d^2 - 1} \opr{L}_n u_{nk}$ in terms of the \emph{Lindblad operators}
+$\opr{L}_n$ to find
+\begin{equation}
+  \dot{\dop}
+  = \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{k=1}^{d^2 - 1} \gamma_k \qty(\opr{L}_k\dop\opr{L}_k^\dag -
+  \frac{1}{2}\acomm{\opr{L}_k^\dag \opr{L}_k}{\dop})
+  \equiv
+  \sopr{L}\dop,
+  \label{eq:lindblad}
+\end{equation}
+which is the \emph{diagonal form} of the Lindblad equation. The eigenvalues
+$\gamma_k$ have dimensions of inverse time and the Lindblad operators may be
+taken to be traceless. The second term is often called the \emph{dissipator}
+$\sopr{D}$ (see Sec.~\ref{sec:interaction}), so the Lindbladian may be separated
+into unitary and non-unitary parts.
+
+\section{The weak-coupling limit\label{sec:interaction}}
+
+Now that we have found the general form for a stochastic \textsc{ctcp}
+generator, we must now determine the conditions for interaction Hamiltonian
+in~\eqref{eq:fullham} to give rise to Markovian dynamics. While there are
+several different regimes where this is true, we will consider the
+\emph{weak-coupling} limit which we justify by supposing that the environment is
+similar to a \emph{harmonic bath} of many harmonic oscillators.
+
+We start by expressing the interaction Hamiltonian in terms of Hermitian
+operators as
+\[
+  \ham_I
+  = \sum_\alpha \opr{A}_\alpha \tprod \opr{B}_\alpha.
+\]
+We suppose that the system in isolation would have \emph{discrete} energy
+levels, so the eigenoperators of the superoperator $\sopr{S} = \comm{\ham_S}{-}$
+form a complete basis for $\liou(\hilb_S)$. We then may write $\opr{A}_\alpha =
+\sum_\omega \opr{A}_{\alpha\omega}$, where
+\begin{equation}
+  \comm{\ham_S}{\opr{A}_{\alpha\omega}}
+  = -\omega\opr{A}_{\alpha\omega}.
+  \label{eq:Aomega}
+\end{equation}
+Using~\eqref{eq:Aomega} to commute past the exponential in~\eqref{eq:intobs}
+gives $\opr{A}_{\alpha\omega}' = e^{-\im\omega t} \opr{A}_{\alpha\omega}$ in the
+interaction picture. Thus the interaction Hamiltonian in the interaction picture
+is
+\begin{equation}
+  \ham_I'
+  = \sum_{\alpha\omega} e^{-\im\omega t} \opr{A}_{\alpha\omega}
+  \tprod \opr{B}_\alpha',
+  \label{eq:inthamdecomp}
+\end{equation}
+where $\opr{B}_\alpha'(t) = e^{-\ham_B t/\im\hbar} \opr{B}_\alpha e^{\ham_B t/
+\im\hbar}$ per~\eqref{eq:intobs}.
+
+Since we are interested in how fluctuations in different environment modes are
+related, we will consider the \emph{reservoir correlation functions}
+\begin{equation}
+  \sensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \label{eq:corr}
+\end{equation}
+and their one-sided Fourier transform
+\begin{align}
+  \Gamma_{\alpha\beta}(\omega)
+  &\equiv \int_0^\infty \dd{s} e^{\im\omega s}
+  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \label{eq:onegammas} \\
+  &\equiv \im S_{\alpha\beta}(\omega) +
+  \flatfrac{\gamma_{\alpha\beta}(\omega)}{2}\!,
+  \label{eq:gammadecomp}
+\end{align}
+where the corresponding matrix $\opr{S} = (\opr{Γ} - \opr{Γ}^\dag) / 2\im$ is
+Hermitian and the matrix corresponding to the full Fourier transform
+\begin{equation}
+  \gamma_{\alpha\beta}(\omega)
+  \equiv \int_{-\infty}^\infty \dd{s} e^{\im\omega s}
+  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \label{eq:gammas}
+\end{equation}
+is positive.
+
+With this setup, we may now move to the main derivation. It is helpful to
+consider the interaction picture time evolution~\eqref{eq:intliou} in the
+integral form
+\[
+  \dop(t)
+  = \dop(0) - \im\int_0^t \dd{s} \comm{\ham_I(s)}{\dop(s)}.
+\]
+Applying~\eqref{eq:intliou} again and tracing out the environment gives the
+closed equation
+\[
+  \dot{\dop}_S(t)
+  = -\int_0^t \dd{s}
+  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(s)}{\dop_S(s) \tprod \dop_B}}
+\]
+for the system density operator. In doing so we have made two assumptions: that
+\[
+  \tr_B\comm{\ham_I(t)}{\dop(0)}
+  = 0,
+\]
+which is the \emph{weak-coupling approximation}, and that
+\[
+  \dop(t)
+  = \dop_S(t) \tprod \dop_B,
+\]
+which is the \emph{Born approximation}. It should be noted that weak-coupling
+follows if the reservoir averages of the interactions vanish:
+$\ensavg[\dop_B]{\opr{B}_\alpha(t)} = 0$.
+
+We now make the \emph{Markov approximation} that $\dop_S(s) = \dop_S(t)$, so
+that the time-evolution only depends on the present time, to obtain the
+\emph{Redfield equation}. To simplify further, we make the substitution $s
+\mapsto t - s$ and set the upper limit of the integral to infinity:
+\begin{equation}
+  \dot{\dop}_S
+  = -\int_0^\infty \dd{s}
+  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(t - s)}{\dop_S(t) \tprod \dop_B}}.
+  \label{eq:infbornmarkov}
+\end{equation}
+This is justified when the reservoir correlation functions
+in~\eqref{eq:onegammas} vanish quickly over a time $\tau_B$ that is smaller than
+the relaxation time $\tau_R$ (see Sec.~\ref{sec:limitations}).
+Substituting~\eqref{eq:inthamdecomp} into~\eqref{eq:infbornmarkov} and
+using~\eqref{eq:onegammas} gives
+\begin{equation}
+  \dot{\dop}_S
+  = 2\herm \sum_{\alpha\beta\omega\omega'}
+  e^{\im(\omega' - \omega)t}
+  \Gamma_{\alpha\beta}(\omega) \qty(%
+  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega'}^\dag
+  - \opr{A}_{\alpha\omega'}^\dag \opr{A}_{\beta\omega} \dop_S),
+  \label{eq:decompsub}
+\end{equation}
+where $\herm\opr{Γ} \equiv (\opr{Γ} + \opr{Γ}^\dag) / 2$. If the typical times
+\[
+  \tau_S = \abs{\omega' - \omega}^{-1}
+  \qfor \omega' \ne \omega
+\]
+for system evolution are large compared to the relaxation time $\tau_R$, then
+the contribution from the fast-oscillating terms of~\eqref{eq:decompsub} where
+$\omega' \ne \omega$ may be neglected. This \emph{rotating wave} or
+\emph{secular} approximation is analogous to how we consider the high-energy
+position distribution in the infinite square well to be uniform, even though it
+is actually a fast-oscillating function. By coarse-graining in this sense, we
+obtain
+\begin{equation}
+  \dot{\dop}_S
+  = 2\herm \sum_{\alpha\beta\omega}
+  \Gamma_{\alpha\beta}(\omega) \qty(%
+  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega}^\dag
+  - \opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega} \dop_S).
+  \label{eq:rotwave}
+\end{equation}
+Now applying the decomposition~\eqref{eq:gammadecomp} gives the interaction
+picture Lindblad equation
+\begin{equation}
+  \dot{\dop}_S
+  = \im\comm{\ham_{LS}}{\dop_S} + \sopr{D}\dop_S,
+  \label{eq:microlindblad}
+\end{equation}
+where the \emph{Lamb shift Hamiltonian} is
+\begin{equation}
+  \ham_{LS}
+  = \sum_{\alpha\beta\omega}
+  S_{\alpha\beta}(\omega) \opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega},
+  \label{eq:lambham}
+\end{equation}
+and the \emph{dissipator} is
+\begin{equation}
+  \sopr{D}\dop_S
+  = \sum_{\alpha\beta\omega} \gamma_{\alpha\beta} \qty(%
+  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega}^\dag
+  - \frac{1}{2} \comm{\opr{A}_{\alpha\omega}^\dag
+  \opr{A}_{\beta\omega}}{\dop_S}).
+  \label{eq:dissipator}
+\end{equation}
+The Lamb shift (or environment renormalization) Hamiltonian commutes with the
+system Hamiltonian since~\eqref{eq:Aomega} implies that
+$\comm*{\ham_S}{\opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega}} = 0$. Adding
+the system's Hamiltonian $\ham_S$ to $\ham_{LS}$ and diagonalizing gives the
+Schr\"odinger picture Lindblad equation~\eqref{eq:lindblad}.
+
+\section{Relaxation to thermal equilibrium\label{sec:thermo}}
+
+The system will generally relax from its initial configuration to a stationary
+solution of~\eqref{eq:lindblad} (see Sec.~\ref{sec:limitations}). We expect that
+the thermal state
+\[
+  \dop_S
+  = \frac{e^{-\beta\ham_S}}{Z}
+  \qq{where}
+  Z
+  = \tr(e^{-\beta\ham_S})
+\]
+would be the equilibrium state. This is true when the reservoir correlation
+functions obey the \textsc{kms} condition~\cite{kubo,martinschwinger}
+\begin{equation}
+  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t) \opr{B}_\beta(0)}
+  = \ensavg[\dop_B]{\opr{B}_\beta(0) \opr{B}_\alpha^\dag(t + \im\beta)},
+  \label{eq:kms}
+\end{equation}
+which is true when the environment is in the thermal state $\dop_B =
+{e^{-\beta\ham_B}} / {\tr(e^{-\beta\ham_B})}$.
+
+\section{A two-level atom\label{sec:example}}
+
+To demonstrate the use of the Lindblad equation, we will study a model for the
+decay of a two-level atom. Our aim is to glimpse why electrons in atoms undergo
+optical decay, even though excited states are stable atomic states. Suppose that
+the atom has Hamiltonian $\ham_S = \hbar\omega\opr{σ}_3 / 2$, where $\opr{σ}_3 =
+\op{1} - \op{0}$. The operators $\opr{σ}_- = \op{0}{1}$ and $\opr{σ}_+ =
+\op{1}{0}$ are Lindblad operators, since they are eigenoperators of the
+superoperator $\comm{\hilb_S}{-}$, like in~\eqref{eq:Aomega}. These correspond
+to lowering and raising the energy by $\hbar\omega$, and will be our analogues
+of the emission and absorption processes. The derivation of
+Sec.~\ref{sec:lindblad} is similar for a bath of photons in equilibrium, and our
+assumptions are justified because typical atomic relaxation times of about
+\SI{20}{\ns} are much slower than the periods of electromagnetic
+waves~\cite{steck}. Ignoring the Lamb shift (which only offsets) and considering
+only the effects at $\omega$,~\eqref{eq:microlindblad} becomes
+\begin{align}
+  \dot{\dop}
+  &= \gamma_0(N+1)\qty(\opr{σ}_- \dop \opr{σ}_+
+  - \frac{1}{2}\acomm{\opr{σ}_+\opr{σ}_-}{\dop}) \nonumber \\
+  &+ \gamma_0 N\qty(\opr{σ}_+ \dop \opr{σ}_-
+  - \frac{1}{2}\acomm{\opr{σ}_-\opr{σ}_+}{\dop})
+  \equiv \sopr{D}\dop,
+  \label{eq:twomaster}
+\end{align}
+where $N = 1 / (e^{\beta\hbar\omega} - 1)$. This is straightforward to solve
+given the properties of the Pauli matrices. From the initial density operator
+$\dop(0) = \op{1}$, we find that the population of upper level is
+\[
+  \dop_{11}(t)
+  = \frac{N}{2N + 1}\qty(1 - e^{-\gamma t}), \qq{where}
+  \gamma = \gamma_0(2N + 1).
+\]
+This is consistent with what we observe in atomic spectra: an exponential decay
+to an equilibrium level which gives Lorentzian peaks. At low temperatures ($N
+\to 0$) the system approaches the ground state in accordance with the third law
+of thermodynamics, and at high temperatures ($N \gg 1$), the level is
+half-occupied and the absorption is saturated~\cite{rubidium}
+(\textit{Cf}.~\footnote{It's cool how this provides a fundamental explanation of
+  the \textit{Doppler-free saturated absorption spectroscopy of Rubidium vapor}
+\textsc{JLab} experiment that I did.}).
+
+\section{Limitations\label{sec:limitations}}
+
+Though the Lindblad equation is widely applicable, there are some situations in
+which key assumptions in its derivation break down. For one, we have glossed
+over the issue of \emph{ergodicity} in considering a harmonic bath. Since we
+needed to assume a discrete spectrum, the correlation functions~\eqref{eq:corr}
+will be quasi-periodic and will not decay as we required. It is only in the
+limit of a reservoir with infinitely many degrees of freedom that we expect
+non-periodic behavior like decay to emerge, but then there may be issues with
+unbounded operators. This can lead to the interesting behavior of spontaneous
+symmetry breaking and phase transitions.
+
+There are also many systems with dynamics that occur on time scales comparable
+to the relaxation time. For example, a paper published less than a month ago (!)
+demonstrates how fast pulsed laser experiments can probe the relaxation of
+temporarily polarized gas molecules due to
+collisions~\cite{collisions1,collisions2}.
+
+\section{Conclusion}
+
+We have seen how the general consideration of Markovian \textsc{ctcp} maps on
+density operators leads to the Lindblad equation, and considered the
+weak-coupling limit as an example of a physical regime where the assumption of
+stochastic dynamics is valid. However, we have only scratched the surface of
+what can be done with the Lindblad equation, especially with respect to solving
+it. Since the two-level atom is a small system, it is simple to diagonalize, but
+larger systems provide more difficulty as the dimension of the Hilbert space
+grows. Numerical solutions are complicated by the additional requirement of
+trace preservation, but they can still be done in many
+situations~\cite{intro,collisions1}. The theory of open quantum systems gives
+some fundamental justifications for the assumptions of equilibrium statistical
+mechanics, as was briefly noted in Sec.~\ref{sec:thermo}, and has made the
+picture of decoherence a bit more clear.
+
+\section{Mathematical details\label{sec:math}}
+
+\begin{defn}[Tensor product]\label{def:tensors}
+  Consider vector spaces $V(k)$, $W(k)$, and $Z$. For any bilinear map $h:V
+  \times W \to Z$, the \emph{tensor product} $V \tprod W$ and associated
+  bilinear map $\phi:V \times W \to V \tprod W$ map have the property that there
+  is a unique bilinear map $g:V \tprod W \to Z$ such that $h = g \circ \phi$.
+  For tensor products of Hilbert spaces, the inner product is defined on each
+  element of a product and then the space is completed. There is then a natural
+  correspondence between the element $v \tprod f$ of the tensor product $V
+  \tprod V^*$ and the linear map $T:V \to V$ defined by $Tx = f(x)v$.
+
+  This induces an extension of Dirac notation where all pairs $f \tprod x$ of
+  dual and usual vectors from the same space are evaluated as $\ip{f}{x} = f(x)$
+  and extended linearly. For example, given a linear operator $\opr{U}:V \tprod
+  W \to V \tprod W$ and a basis $\ket{\phi_i}$ for $W$, the partial trace over
+  $W$ may be expressed as $\tr_W\opr{U} = \ev{\opr{U}}{\phi_i}$. This forms the
+  justification of the step from~\eqref{eq:krauspre} to~\eqref{eq:krauspost} and
+  of the manipulations in Thm.~\ref{thm:kraus}.
+\end{defn}
+
+\begin{thm}[Klein inequality]\label{thm:klein}
+  For density operators $\dop$ and $\dop'$, $S(\dop \| \dop') \geq 0$, with
+  equality if and only if $\dop = \dop'$.
+  \begin{proof}
+    The case for equality is trivial, so we will consider $\dop \neq \dop'$. Let
+    $\sopr{F}\dop = \dop\ln\dop$, so that we may express the relative entropy as
+    \[
+      S(\dop \| \dop')
+      = \tr(\sopr{F}\dop - \sopr{F}\dop' - \opr{δ}\sopr{F}'\dop'),
+    \]
+    where $\opr{δ} = \dop - \dop'$. We then have for $0 < t < 1$ that
+    \[
+      \dop' + t\opr{δ}
+      = t\dop + (1 - t)\dop'.
+    \]
+    Now let $f(t) = \tr\qty(\sopr{F}(\dop' + t\opr{δ}))$. Since the trace is
+    monotonic and convex, $f$ is convex and $f(t) \leq f(0) + t\qty(f(1) -
+    f(0))$. Rearranging and taking the limit as $t \to 0^+$ gives
+    \[
+      f'(0)
+      \leq f(1) - f(0),
+    \]
+    which evaluates to
+    \[
+      \tr\qty(\opr{δ}\sopr{F}'\dop')
+      \leq \tr\sopr{F}\dop - \tr\sopr{F}\dop'.
+      \qedhere
+    \]
+  \end{proof}
+\end{thm}
+
+\begin{thm}\label{thm:relSunitary}
+  For a unitary operator $\opr{U}$ and density operators $\dop$ and $\dop'$,
+  \[
+    S(\opr{U}\dop\opr{U}^\dag \| \opr{U}\dop'\opr{U}^\dag)
+    = S(\dop \| \dop').
+  \]
+  \begin{proof}
+    Since we may cycle the traces, it suffices to show that
+    \[
+      \ln\qty(\opr{U}\dop\opr{U}^\dag)
+      = \ln\dop.
+    \]
+    This follows from Jacobi's formula for invertible matrices when
+    applied to the logarithm that takes us from a Lie group to its corresponding
+    Lie algebra, giving $\tr \circ \det = \tr \circ \log$.
+  \end{proof}
+\end{thm}
+
+\begin{thm}\label{thm:relSsubsys}
+  For density operators $\dop$ and $\dop'$,
+  \[
+    S(\tr_B\dop \| \tr_B\dop')
+    \leq S(\dop \| \dop'),
+  \]
+  with equality if and only if $\dop$ or $\dop'$ is uncorrelated.
+\end{thm}
+
+\begin{thm}[Choi-Kraus representation~\cite{intro}]\label{thm:kraus}
+  A superoperator $\sopr{S}$ on a density operator $\dop$ is completely positive
+  and trace-preserving if and only if it may be represented as
+  \[
+    \sopr\dop
+    = \sum_{k=1}^K \opr{M}_k \dop \opr{M}_k^\dag,
+    \qq{where}
+    \sum_{k=1}^K \opr{M}_k \opr{M}_k^\dag
+    = \idopr.
+  \]
+\end{thm}
+
+\end{document}
+
