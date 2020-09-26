@@ -19,7 +19,7 @@ $(CLEANDIRS):
 .PHONY: clean
 clean: $(CLEANDIRS)
 	latexmk -c
-	rm -fv *.xdv
+	rm -fv *.xdv *.bbl *.brf
 	rm -rfv _minted-*
 
 .PHONY: distclean
