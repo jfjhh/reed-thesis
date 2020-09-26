@@ -1,6 +1,4 @@
-\documentclass[12pt,draft]{reedthesis}
-
-\overfullrule=1mm
+\documentclass[12pt]{reedthesis}
 
 % Core packages
 \usepackage[intlimits]{mathtools} % Load before newtxmath
@@ -13,10 +11,16 @@
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
 \usepackage{subfiles}
+\newcommand{\notebook}[1]{{\setlength{\parindent}{0pt}\subfile{../notebooks/tex/#1}}}
+
+\usepackage[Export]{adjustbox} % Note capital Export. Loads graphicx.
+\adjustboxset{max size={0.75\linewidth}{0.9\textheight}, center}
+
 
 \AtEndDocument{%
   \bibliographystyle{unsrtnat}
   \bibliography{thesis}
+  \printindex
 }
 
 % Layout and styling
@@ -35,7 +39,13 @@
 \newtheorem{defn}{Definition}
 \newtheorem{post}{Postulate}
 
+\ifdraft{\overfullrule=1mm}{}
+
 \setlength{\parskip}{0pt}
+
+\usepackage{imakeidx}
+\makeindex
+\newcommand{\term}[1]{\index{#1}\textbf{#1}}
 
 % Graphics
 \usepackage{graphicx}
@@ -45,10 +55,9 @@
 % Fonts
 \usepackage{fontspec}
 \usepackage[semibold,osf]{libertinus}
+\setmonofont[Scale=MatchLowercase]{Iosevka}
 \usepackage[scr=boondoxo,cal=esstix]{mathalfa}
 \usepackage{bm} % Load after math font configuration
-\renewcommand\mathrm\textnormal%
-\setmonofont[Scale=MatchLowercase]{Inconsolata}
 
 \usepackage{lettrine}
 % \usepackage{Zallman} % Even fancier
@@ -57,7 +66,7 @@
 \newcommand{\dropcap}[2]{\textsc{#1#2}}
 
 \usepackage[switch*,pagewise]{lineno} % Before minted
-\ifdraft{\linenumbers}{}
+% \ifdraft{\linenumbers}{}
 
 % Patch amsmath environments to work with lineno
 \newcommand*\patchAmsMathEnvironmentForLineno[1]{%
@@ -79,12 +88,13 @@
 }
 
 % Code highlighting
-\usepackage{minted}
+\usepackage[final]{minted}
 \setminted{%
   mathescape,
   linenos,
   breaklines,
   fontsize=\small,
+  baselinestretch=0.9,
 }
 \setminted[wolfram]{style=mathematica}
 \ifoptionfinal{\setminted{style=bw}}{\setminted{style=friendly}}
@@ -97,11 +107,18 @@
 \usepackage[pdfusetitle,final,backref]{hyperref}
 \usepackage[all]{hypcap}
 \usepackage{cleveref}
+
+\crefname{thm}{theorem}{theorems}
+\crefname{lem}{lemma}{lemmas}
+\crefname{defn}{definition}{definitions}
+\crefname{post}{postulate}{postulates}
+
 \usepackage{autonum}
+
+\definecolor{linkcolor}{rgb}{0.0,0.25,0.5}
 \hypersetup{%
-  allcolors=MidnightBlue,
+  allcolors=linkcolor,
   citecolor=OliveGreen,
-  urlcolor=MidnightBlue,
 }
 \urlstyle{same}
 \ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
@@ -114,6 +131,8 @@
 % Math commands
 % Subscript text
 \newcommand*\sub[1]{\textit{#1}}
+
+\newcommand{\defeq}{\equiv}
 
 % Variant symbols
 \renewcommand\leq\leqslant%
@@ -129,16 +148,12 @@
 
 % Named operations and special constants
 \newcommand\im{\mathrm{i}\mkern1mu}
-\renewcommand\ln{\operatorname{\mathrm{ln}}}
-\renewcommand\log{\operatorname{\mathrm{log}}}
-\renewcommand\exp{\operatorname{\mathrm{exp}}}
-\renewcommand\tr{\operatorname{\mathrm{tr}}}
-\renewcommand\det{\operatorname{\mathrm{det}}}
 
 % Operators
 \newcommand\tp\otimes%
 \newcommand{\opr}[1]{\mathsf{#1}}%
-\newcommand\idsopr{\mathbb{1}}
+% \newcommand{\opr}[1]{\mathnormal{#1}}%
+\newcommand\idsopr{\idopr}
 \newcommand\idopr{\opr{I}}
 \newcommand\sopr\mathcal%
 \newcommand\herm{\operatorname{\mathrm{He}}}
@@ -151,15 +166,17 @@
 \newcommand\liou{\mathcal{L}}
 \newcommand\ham{\opr{H}}
 \newcommand\dop{\opr{ρ}}
+\newcommand\pauli{\opr{σ}}
 \newcommand\tprod\otimes%
-\newcommand\lprod\ip%
+% \newcommand\lprod\ip%
+\newcommand\lprod[2]{\qty(#1,#2)}
 \newcommand\ensavg[2][\dop]{\ev{#2}_{\mkern-1.5mu{#1}}}
 \newcommand\sensavg[2][\dop]{\ev*{#2}_{\mkern-1.5mu{#1}}}
 
-  \title{\textbf{\large
-      Toy Systems and Quantum Master Equations
-    }\ifdraft{\\\textsc{(Provisional Title) \textbf{Draft}}}{}
-    }
+\title{\textbf{\large
+    Toy Systems and Quantum Master Equations
+  }\ifdraft{\\\textsc{(Provisional Title) \textbf{Draft}}}{}
+  }
 \author{Alex Striff}
 % The month and year that you submit your final draft to the library
 % (May or December)
@@ -175,9 +192,9 @@
 \pagenumbering{arabic}
 \pagestyle{empty}
 
-\subfile{acknowledgements}
+\include{acknowledgements}
 % \chapter*{Preface} % Optional
-\subfile{abstract}
+\include{abstract}
 % \chapter*{Dedication} % Optional
 
 \mainmatter%
@@ -188,12 +205,12 @@
 
 % \ifdraft{\setstretch{1.5}}{}
 
-\subfile{introduction}
+\include{introduction}
 \subfile{dop-theory/main}
-\subfile{conclusion}
+\include{conclusion}
 
 \appendix
-\subfile{appendix}
+\include{appendix}
 
 \backmatter% Adds index and bibliography to TOC
 

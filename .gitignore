@@ -11,6 +11,10 @@
 *-blx.bib
 *.brf
 *.bcf
+*.idx
+*.ilg
+*.ind
+*.xdv
 *.synctex.gz
 *.run.xml
 _minted*
