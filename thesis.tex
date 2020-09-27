@@ -11,11 +11,11 @@
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
 \usepackage{subfiles}
-\newcommand{\notebook}[1]{{\setlength{\parindent}{0pt}\subfile{../notebooks/tex/#1}}}
+\newcommand{\notebook}[1]{\subfile{../notebooks/tex/#1}}
 
 \usepackage[Export]{adjustbox} % Note capital Export. Loads graphicx.
 \adjustboxset{max size={0.75\linewidth}{0.9\textheight}, center}
-
+\usepackage{float}
 
 \AtEndDocument{%
   \bibliographystyle{unsrtnat}
@@ -55,7 +55,7 @@
 % Fonts
 \usepackage{fontspec}
 \usepackage[semibold,osf]{libertinus}
-\setmonofont[Scale=MatchLowercase]{Iosevka}
+\setmonofont[Scale=MatchLowercase]{Iosevka Slab}
 \usepackage[scr=boondoxo,cal=esstix]{mathalfa}
 \usepackage{bm} % Load after math font configuration
 
@@ -88,10 +88,11 @@
 }
 
 % Code highlighting
+\usepackage{textcomp}
+\usepackage{upquote}
 \usepackage[final]{minted}
 \setminted{%
   mathescape,
-  linenos,
   breaklines,
   fontsize=\small,
   baselinestretch=0.9,

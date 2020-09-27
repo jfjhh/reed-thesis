@@ -1,10 +1,8 @@
 PD = pandoc
 NBC = jupyter-nbconvert
-PYDIR = src
 TEXDIR = tex
 MINTED_FILTER = minted.py
-TEMPLATE = template.tex
-SUBDIRS = src tex
+SUBDIRS = tex
 CLEANDIRS = $(SUBDIRS:%=clean-%)
 DISTCLEANDIRS = $(SUBDIRS:%=distclean-%)
 
@@ -22,36 +20,17 @@ $(SUBDIRS): notebook
 	$(MAKE) -C $@
 
 .PHONY: notebook
-notebook: gensrc gentex
-
-.PHONY: gensrc
-gensrc: $(NOTEBOOKS:%=src/%.py)
-
-src/%.py: %.ipynb
-	$(NBC) \
-		--to python \
-		--no-prompt \
-		--output-dir=$(PYDIR) \
-		$<
+notebook: gentex
 
 .PHONY: gentex
 gentex: $(NOTEBOOKS:%=tex/%.tex)
 
 tex/%.tex: %.ipynb
+	# Implicity uses config file and template
 	$(NBC) \
-		--to markdown \
+		--to latex \
 		--output-dir=$(TEXDIR) \
 		$<
-	$(PD) \
-		$(TEXDIR)/$*.md \
-		-o $@ \
-		--template=$(TEMPLATE) \
-		-f markdown-implicit_figures \
-		-t latex \
-		--no-highlight \
-		--filter $(MINTED_FILTER) \
-		--verbose
-	rm -fv $(TEXDIR)/$*.md
 
 .PHONY: subdirs $(CLEANDIRS)
 .PHONY: clean

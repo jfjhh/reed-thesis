@@ -1,13 +1,10 @@
-ENTRIES = $(basename $(wildcard *.tex))
+NOTEBOOKS = $(basename $(wildcard *.tex))
 
 .PHONY: all
-all: notebook
+all: # None for building the thesis
 
-.PHONY: notebook
-notebook: entries
-
-.PHONY: entries
-entries: $(addsuffix .pdf, $(ENTRIES))
+.PHONY: notebooks
+notebooks: $(addsuffix .pdf, $(NOTEBOOKS))
 
 %.pdf: %.tex
 	latexmk $<
