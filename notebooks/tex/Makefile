@@ -16,7 +16,7 @@ clean:
 		&& latexmk -c \
 		|| true
 	rm -fv *.tex
-	rm -fv *.xdv
+	rm -fv *.xdv *.bbl *.brf
 	rm -rfv _minted-*
 
 .PHONY: distclean

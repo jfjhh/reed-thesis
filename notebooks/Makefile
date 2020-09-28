@@ -30,6 +30,7 @@ tex/%.tex: %.ipynb
 	$(NBC) \
 		--to latex \
 		--output-dir=$(TEXDIR) \
+		--TagRemovePreprocessor.remove_cell_tags='{"hide"}' \
 		$<
 
 .PHONY: subdirs $(CLEANDIRS)

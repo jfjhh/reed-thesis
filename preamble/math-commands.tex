@@ -1,0 +1,47 @@
+% Packages
+\usepackage{physics}
+\usepackage{siunitx}
+
+% Math commands
+
+\newcommand{\defeq}{\equiv}
+
+% Variant symbols
+\renewcommand\leq\leqslant%
+\renewcommand\geq\geqslant%
+\renewcommand\phi\varphi%
+\renewcommand\epsilon\varepsilon%
+
+% Common algebraic objects
+\newcommand\ZZ{\mathbb{Z}}
+\newcommand\QQ{\mathbb{Q}}
+\newcommand\CC{\mathbb{C}}
+\newcommand\RR{\mathbb{R}}
+
+% Named operations and special constants
+\newcommand\im{\mathrm{i}\mkern1mu}
+
+% Operators
+\newcommand\tp\otimes%
+\newcommand{\opr}[1]{\mathsf{#1}}%
+% \newcommand{\opr}[1]{\mathnormal{#1}}%
+\newcommand\idsopr{\idopr}
+\newcommand\idopr{\opr{I}}
+\newcommand\sopr\mathcal%
+\newcommand\herm{\operatorname{\mathrm{He}}}
+
+% Categories
+\newcommand\cat\mathsf%
+
+% Quantum mechanics
+\newcommand\hilb{\mathcal{H}}
+\newcommand\liou{\mathcal{L}}
+\newcommand\ham{\opr{H}}
+\newcommand\dop{\opr{ρ}}
+\newcommand\pauli{\opr{σ}}
+\newcommand\tprod\otimes%
+% \newcommand\lprod\ip%
+\newcommand\lprod[2]{\qty(#1,#2)}
+\newcommand\ensavg[2][\dop]{\ev{#2}_{\mkern-1.5mu{#1}}}
+\newcommand\sensavg[2][\dop]{\ev*{#2}_{\mkern-1.5mu{#1}}}
+

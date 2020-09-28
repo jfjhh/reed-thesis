@@ -1,5 +1,5 @@
 MAIN = thesis
-SUBDIRS = notebooks
+SUBDIRS = chapters notebooks
 CLEANDIRS = $(SUBDIRS:%=clean-%)
 DISTCLEANDIRS = $(SUBDIRS:%=distclean-%)
 

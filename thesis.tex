@@ -1,4 +1,4 @@
-\documentclass[12pt]{reedthesis}
+\documentclass[12pt,draft]{reedthesis}
 
 % Core packages
 \usepackage[intlimits]{mathtools} % Load before newtxmath
@@ -13,9 +13,6 @@
 \usepackage{subfiles}
 \newcommand{\notebook}[1]{\subfile{../notebooks/tex/#1}}
 
-\usepackage[Export]{adjustbox} % Note capital Export. Loads graphicx.
-\adjustboxset{max size={0.75\linewidth}{0.9\textheight}, center}
-\usepackage{float}
 
 \AtEndDocument{%
   \bibliographystyle{unsrtnat}
@@ -27,6 +24,8 @@
 \usepackage[final]{microtype}
 \usepackage{setspace} 
 \usepackage{booktabs}
+
+\usepackage[labelfont=bf]{caption}
 
 \usepackage{sectsty}
 \allsectionsfont{\normalfont\sffamily\liningnums}
@@ -46,11 +45,6 @@
 \usepackage{imakeidx}
 \makeindex
 \newcommand{\term}[1]{\index{#1}\textbf{#1}}
-
-% Graphics
-\usepackage{graphicx}
-% \usepackage[usenames,dvipsnames]{xcolor}
-% \usepackage{tikz}
 
 % Fonts
 \usepackage{fontspec}
@@ -100,14 +94,48 @@
 \setminted[wolfram]{style=mathematica}
 \ifoptionfinal{\setminted{style=bw}}{\setminted{style=friendly}}
 
+% Graphics
+\PassOptionsToPackage{final}{graphicx}
+\def\figwidth{0.9\linewidth}
+\usepackage{graphicx}
+\setkeys{Gin}{draft=false}
+% \usepackage{float}
+% \usepackage{tikz}
+
+\graphicspath{{figs/}}
+
 % Other
 \usepackage{kantlipsum}
-% \ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.95}}{}
+\ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.975}}{}
 
 % Reference management (order-sensitive)
 \usepackage[pdfusetitle,final,backref]{hyperref}
 \usepackage[all]{hypcap}
 \usepackage{cleveref}
+
+\usepackage{xstring}
+\IfEq{\jobname}{\detokenize{thesis}}{% Full document
+  % Nothing different
+  }{% In a subfile
+  % Looks like this must be after hyperref is loaded for \url to work.
+  \AtBeginDocument{%
+    \ifdraft{%
+      {%
+        \setlength{\parindent}{0pt}
+        \setlength{\parskip}{\baselineskip}
+        \Large
+
+        \textsf{\huge Document information}
+        \vspace{\baselineskip}
+
+        Alex Striff \\ \@date
+
+        Previous commit: \\
+        \input{HEAD.out}
+      }
+      }{}
+    }
+}
 
 \crefname{thm}{theorem}{theorems}
 \crefname{lem}{lemma}{lemmas}
@@ -124,59 +152,13 @@
 \urlstyle{same}
 \ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
 
-
-% Resources
-\graphicspath{{figs/}}
-
-
-% Math commands
-% Subscript text
-\newcommand*\sub[1]{\textit{#1}}
-
-\newcommand{\defeq}{\equiv}
-
-% Variant symbols
-\renewcommand\leq\leqslant%
-\renewcommand\geq\geqslant%
-\renewcommand\phi\varphi%
-\renewcommand\epsilon\varepsilon%
-
-% Common algebraic objects
-\newcommand\ZZ{\mathbb{Z}}
-\newcommand\QQ{\mathbb{Q}}
-\newcommand\CC{\mathbb{C}}
-\newcommand\RR{\mathbb{R}}
-
-% Named operations and special constants
-\newcommand\im{\mathrm{i}\mkern1mu}
-
-% Operators
-\newcommand\tp\otimes%
-\newcommand{\opr}[1]{\mathsf{#1}}%
-% \newcommand{\opr}[1]{\mathnormal{#1}}%
-\newcommand\idsopr{\idopr}
-\newcommand\idopr{\opr{I}}
-\newcommand\sopr\mathcal%
-\newcommand\herm{\operatorname{\mathrm{He}}}
-
-% Categories
-\newcommand\cat\mathsf%
-
-% Quantum mechanics
-\newcommand\hilb{\mathcal{H}}
-\newcommand\liou{\mathcal{L}}
-\newcommand\ham{\opr{H}}
-\newcommand\dop{\opr{ρ}}
-\newcommand\pauli{\opr{σ}}
-\newcommand\tprod\otimes%
-% \newcommand\lprod\ip%
-\newcommand\lprod[2]{\qty(#1,#2)}
-\newcommand\ensavg[2][\dop]{\ev{#2}_{\mkern-1.5mu{#1}}}
-\newcommand\sensavg[2][\dop]{\ev*{#2}_{\mkern-1.5mu{#1}}}
+% More preamble commands
+\input{preamble/math-commands}
+\input{preamble/ansi-colors}
 
 \title{\textbf{\large
     Toy Systems and Quantum Master Equations
-  }\ifdraft{\\\textsc{(Provisional Title) \textbf{Draft}}}{}
+  }\ifdraft{\\\textsc{(Provisional Title) \\ \textbf{Draft}}}{}
   }
 \author{Alex Striff}
 % The month and year that you submit your final draft to the library
@@ -207,11 +189,11 @@
 % \ifdraft{\setstretch{1.5}}{}
 
 \include{introduction}
-\subfile{dop-theory/main}
+\input{chapters/subfiles.txt}
 \include{conclusion}
 
 \appendix
-\include{appendix}
+\subfile{appendices/computer-details}
 
 \backmatter% Adds index and bibliography to TOC
 
