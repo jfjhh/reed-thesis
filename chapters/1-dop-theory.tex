@@ -33,7 +33,7 @@ Hilbert space $\hilb$.
 \begin{defn}[Liouville space]
   The space $\liou(\hilb)$ is the complex Hilbert space of operators $\opr{A}$
   on $\hilb$ for which the norm induced by the inner product
-  $\ip{\opr{A}}{\opr{B}} \defeq \tr(\opr{A}^\dag \opr{B})$ is finite.
+  $\lprod{\opr{A}}{\opr{B}} \defeq \tr(\opr{A}^\dag \opr{B})$ is finite.
 \end{defn}
 
 \begin{post}\label{post:ensemble}
@@ -132,38 +132,75 @@ should be the same:
   = \ensavg[\dop_A]{\opr{O}_A}.
   \label{eq:sameavg}
 \end{equation}
-Suppose that there is a map $\sopr{P}$ that sends $\dop$ to $\dop_A$. To see
-what this is, take an orthonormal complete basis $\qty{\opr{A}_i}$ of Hermitian
-operators for $\liou(\hilb_A)$ and $\qty{\opr{B}_k}$ for $\liou(\hilb_B)$, so
-the density operator may be expressed as
-\[
-  \dop
-  = \sum_{jk} \opr{A}_j\lprod{\opr{A}_j}{\dop}
-  \tprod \opr{B}_k\lprod{\opr{B}_k}{\dop}.
-\]
-We may then compute that (summing over repeated indices)
-\begin{align}
-  \sopr{P}\dop
-  &= \opr{A}_i\tr(\opr{A}_i\sopr{P}\dop) \\
-  &= \opr{A}_i\tr[\qty(\opr{A}_i \tprod \idopr)
-  \qty(\opr{A}_j\lprod{\opr{A}_j}{\dop} \tprod
-  \opr{B}_k\lprod{\opr{B}_k}{\dop})]
-  \qq{(by~\cref{eq:sameavg})} \\
-  &= \opr{A}_i\tr(\opr{A}_i\opr{A}_j\lprod{\opr{A}_j}{\dop})
-  \tr(\opr{B}_k\lprod{\opr{B}_k}{\dop}) \\
-  &= \opr{A}_i\lprod{\opr{A}_i}{\opr{A}_j\lprod{\opr{A}_j}{\dop}}
-  \tr(\opr{B}_k\lprod{\opr{B}_k}{\dop}) \\
-  &= \opr{A}_j\lprod{\opr{A}_j}{\dop}
-  \tr(\opr{B}_k\lprod{\opr{B}_k}{\dop}) \\
-  &\equiv \tr_B\qty(\opr{A}_j\lprod{\opr{A}_j}{\dop}
-  \tprod \opr{B}_k\lprod{\opr{B}_k}{\dop})
-  = \tr_B\dop
-  = \dop_A,
-\end{align}
-which is the \term{partial trace} defined by $\tr_B(\opr{A}_j \tprod \opr{B}_k)
-\equiv \opr{A}_j\tr\opr{B}_k$ and extending linearly.
 
-However, the reduction of the density operator by ``tracing over'' $B$ comes at
+To see what $\dop_A$ is, take an orthonormal complete basis $\qty{\opr{A}_j}$ of
+Hermitian operators for $\liou(\hilb_A)$ and $\qty{\opr{B}_k}$ for
+$\liou(\hilb_B)$, so the density operator may be expressed as
+\begin{equation}
+  \dop
+  = \sum_{jk}
+  \opr{A}_j \tprod \opr{B}_k
+  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}.
+  \label{eq:ptracedopdef}
+\end{equation}
+We may then compute that
+\begin{align}
+  \dop_A
+  &= \sum_i \opr{A}_i \lprod{\opr{A}_i}{\dop_A}
+  \\
+  &= \sum_i \opr{A}_i \lprod{\opr{A}_i \tprod \idopr}{\dop}
+  \byeq{eq:sameavg}
+  \\
+  &= \sum_i \opr{A}_i \lprod{\opr{A}_i \tprod \idopr}{%
+    \textstyle \sum_{jk}
+    \opr{A}_j \tprod \opr{B}_k
+    \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  }
+  \byeq{eq:ptracedopdef}
+  \\
+  &= \sum_{ijk}
+  \opr{A}_i \lprod{\opr{A}_i \tprod \idopr}{\opr{A}_j \tprod \opr{B}_k}
+  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \\
+  &= \sum_{ijk}
+  \opr{A}_i \lprod{\opr{A}_i}{\opr{A}_j}\lprod{\opr{B}_k}{\idopr}
+  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \\
+  &= \sum_{ijk}
+  \opr{A}_i \delta_{ij}\tr\opr{B}_k
+  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \\
+  &= \sum_{jk}
+  \opr{A}_j \tr\opr{B}_k
+  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}.
+  \label{eq:partialptrace}
+\end{align}
+\begin{defn}\label{def:ptrace}
+  At this point, it makes sense to define the \term{partial trace} by
+  \begin{equation}
+    \tr_B\qty(\opr{A} \tprod \opr{B})
+    = \opr{A} \tr\opr{B}
+    \label{eq:ptrace}
+  \end{equation}
+  and extending linearly.
+\end{defn}
+With this definition, we continue from \cref{eq:partialptrace} to find that
+\begin{align}
+  \dop_A
+  &= \sum_{jk}
+  \tr_B\qty(\opr{A}_j \tprod \opr{B}_k)
+  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \\
+  &= \tr_B\qty(\textstyle \sum_{jk}
+  \opr{A}_j \tprod \opr{B}_k
+  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop})
+  \\
+  &= \tr_B\dop.
+\end{align}
+Thus the reduced density matrix for system $A$ is obtained from the full density
+matrix by taking the partial trace over system $B$.
+
+However, the reduction of the density operator by ``tracing out'' $B$ comes at
 the cost of losing information about the correlation between $A$ and $B$.
 Quantitatively, the \term{relative entropy} between the correlated and
 uncorrelated density operators is
@@ -278,7 +315,7 @@ $\liou(\hilb_S)$ as $\opr{M}_{ij} = \sum_k \opr{F}_k
 \ip*{\opr{F}_k}{\opr{M}_{ij}}$. Then \cref{eq:krausrep} becomes
 \begin{equation}
   \dop(t)
-  = \sum_{mn} c_{mn}(t) \opr{F}_m\dop\opr{F}_n^\dag,
+  = \sum_{mn} c_{mn}(t) \opr{F}_m\dop(0)\opr{F}_n^\dag,
   \label{eq:Fintro}
 \end{equation}
 where
