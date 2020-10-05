@@ -90,7 +90,7 @@
 ((* set filename = filename | posix_path *))
 ((*- block figure scoped -*)) \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\figwidth]{((( filename )))}
+    \includegraphics{((( filename )))}
   \end{center}
   \caption{((( caption )))}\label{((( label )))}
 \end{figure} ((*- endblock figure -*))
@@ -102,7 +102,7 @@
 ((*- block figure_wide scoped -*))
 \begin{figure*}[H]
   \begin{center}
-    \includegraphics[width=\figwidth]{((( filename )))}
+    \includegraphics{((( filename )))}
     \caption{((( caption )))}\label{((( label )))}
   \end{center}
 \end{figure*}

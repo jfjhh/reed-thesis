@@ -16,10 +16,13 @@ subfiles: $(addsuffix .pdf, $(SUBFILES))
 
 .PHONY: HEAD.out
 HEAD.out:
-	echo "\url{https://github.com/jfjhh/reed-thesis/commit/`git rev-parse --short HEAD`}" > $@
+	echo 'Previous commit: ' > $@
+	git rev-list --format=%s --max-count=1 HEAD | tail -1 >> $@
+	echo '\\' >> $@
+	echo "\url{https://github.com/jfjhh/reed-thesis/commit/`git rev-parse --short HEAD`}" >> $@
 	echo '' >> $@
 	echo 'Current diff:' >> $@
-	echo '\vspace{-0.5\baselineskip}' >> $@
+	echo '\vspace{-\baselineskip}' >> $@
 	echo '\begin{minted}{text}' >> $@
 	git diff --stat --stat-width=80 HEAD >> $@
 	echo '\end{minted}' >> $@

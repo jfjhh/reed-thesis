@@ -10,6 +10,7 @@
 \usepackage[numbers]{natbib}
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
+\usepackage{xstring}
 \usepackage{subfiles}
 \newcommand{\notebook}[1]{\subfile{../notebooks/tex/#1}}
 
@@ -21,14 +22,23 @@
 }
 
 % Layout and styling
+\usepackage{etoolbox}
 \usepackage[final]{microtype}
 \usepackage{setspace} 
 \usepackage{booktabs}
+\usepackage{csquotes}
 
 \usepackage[labelfont=bf]{caption}
 
 \usepackage{sectsty}
 \allsectionsfont{\normalfont\sffamily\liningnums}
+\subsubsectionfont{\normalfont\large\sffamily\liningnums}
+
+\IfEq{\jobname}{\detokenize{thesis}}{% Full document
+  \usepackage[titles]{tocloft}
+  }{% In a subfile
+  \usepackage{tocloft}
+}
 
 \usepackage{amsthm}
 \theoremstyle{plain}
@@ -96,7 +106,7 @@
 
 % Graphics
 \PassOptionsToPackage{final}{graphicx}
-\def\figwidth{0.9\linewidth}
+\def\figwidth{\linewidth}
 \usepackage{graphicx}
 \setkeys{Gin}{draft=false}
 % \usepackage{float}
@@ -113,7 +123,6 @@
 \usepackage[all]{hypcap}
 \usepackage{cleveref}
 
-\usepackage{xstring}
 \IfEq{\jobname}{\detokenize{thesis}}{% Full document
   % Nothing different
   }{% In a subfile
@@ -123,15 +132,23 @@
       {%
         \setlength{\parindent}{0pt}
         \setlength{\parskip}{\baselineskip}
-        \Large
 
-        \textsf{\huge Document information}
-        \vspace{\baselineskip}
+        {\LARGE
+          \textsf{Document information}
+        }
 
         Alex Striff \\ \@date
 
-        Previous commit: \\
         \input{HEAD.out}
+
+        {\small
+          \let\clearpage\relax
+          \renewcommand{\cfttoctitlefont}{\Large\normalfont\liningnums}
+          \setlength{\cftbeforetoctitleskip}{0.5\baselineskip}
+          \setlength{\cftaftertoctitleskip}{0pt}
+          \renewcommand{\cftchapafterpnum}{}
+          \tableofcontents
+        }
       }
       }{}
     }
@@ -153,6 +170,7 @@
 \ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
 
 % More preamble commands
+\input{preamble/math-packages}
 \input{preamble/math-commands}
 \input{preamble/ansi-colors}
 
@@ -165,7 +183,7 @@
 % (May or December)
 \date{\ifoptionfinal{May 2021}{\today}}
 \division{Mathematics and Natural Sciences}
-\advisor{Advisor F. Name}
+\advisor{Darrell Schroeter}
 \department{Physics}
 
 \begin{document}
@@ -183,8 +201,8 @@
 \mainmatter%
 \pagestyle{fancyplain}
 \tableofcontents
-% \listoffigures
-% \listoftables
+\listoffigures
+\listoftables
 
 % \ifdraft{\setstretch{1.5}}{}
 

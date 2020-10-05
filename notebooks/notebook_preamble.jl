@@ -15,6 +15,7 @@ pgfplots();
 
 using PlotThemes
 theme(:vibrant,
+    size=(400, 300),
     dpi=300,
     titlefontsize=12,
     tickfontsize=12,
