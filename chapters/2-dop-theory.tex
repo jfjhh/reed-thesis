@@ -771,9 +771,320 @@ picture of decoherence a bit more clear.
   \]
 \end{thm}
 
-\notebook{closed-simulations}
+\section{The Born-Markov approximation for the Ising chain in a
+bath\label{sec:bm-ising}}
 
-\notebook{ising-diss}
+We consider the Hamiltonian (in natural units)
+\begin{align}
+  \ham
+  &= \qty(-J\sum_i \pauli_{zi}\pauli_{z(i+1)} - h\sum_i \pauli_{xi})
+  + \sum_{ik} \omega_{ik} \opr{a}_{ik}^\dag \opr{a}_{ik}
+  + \sum_{ik} C_k \qty(\opr{a}_{ik}^\dag + \opr{a}_{ik})\pauli_{zi} \\
+  &\equiv \ham_S \otimes \idopr + \idopr \otimes \ham_B + \ham_I.
+\end{align}
+The Schrodinger picture operators of the interaction Hamiltonian
+\begin{equation}
+  \ham_I
+  = \sum_i \opr{A}_i \tprod \opr{B}_i
+\end{equation}
+are
+\begin{align}
+  \opr{A}_i &= \pauli_{zi} \\
+  \opr{B}_i &= \sum_k C_k\qty(\opr{a}_{ik}^\dag + \opr{a}_{ik})
+  \equiv \sum_k \opr{B}_{ik}.
+\end{align}
+In the interaction picture,
+\begin{align}
+  \opr{A}_i(t)
+  &= \pauli_{zi} \\
+  \shortintertext{and}
+  \opr{B}_{ik}(t)
+  &= C_k \qty(e^{\im \omega_{ik} t} \opr{a}_{ik}^\dag
+  + e^{-\im \omega_{ik} t} \opr{a}_{ik}).
+\end{align}
+\begin{proof}
+  Consider an observable $\opr{A}$ which satisfies
+  \begin{align}
+    \comm{\ham}{\opr{A}} &= \omega\opr{A}
+  \end{align}
+  for a Hamiltonian $\ham$. Such an \term{eigenoperator} of $\ham$ has
+  \begin{align}
+    \ham^n\opr{A}
+    &= \ham^{n-1}\opr{A}\ham + \ham^{n-1}\comm{\ham}{\opr{A}} \\
+    &= \ham^{n-1}\opr{A}\qty(\ham + \omega\idopr) \\
+    &= \opr{A}{\qty(\ham + \omega\idopr)}^n.
+  \end{align}
+  Then
+  \begin{align}
+    e^{\ham} \opr{A}
+    &= \sum_{n \ge 0} \frac{\ham^n \opr{A}}{n!} \\
+    &= \opr{A} \sum_{n \ge 0} \frac{{\qty(\ham + \omega\idopr)}^n}{n!} \\
+    &= \opr{A} e^{\ham + \omega\idopr} \\
+    &= \opr{A} e^{\omega} e^{\ham}, \by{\textsc{bch}}
+  \end{align}
+  so the interaction picture operator is
+  \begin{align}
+    \opr{A}(t)
+  &= e^{\im\ham t} \opr{A} e^{-\im\ham t} \\
+  &= e^{\im\omega t} \opr{A} e^{\im\ham t}e^{-\im\ham t} \\
+  &= e^{\im\omega t} \opr{A}.
+  \end{align}
+  In our case, $\ham = \ham_B$ and we have the eigenoperators
+  \begin{alignat}{2}
+    \comm{\ham_B}{\opr{a}_{jl}}
+  &=
+  \sum_{ik} \comm{\opr{a}_{ik}^\dag\opr{a}_{ik}}{\opr{a}_{jl}}
+  && \by{definition of $\ham_B$}
+  \\
+  &= -\sum_{ik} \delta_{ij}\delta_{kl} \opr{a}_{jl}
+  && \by{commutation relations}
+  \\
+  &= -\opr{a}_{jl},
+  \end{alignat}
+  which follows from the commutation relations
+  \begin{align}
+    \comm{\opr{a}^\dag\opr{a}}{\opr{a}}
+  &= \opr{a}^\dag\opr{a}\opr{a} - \opr{a}\opr{a}^\dag \opr{a} \\
+  &=
+  \opr{a}^\dag\opr{a}\opr{a} - \opr{a}^\dag\opr{a} \opr{a} -
+  \opr{a}\comm{\opr{a}}{\opr{a}^\dag} \\
+  &= -\opr{a}
+  \\
+  \shortintertext{and}
+  \comm{\opr{a}^\dag\opr{a}}{\opr{a}^\dag}
+  &= \opr{a}^\dag\opr{a}\opr{a}^\dag - \opr{a}^\dag\opr{a}^\dag \opr{a} \\
+  &= \opr{a}^\dag\opr{a}\opr{a}^\dag - \opr{a}^\dag\opr{a}\opr{a}^\dag
+  - \opr{a}^\dag\comm{\opr{a}^\dag}{\opr{a}} \\
+  &= \opr{a}^\dag.
+  \qedhere
+  \end{align}
+\end{proof}
+
+For the Born-Markov approximation to hold, we must verify that
+\begin{enumerate}
+  \item $\tr_B\comm{\ham_I(t)}{\dop_0} = 0$, or also that
+    $0 = \ensavg[\dop_B^{(I)}(t)]{\opr{B}_{ik}(t)} =
+    \ensavg[\dop_B^{(S)}(t)]{\opr{B}_{ik}}$.
+  \item $\dop(t) \approx \dop_S(t) \tprod \dop_B$ (see~\cite[p.~131]{opensys}).
+  \item The reservoir correlation functions
+    $\ensavg[\dop_B^{(I)}(t)]{\opr{B}_{ik}^\dag(t)\opr{B}_{jl}(t-s)}$ decay
+    quickly over a time $\tau_B$ much less than the relaxation time $\tau_R$.
+\end{enumerate}
+Condition \textbf{1} is satisfied if the bath is in a thermal state, which we
+will also assume at $t = 0$ for condition \textbf{2}. The validity of \textbf{2}
+rests on \textbf{3}: we do not require that the bath is truly
+stationary, but only that it is approximately so on the coarser timescale of
+system evolution.
+
+In the thermal state
+\begin{equation}
+  \dop_\text{th}
+  = \frac{e^{-\beta\ham_B}}{\tr e^{-\beta\ham_B}},
+\end{equation}
+the reservoir correlation functions are
+\begin{align}
+  \ev{\opr{B}_{ik}^\dag(t)\opr{B}_{jl}(t-s)} 
+  &= \ev{\opr{B}_{ik}^\dag(s)\opr{B}_{jl}(0)} \\
+  &= \delta_{ij}\delta_{kl}C_k C_l \qty(
+  e^{-\im \omega_{ik} s}
+  \qty(n_B(\omega_{ik}) + 1)
+  +
+  e^{\im \omega_{ik} s}
+  n_B(\omega_{ik})
+  ).
+\end{align}
+\begin{proof}
+  We have that~\cite[p.~144]{opensys}
+  \begin{align}
+    \ev{\opr{a}_{ik}\opr{a}_{jl}}
+  &= 0 \\
+  \ev{\opr{a}_{ik}^\dag\opr{a}_{jl}^\dag}
+  &= 0 \\
+  \ev{\opr{a}_{ik}^\dag\opr{a}_{jl}}
+  &= \delta_{ij}\delta_{kl} \, n_B(\omega_{ik}) \\
+  \ev{\opr{a}_{ik}\opr{a}_{jl}^\dag}
+  &= \delta_{ij}\delta_{kl} \qty(n_B(\omega_{ik}) + 1),
+  \end{align}
+  where
+  \begin{equation}
+    n_B(\omega)
+    = \frac{1}{e^{\beta\omega} - 1}
+  \end{equation}
+  is the \term{Planck distribution}. We may then compute that
+  \begin{align}
+    &\ev{\opr{B}_{ik}^\dag(t)\opr{B}_{jl}(t-s)} \\
+    &= C_k C_l\ev{\qty(e^{-\im \omega_{ik} t} \opr{a}_{ik}
+      + e^{\im \omega_{ik} t} \opr{a}_{ik}^\dag)
+      \qty(e^{\im \omega_{jl} (t-s)} \opr{a}_{jl}^\dag + e^{-\im \omega_{jl}
+    (t-s)} \opr{a}_{jl})} \\
+    &= C_k C_l
+    \left(
+      e^{-\im \omega_{ik} t + \im \omega_{jl} (t-s)}
+      \ev{\opr{a}_{ik} \opr{a}_{jl}^\dag}
+      +
+      e^{-\im \omega_{ik} t - \im \omega_{jl} (t-s)}
+      \ev{\opr{a}_{ik} \opr{a}_{jl}}
+    \right. \\
+    &\mathrel{\phantom{=}}
+    + \left. e^{\im \omega_{ik} t + \im \omega_{jl} (t-s)}
+      \ev{\opr{a}_{ik}^\dag \opr{a}_{jl}^\dag}
+      +
+      e^{\im \omega_{ik} t - \im \omega_{jl} (t-s)}
+      \ev{\opr{a}_{ik}^\dag \opr{a}_{jl}}
+    \right). \\
+    &= \delta_{ij}\delta_{kl}C_k C_l \qty(
+    e^{-\im \omega_{ik} s}
+    \qty(n_B(\omega_{ik}) + 1)
+    +
+    e^{\im \omega_{ik} s}
+    n_B(\omega_{ik})
+    ).
+  \end{align}
+\end{proof}
+Thus the \term{spectral correlation tensor} is
+\begin{align}
+  \Gamma_{ij}(\omega)
+  &\equiv \sum_{kl} \int_0^\infty \dd{s} e^{\im\omega s}
+  \ensavg[\dop_B]{\opr{B}_{ik}^\dag(t)\opr{B}_{jl}(t-s)}
+  \\
+  &= \delta_{ij}\sum_k\int_0^\infty \dd{s} C_k^2 \qty(
+  e^{\im (\omega - \omega_{ik}) s}
+  \qty(n_B(\omega_{ik}) + 1)
+  +
+  e^{\im (\omega + \omega_{ik}) s}
+  n_B(\omega_{ik})
+  ) \\
+  &= \delta_{ij} \sum_k C_k^2
+  \qty(\pi\delta(\omega_{ik} - \omega) - \im\pv\frac{1}{\omega_{ik} - \omega})
+  \qty(n_B(\omega_{ik}) + 1) \\
+  &+
+  \qty(\pi\delta(-\omega_{ik} - \omega) + \im\pv\frac{1}{\omega_{ik} + \omega})
+  n_B(\omega_{ik}) \\
+  &\equiv \delta_{ij}\qty(\frac{\gamma(\omega)}{2} + \im S(\omega)),
+\end{align}
+where we have used that
+\begin{equation}
+  \int_0^\infty \dd{s} e^{-\im\omega s}
+  = \pi\delta(\omega) - \im\pv\frac{1}{\omega},
+\end{equation}
+and $\pv$ denotes the Cauchy principal value.
+We now take the continuum limit of a large 1\textsc{d} cavity (with $\omega =
+ck$)\footnote{We are assuming that there is only one mode per frequency per site
+in 1\textsc{d}, rather than that there may be many modes for a given frequency,
+as usual in 3\textsc{d}.}
+\begin{equation}
+  \sum_k
+  \mapsto \frac{L}{\pi}\int_0^\infty \dd{k}
+  = \frac{L}{\pi c}\int_0^\infty \dd{\omega}
+\end{equation}
+so that we have\footnote{Note that the Planck distribution satisfies
+$n_B(\omega) + 1 = -n_B(-\omega)$.}
+\begin{align}
+  \gamma(\omega)
+  &= \frac{2L}{c} {C(\omega)}^2 \qty(n_B(\omega) + 1) \\
+  \shortintertext{and}
+  S(\omega)
+  &= \pv\int_0^\infty \dd{\omega_k} \frac{L}{c} {C(\omega_k)}^2
+  \qty(\frac{n_B(\omega_{ik}) + 1}{\omega - \omega_{ik}}
+  + \frac{n_B(\omega_{ik})}{\omega + \omega_{ik}}).
+\end{align}
+Since the only eigenvalue of $\ham_S\angle$ is $\omega = 0$, we must require
+that
+\begin{equation}
+  \gamma(0)
+  = \lim_{\omega \to 0} \frac{2L}{c} {C(\omega)}^2 \qty(n_B(\omega) + 1)
+\end{equation}
+is finite. There are two relevant cases.
+
+If $C(\omega)$ initially grows faster than $\sqrt{\omega}$, then
+$\gamma(0) = 0$ and the jump operators vanish, leaving just the Lamb shift.
+We then evaluate
+\begin{align}
+  S(0)
+  &= \pv\int_0^\infty \dd{\omega_k} \frac{L}{c} {C(\omega_k)}^2
+  \qty(\frac{n_B(\omega_{ik}) + 1}{- \omega_{ik}}
+  + \frac{n_B(\omega_{ik})}{\omega_{ik}}) \\
+  &= -\frac{L}{c} \pv\int_0^\infty \dd{\omega_k} \frac{{C(\omega_k)}^2}{\omega_k}
+  \by{let $\omega_{ik} \coloneqq\omega_{k}$}
+\end{align}
+In this case, the exact form of $C(\omega_k)$ does not matter much. So long as it also
+goes to zero, $S(0)$ will take some constant negative value.
+
+If instead, $C(\omega) \propto \sqrt{\omega}$, then $\gamma(0)$ is finite. A
+common choice makes the \term{spectral density}
+\begin{align}
+  J(\omega)
+  &\equiv \frac{2\alpha}{\pi} \int_0^\infty \dd{\omega_k} {C(\omega_k)}^2
+  \delta(\omega - \omega_k) \\
+  &= \frac{2\alpha}{\pi} {C(\omega)}^2 \\
+  \shortintertext{be}
+  J(\omega)
+  &= \frac{2\alpha}{\pi}\frac{\omega}{1 + {(\omega/\Omega)}^2}.
+\end{align}
+This is known as the \term{Ohmic spectral density} with cutoff frequency
+$\Omega$, which gives rise to frequency-independent damping with a rate
+proportional to $\alpha$~\cite[p.~175]{opensys}. Then
+\begin{align}
+  S(0)
+  &= -\frac{2\alpha}{\pi}\pv\int_0^\infty \frac{\dd{\omega_k}}{1 +
+  {(\omega_k / \Omega)}^2} \\
+  &= -\frac{\Omega}{\alpha}.
+\end{align}
+Thus the Lamb shift Hamiltonian
+\[
+  \ham_{LS}
+  = \sum_{ij} \delta_{ij} S(0) \pauli_{zi} \pauli_{zj}
+  = -\frac{N\Omega}{\alpha}\idopr
+\]
+only shifts the energy of the chain. With an Ohmic bath, we find
+\begin{align}
+  \gamma(0)
+  &= \lim_{\omega \to 0} \frac{4\alpha L}{\pi c} \frac{\omega}{1 + {(\omega/\Omega)}^2}
+  \qty(n_B(\omega) + 1) \\
+  &= \frac{2L}{c} \frac{1}{\beta},
+\end{align}
+so the dissipator is
+\begin{equation}
+  \sopr{D} \dop_S
+  = \frac{4L}{\pi c}\frac{\alpha}{\beta}
+  \sum_i \qty(\pauli_{zi}\dop_S\pauli_{zi} - \dop_S).
+\end{equation}
+Thus neglecting the Lamb shift and $4L / \pi c$, we have that the system density
+matrix in the interaction picture obeys
+\begin{align}
+  \dot{\dop}_S(t)
+  &= \frac{\alpha}{\beta}
+  \sum_i \qty(\pauli_{zi}\dop_S(t)\pauli_{zi} - \dop_S(t)) \\
+  &= \frac{\alpha}{\beta}
+  \sum_i \comm{\pauli_{zi}}{\dop_S(t)}\pauli_{zi}.
+\end{align}
+The reduced density matrix entries for each site are then determined by the equations
+\begin{align}
+  \dot{\dop}_{00}
+  &= 0
+  \\
+  \dot{\dop}_{11}
+  &= 0
+  \\
+  \dot{\dop}_{01}
+  &= -\frac{2\alpha}{\beta} \dop_{01}
+  \\
+  \dot{\dop}_{01}
+  &= -\frac{2\alpha}{\beta} \dop_{10}.
+\end{align}
+\begin{proof}
+  If $\opr{A}\ket{a} = a\ket{a}$, then
+  \[
+    \opr{A} \angle \op{a}{b}
+    = (a - b)\op{a}{b},
+  \]
+  where the superoperator $\opr{A}\angle$ is defined by
+  $\opr{A}\mathbin{\angle}\opr{B} \equiv \comm{\opr{A}}{\opr{B}}$.
+\end{proof}
+
+% \notebook{closed-simulations}
+
+% \notebook{ising-diss}
 
 \end{document}
 

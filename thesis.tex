@@ -1,12 +1,21 @@
 \documentclass[12pt,draft]{reedthesis}
 
 % Core packages
-\usepackage[intlimits]{mathtools} % Load before newtxmath
+\usepackage[fleqn]{mathtools} % Load before newtxmath
 \mathtoolsset{%
   mathic,
 }
-\usepackage{physics}
-\usepackage{siunitx}
+% \newtagform{gray}{\color{gray}(}{)}
+% \usetagform{gray}
+\allowdisplaybreaks%
+
+\usepackage[%
+math-style=ISO,
+bold-style=ISO,
+sans-style=italic,
+nabla=upright,
+partial=upright,
+]{unicode-math}
 \usepackage[numbers]{natbib}
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
@@ -25,8 +34,11 @@
 \usepackage{etoolbox}
 \usepackage[final]{microtype}
 \usepackage{setspace} 
+\onehalfspacing%
 \usepackage{booktabs}
 \usepackage{csquotes}
+\usepackage{enumitem}
+\setlist[enumerate,1]{label=\textbf{\arabic*.}}
 
 \usepackage[labelfont=bf]{caption}
 
@@ -48,6 +60,36 @@
 \newtheorem{defn}{Definition}
 \newtheorem{post}{Postulate}
 
+% \usepackage{marginnote}
+% \renewcommand*{\marginfont}{\color{linkcolor}\small\sffamily}
+
+% \usepackage{wasysym}
+% \newcounter{prf}[chapter]
+% \newenvironment{prf}[1][]{%
+%   \begingroup%
+%   \stepcounter{prf}
+%   \marginnote{\textcolor{linkcolor}{\hypertarget{prf:end-\theprf}{\hyperlink{prf:\theprf}{\DOWNarrow}}}}
+%   }{%
+%   \marginnote{\textcolor{linkcolor}{\hypertarget{prf:\theprf}{\hyperlink{prf:end-\theprf}{\UParrow}}}}
+%   \addtocounter{prf}{-1}
+%   \endgroup%
+% }
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\tcolorboxenvironment{prf}{%
+  enhanced jigsaw,
+  breakable,
+  title={Proof},
+  fonttitle=\sffamily,
+}
+\tcolorboxenvironment{proof}{%
+  enhanced jigsaw,
+  breakable,
+  % title={Proof},
+  % fonttitle=\sffamily,
+}
+
 \ifdraft{\overfullrule=1mm}{}
 
 \setlength{\parskip}{0pt}
@@ -61,7 +103,6 @@
 \usepackage[semibold,osf]{libertinus}
 \setmonofont[Scale=MatchLowercase]{Iosevka Slab}
 \usepackage[scr=boondoxo,cal=esstix]{mathalfa}
-\usepackage{bm} % Load after math font configuration
 
 \usepackage{lettrine}
 % \usepackage{Zallman} % Even fancier
@@ -118,6 +159,11 @@
 \usepackage{kantlipsum}
 \ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.975}}{}
 
+% More preamble commands, separated for reuse by notebooks
+\input{preamble/math-packages}
+\input{preamble/math-commands}
+\input{preamble/ansi-colors}
+
 % Reference management (order-sensitive)
 \usepackage[pdfusetitle,final,backref]{hyperref}
 \usepackage[all]{hypcap}
@@ -159,7 +205,7 @@
 \crefname{defn}{definition}{definitions}
 \crefname{post}{postulate}{postulates}
 
-\usepackage{autonum}
+\ifdraft{}{\usepackage{autonum}}
 
 \definecolor{linkcolor}{rgb}{0.0,0.25,0.5}
 \hypersetup{%
@@ -168,11 +214,6 @@
 }
 \urlstyle{same}
 \ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
-
-% More preamble commands
-\input{preamble/math-packages}
-\input{preamble/math-commands}
-\input{preamble/ansi-colors}
 
 \title{\textbf{\large
     Toy Systems and Quantum Master Equations
