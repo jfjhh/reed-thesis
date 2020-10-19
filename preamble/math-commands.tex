@@ -23,7 +23,7 @@
 
 % Operators
 \newcommand\tp\otimes%
-\newcommand{\opr}[1]{\symsf{#1}}%
+\newcommand\opr\symsf%
 % \newcommand{\opr}[1]{\mathnormal{#1}}%
 \newcommand\idsopr{\idopr}
 \newcommand\idopr{\opr{I}}
@@ -32,7 +32,12 @@
 \newcommand\sgn{\operatorname{\mathrm{sgn}}}
 
 % Categories
-\newcommand\cat\mathsf%
+\newcommand\cat\symsf%
+
+% Linear algebra
+\newcommand\vq[1]{\symbf{#1}}
+\newcommand\mq[1]{\symbf{#1}}
+\newcommand\trans{{\symsfup{T}}} % this is the one case when we want it upright
 
 % Quantum mechanics
 \newcommand\hilb{\mathcal{H}}

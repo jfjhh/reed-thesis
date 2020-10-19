@@ -122,14 +122,14 @@ on to considering the more general dynamics of interacting quantum systems.
 
 Consider two quantum systems in Hilbert spaces $\hilb_A$ and $\hilb_B$. 
 The Hilbert space of the composite system is the \term{tensor product}
-$\hilb = \hilb_A \tprod \hilb_B$ (\cref{def:tensors}). How might a density operator $\dop$ for the
+$\hilb = \hilb_A \tp \hilb_B$ (\cref{def:tensors}). How might a density operator $\dop$ for the
 composite system admit a \term{reduced density operator} $\dop_A$ for system $A$?
 Consider an observable $\opr{O}$ of system $A$, for which the corresponding
-composite observable is $\opr{O} \tprod \idopr$. Regardless of the
+composite observable is $\opr{O} \tp \idopr$. Regardless of the
 representation (composite or subsystem), the ensemble average of $\opr{O}$
 should be the same:
 \begin{equation}
-  \ensavg{\opr{O}_A \tprod \idopr}
+  \ensavg{\opr{O}_A \tp \idopr}
   = \ensavg[\dop_A]{\opr{O}_A}.
   \label{eq:sameavg}
 \end{equation}
@@ -140,8 +140,8 @@ $\liou(\hilb_B)$, so the density operator may be expressed as
 \begin{equation}
   \dop
   = \sum_{jk}
-  \opr{A}_j \tprod \opr{B}_k
-  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}.
+  \opr{A}_j \tp \opr{B}_k
+  \lprod{\opr{A}_j \tp \opr{B}_k}{\dop}.
   \label{eq:ptracedopdef}
 \end{equation}
 We may then compute that
@@ -149,37 +149,37 @@ We may then compute that
   \dop_A
   &= \sum_i \opr{A}_i \lprod{\opr{A}_i}{\dop_A}
   \\
-  &= \sum_i \opr{A}_i \lprod{\opr{A}_i \tprod \idopr}{\dop}
+  &= \sum_i \opr{A}_i \lprod{\opr{A}_i \tp \idopr}{\dop}
   \byeq{eq:sameavg}
   \\
-  &= \sum_i \opr{A}_i \lprod{\opr{A}_i \tprod \idopr}{%
+  &= \sum_i \opr{A}_i \lprod{\opr{A}_i \tp \idopr}{%
     \textstyle \sum_{jk}
-    \opr{A}_j \tprod \opr{B}_k
-    \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+    \opr{A}_j \tp \opr{B}_k
+    \lprod{\opr{A}_j \tp \opr{B}_k}{\dop}
   }
   \byeq{eq:ptracedopdef}
   \\
   &= \sum_{ijk}
-  \opr{A}_i \lprod{\opr{A}_i \tprod \idopr}{\opr{A}_j \tprod \opr{B}_k}
-  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \opr{A}_i \lprod{\opr{A}_i \tp \idopr}{\opr{A}_j \tp \opr{B}_k}
+  \lprod{\opr{A}_j \tp \opr{B}_k}{\dop}
   \\
   &= \sum_{ijk}
   \opr{A}_i \lprod{\opr{A}_i}{\opr{A}_j}\lprod{\opr{B}_k}{\idopr}
-  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \lprod{\opr{A}_j \tp \opr{B}_k}{\dop}
   \\
   &= \sum_{ijk}
   \opr{A}_i \delta_{ij}\tr\opr{B}_k
-  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \lprod{\opr{A}_j \tp \opr{B}_k}{\dop}
   \\
   &= \sum_{jk}
   \opr{A}_j \tr\opr{B}_k
-  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}.
+  \lprod{\opr{A}_j \tp \opr{B}_k}{\dop}.
   \label{eq:partialptrace}
 \end{align}
 \begin{defn}\label{def:ptrace}
   At this point, it makes sense to define the \term{partial trace} by
   \begin{equation}
-    \tr_B\qty(\opr{A} \tprod \opr{B})
+    \tr_B\qty(\opr{A} \tp \opr{B})
     = \opr{A} \tr\opr{B}
     \label{eq:ptrace}
   \end{equation}
@@ -189,12 +189,12 @@ With this definition, we continue from \cref{eq:partialptrace} to find that
 \begin{align}
   \dop_A
   &= \sum_{jk}
-  \tr_B\qty(\opr{A}_j \tprod \opr{B}_k)
-  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop}
+  \tr_B\qty(\opr{A}_j \tp \opr{B}_k)
+  \lprod{\opr{A}_j \tp \opr{B}_k}{\dop}
   \\
   &= \tr_B\qty(\textstyle \sum_{jk}
-  \opr{A}_j \tprod \opr{B}_k
-  \lprod{\opr{A}_j \tprod \opr{B}_k}{\dop})
+  \opr{A}_j \tp \opr{B}_k
+  \lprod{\opr{A}_j \tp \opr{B}_k}{\dop})
   \\
   &= \tr_B\dop.
 \end{align}
@@ -206,11 +206,11 @@ the cost of losing information about the correlation between $A$ and $B$.
 Quantitatively, the \term{relative entropy} between the correlated and
 uncorrelated density operators is
 \begin{align}
-  &S(\dop \| \dop_A \tprod \dop_B) \\
-  &\equiv \tr\dop(\ln\dop - \ln(\dop_A \tprod \dop_B)) \\
+  &S(\dop \| \dop_A \tp \dop_B) \\
+  &\equiv \tr\dop(\ln\dop - \ln(\dop_A \tp \dop_B)) \\
   &= \tr(\dop\ln\dop)
-  - \tr_A\tr_B\qty(\dop\ln(\dop_A \tprod \idopr))
-  - \tr_B\tr_A\qty(\dop\ln(\idopr \tprod \dop_B)) \\
+  - \tr_A\tr_B\qty(\dop\ln(\dop_A \tp \idopr))
+  - \tr_B\tr_A\qty(\dop\ln(\idopr \tp \dop_B)) \\
   &= S(\dop_A) + S(\dop_B) - S(\dop).
   \label{eq:relentropy}
 \end{align}
@@ -221,7 +221,7 @@ non-negative (\cref{thm:klein}), we have that
   \leq S(\dop_A) + S(\dop_B),
   \label{eq:infoloss}
 \end{equation}
-with equality when $\dop = \dop_A \tprod \dop_B$. Other expected properties
+with equality when $\dop = \dop_A \tp \dop_B$. Other expected properties
 hold, such as that the relative entropy is invariant under unitary
 transformations (\cref{thm:relSunitary}), or that the relative entropy
 between subsystems is less than that between combined systems
@@ -232,19 +232,19 @@ in contact with an \term{environment} system $B$. We suppose that the composite
 system has a Hamiltonian of the form
 \begin{equation}
   \ham_{SB}(t)
-  = \ham_S \tprod \idopr
-  + \idopr \tprod \ham_B
+  = \ham_S \tp \idopr
+  + \idopr \tp \ham_B
   + \ham_I(t)
   \label{eq:fullham}
 \end{equation}
 and that the environment is in equilibrium, so the composite density operator is
-$\dop(t) = \dop_S(t) \tprod \dop_B$. In terms of the unitary time-evolution
+$\dop(t) = \dop_S(t) \tp \dop_B$. In terms of the unitary time-evolution
 operator $\opr{U}(t)$ for the system, \cref{eq:liouville} becomes $\dop(t) =
 \opr{U}(t)\dop(0)\opr{U}^\dag(t)$. Taking the partial trace over the environment
 gives the time-evolved system density operator
 \begin{equation}
   \dop_S(t)
-  = \tr_B\qty(\opr{U}(t)\qty(\dop_S(0) \tprod \dop_B)\opr{U}^\dag(t)).
+  = \tr_B\qty(\opr{U}(t)\qty(\dop_S(0) \tp \dop_B)\opr{U}^\dag(t)).
   \label{eq:evolveddop}
 \end{equation}
 
@@ -253,7 +253,7 @@ Whatever \cref{eq:evolveddop} evaluates to, it will be an example of a
 $\dop_S(t) = \sopr{V}(t)\dop_S(0)$. While $\sopr{V}(t)$ seems abstract, we know
 it should output a density operator. Then for $\sopr{V}(t)$ to be a valid map on
 system density operators, it should \emph{preserve the trace} of the input
-density operator. In fact, as a valid map $\sopr{V}(t) \tprod \idsopr$ on the
+density operator. In fact, as a valid map $\sopr{V}(t) \tp \idsopr$ on the
 composite system, the composite density operator should remain positive. This
 property of $\sopr{V}(t)$ is called \term{complete positivity}. Thus the valid
 maps on system density operators are \term{completely positive and
@@ -277,9 +277,9 @@ $\dop(t)$ and an equilibrium ensemble $\dop_0$ cannot decrease
 (by \cref{eq:evolveddop} and theorems \cref{thm:relSunitary,thm:relSsubsys}):
 \begin{align}
   S\qty(\sopr{V}(t)\dop \| \sopr{V}(t)\dop_0)
-  &= S\qty(\tr_B\qty[\opr{U}(t)\qty(\dop \tprod \dop_B)\opr{U}^\dag(t)] \| \dop_0) \\
-  &\leq S\qty(\opr{U}(t)\qty(\dop \tprod \dop_B)\opr{U}^\dag(t) \| \dop_0 \tprod \dop_B) \\
-  &= S\qty(\dop \tprod \dop_B \| \dop_0 \tprod \dop_B) \\
+  &= S\qty(\tr_B\qty[\opr{U}(t)\qty(\dop \tp \dop_B)\opr{U}^\dag(t)] \| \dop_0) \\
+  &\leq S\qty(\opr{U}(t)\qty(\dop \tp \dop_B)\opr{U}^\dag(t) \| \dop_0 \tp \dop_B) \\
+  &= S\qty(\dop \tp \dop_B \| \dop_0 \tp \dop_B) \\
   &= S\qty(\dop \| \dop_0).
 \end{align}
 
@@ -299,7 +299,7 @@ orthonormal vectors $\phi_j \in \hilb_B$, where $\sum_j\lambda_j = 1$.
 Then \cref{eq:evolveddop} becomes (writing $\dop_S$ as $\dop$)
 \begin{align}
   \dop(t)
-  &= \sum_{ij} \mel{\phi_i}{\opr{U}(t)\qty(\dop(0) \tprod
+  &= \sum_{ij} \mel{\phi_i}{\opr{U}(t)\qty(\dop(0) \tp
   \lambda_j\op*{\phi_j}{\phi_j})\opr{U}^\dag(t)}{\phi_i}
   \label{eq:krauspre} \\
   &= \sum_{ij} \lambda_j\mel{\phi_i}{\opr{U}(t)}{\phi_j}\dop(0)
@@ -431,7 +431,7 @@ We start by expressing the interaction Hamiltonian in terms of Hermitian
 operators as
 \[
   \ham_I
-  = \sum_\alpha \opr{A}_\alpha \tprod \opr{B}_\alpha.
+  = \sum_\alpha \opr{A}_\alpha \tp \opr{B}_\alpha.
 \]
 We suppose that the system in isolation would have \emph{discrete} energy
 levels, so the eigenoperators of the superoperator $\sopr{S} = \comm{\ham_S}{-}$
@@ -449,7 +449,7 @@ is
 \begin{equation}
   \ham_I'
   = \sum_{\alpha\omega} e^{-\im\omega t} \opr{A}_{\alpha\omega}
-  \tprod \opr{B}_\alpha',
+  \tp \opr{B}_\alpha',
   \label{eq:inthamdecomp}
 \end{equation}
 where $\opr{B}_\alpha'(t) = e^{-\ham_B t/\im\hbar} \opr{B}_\alpha e^{\ham_B t/
@@ -493,7 +493,7 @@ closed equation
 \[
   \dot{\dop}_S(t)
   = -\int_0^t \dd{s}
-  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(s)}{\dop_S(s) \tprod \dop_B}}
+  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(s)}{\dop_S(s) \tp \dop_B}}
 \]
 for the system density operator. In doing so we have made two assumptions: that
 \[
@@ -503,7 +503,7 @@ for the system density operator. In doing so we have made two assumptions: that
 which is the \term{weak-coupling approximation}, and that
 \[
   \dop(t)
-  = \dop_S(t) \tprod \dop_B,
+  = \dop_S(t) \tp \dop_B,
 \]
 which is the \term{Born approximation}. It should be noted that weak-coupling
 follows if the reservoir averages of the interactions vanish:
@@ -516,7 +516,7 @@ that the time-evolution only depends on the present time, to obtain the
 \begin{equation}
   \dot{\dop}_S
   = -\int_0^\infty \dd{s}
-  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(t - s)}{\dop_S(t) \tprod \dop_B}}.
+  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(t - s)}{\dop_S(t) \tp \dop_B}}.
   \label{eq:infbornmarkov}
 \end{equation}
 This is justified when the reservoir correlation functions
@@ -684,18 +684,18 @@ picture of decoherence a bit more clear.
 
 \begin{defn}[Tensor product]\label{def:tensors}
   Consider vector spaces $V(k)$, $W(k)$, and $Z$. For any bilinear map $h:V
-  \times W \to Z$, the \term{tensor product} $V \tprod W$ and associated
-  bilinear map $\phi:V \times W \to V \tprod W$ map have the property that there
-  is a unique bilinear map $g:V \tprod W \to Z$ such that $h = g \circ \phi$.
+  \times W \to Z$, the \term{tensor product} $V \tp W$ and associated
+  bilinear map $\phi:V \times W \to V \tp W$ map have the property that there
+  is a unique bilinear map $g:V \tp W \to Z$ such that $h = g \circ \phi$.
   For tensor products of Hilbert spaces, the inner product is defined on each
   element of a product and then the space is completed. There is then a natural
-  correspondence between the element $v \tprod f$ of the tensor product $V
-  \tprod V^*$ and the linear map $T:V \to V$ defined by $Tx = f(x)v$.
+  correspondence between the element $v \tp f$ of the tensor product $V
+  \tp V^*$ and the linear map $T:V \to V$ defined by $Tx = f(x)v$.
 
-  This induces an extension of Dirac notation where all pairs $f \tprod x$ of
+  This induces an extension of Dirac notation where all pairs $f \tp x$ of
   dual and usual vectors from the same space are evaluated as $\ip{f}{x} = f(x)$
-  and extended linearly. For example, given a linear operator $\opr{U}:V \tprod
-  W \to V \tprod W$ and a basis $\ket{\phi_i}$ for $W$, the partial trace over
+  and extended linearly. For example, given a linear operator $\opr{U}:V \tp
+  W \to V \tp W$ and a basis $\ket{\phi_i}$ for $W$, the partial trace over
   $W$ may be expressed as $\tr_W\opr{U} = \ev{\opr{U}}{\phi_i}$. This forms the
   justification of the step from \cref{eq:krauspre} to \cref{eq:krauspost} and
   of the manipulations in \cref{thm:kraus}.
@@ -780,12 +780,12 @@ We consider the Hamiltonian (in natural units)
   &= \qty(-J\sum_i \pauli_{zi}\pauli_{z(i+1)} - h\sum_i \pauli_{xi})
   + \sum_{ik} \omega_{ik} \opr{a}_{ik}^\dag \opr{a}_{ik}
   + \sum_{ik} C_k \qty(\opr{a}_{ik}^\dag + \opr{a}_{ik})\pauli_{zi} \\
-  &\equiv \ham_S \otimes \idopr + \idopr \otimes \ham_B + \ham_I.
+  &\equiv \ham_S \tp \idopr + \idopr \tp \ham_B + \ham_I.
 \end{align}
 The Schrodinger picture operators of the interaction Hamiltonian
 \begin{equation}
   \ham_I
-  = \sum_i \opr{A}_i \tprod \opr{B}_i
+  = \sum_i \opr{A}_i \tp \opr{B}_i
 \end{equation}
 are
 \begin{align}
@@ -865,7 +865,7 @@ For the Born-Markov approximation to hold, we must verify that
   \item $\tr_B\comm{\ham_I(t)}{\dop_0} = 0$, or also that
     $0 = \ensavg[\dop_B^{(I)}(t)]{\opr{B}_{ik}(t)} =
     \ensavg[\dop_B^{(S)}(t)]{\opr{B}_{ik}}$.
-  \item $\dop(t) \approx \dop_S(t) \tprod \dop_B$ (see~\cite[p.~131]{opensys}).
+  \item $\dop(t) \approx \dop_S(t) \tp \dop_B$ (see~\cite[p.~131]{opensys}).
   \item The reservoir correlation functions
     $\ensavg[\dop_B^{(I)}(t)]{\opr{B}_{ik}^\dag(t)\opr{B}_{jl}(t-s)}$ decay
     quickly over a time $\tau_B$ much less than the relaxation time $\tau_R$.
@@ -1081,6 +1081,59 @@ The reduced density matrix entries for each site are then determined by the equa
   where the superoperator $\opr{A}\angle$ is defined by
   $\opr{A}\mathbin{\angle}\opr{B} \equiv \comm{\opr{A}}{\opr{B}}$.
 \end{proof}
+
+\section{Solving eigenoperator problems in coordinates}
+
+Given a complete basis $\opr{A}_i$ for $\liou(\hilb_A)$ and the Hamiltonian
+\begin{equation}
+  \ham
+  = \sum_i h_i \opr{A}_i,
+\end{equation}
+we want to find eigenoperators
+\begin{equation}
+  \opr{A}
+  = \sum_j a_j \opr{A}_j,
+\end{equation}
+of $\ham\angle$. If 
+\begin{align}
+  \comm{\opr{A}_i}{\opr{A}_j}
+  &= \sum_k s_{ijk} \opr{A}_k \\
+  s_{ijk}
+  &= \ip{\comm{\opr{A}_i}{\opr{A}_j}}{\opr{A}_k},
+\end{align}
+then the eigenvalue equation is
+\begin{align}
+  \comm{\ham}{\opr{A}}
+  &= \omega\opr{A} \\
+  \sum_{ijk} h_i a_j s_{ijk} \opr{A}_k
+  &= \sum_{j} \omega a_j \opr{A}_j \\
+  \sum_{jk} S_{jk} a_j  \opr{A}_k
+  &= \sum_{j} \omega a_j \opr{A}_j,
+\end{align}
+where the matrix $\mq{S}$ has coefficients
+\begin{equation}
+  S_{jk}
+  = \sum_i h_i s_{ijk}
+  = \mel{\opr{A}_j}{\ham\angle}{\opr{A}_k}.
+\end{equation}
+Thus eigenoperators may be found by solving the ordinary eigenvalue problem
+\begin{equation}
+  \mq{S}^\trans \vq{a} = \omega \vq{a}.
+\end{equation}
+
+\subsection{Fermions}
+
+For example, consider the basis
+\begin{equation}
+  \idopr
+  \qc
+  \opr{c}
+  \qc
+  \opr{c}^\dag,
+  \qand
+  \opr{c}^\dag\opr{c}
+\end{equation}
+on fermionic Fock states.
 
 % \notebook{closed-simulations}
 
