@@ -1,0 +1,562 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+
+\chapter{The Ising model as an open quantum system}
+
+\section{Solution of the transverse Ising model}
+
+We consider the Hamiltonian
+\begin{equation}
+  \ham
+  = -\sum_{i \in \ZZ_N} \pauli_i^x\pauli_{i+1}^x
+  + \lambda\sum_{i \in \ZZ_N} \pauli_i^z
+  \label{eq:transham}
+\end{equation}
+for the periodic transverse Ising chain with $N$ spins. We notice that the
+operators
+\begin{equation}
+  \pauli_i^\pm
+  = \frac{\pauli_i^x \pm \im\pauli_i^y}{2}
+  \label{eq:paulipm}
+\end{equation}
+satisfy
+\begin{equation}
+  \pauli_i^z
+  = 2\pauli_i^+\pauli_i^- - \idopr
+\end{equation}
+and have commutators
+\begin{align}
+  \comm{\pauli_i^+}{\pauli_j^-}
+  &= \frac{1}{4}\comm{\pauli_i^x + \im\pauli_i^y}{\pauli_j^x - \im\pauli_j^y} \\
+  &= \frac{1}{4} \qty(%
+  \comm{\pauli_i^x}{\pauli_j^x} + \comm{\pauli_i^y}{\pauli_j^y}
+  + \im\comm{\pauli_i^y}{\pauli_j^x}
+  - \im\comm{\pauli_i^x}{\pauli_j^y}
+  ) \\
+  &= \delta_{ij}\pauli_i^z.
+\end{align}
+Thus their anticommutators are
+\begin{align}
+  \acomm{\pauli_i^+}{\pauli_j^-}
+  &= 2\pauli_i^+\pauli_j^- - \comm{\pauli_i^+}{\pauli_j^-} \\
+  &= 2\pauli_i^+\pauli_j^- - \delta_{ij}\pauli_i^z \\
+  &= \delta_{ij}\idopr + 2\pauli_i^+\pauli_j^- (1 - \delta_{ij}).
+\end{align}
+It could be helpful to think of the $\pauli_i^\pm$ as fermion creation and
+annihilation operators, but they do not anticommute at different sites.
+
+How might we construct operators that satisfy the fermionic canonical
+anticommutation relations (CAR) from the Pauli operators? Suppose we have such
+operators $\opr{c}_i$. Given a tuple $\tq{n} = {\qty(n_i)}_{i\in\ZZ_N}$, we have the
+corresponding states
+\begin{equation}
+  \ket{\tq{n}}
+  = \prod_{i\in\ZZ_N} {\qty(\opr{c}_i^\dag)}^{n_i} \ket{\tq{0}},
+\end{equation}
+where $\ket{\tq{0}}$ denotes the vacuum state. It then follows that
+\begin{align}
+  \opr{c}_i\ket{\tq{n}}
+  &= -{(-1)}^{n_{<i}}\ket{\tq{n}_{i \leftarrow 0}}, 
+  \label{eq:car-action} \\
+  \shortintertext{where}
+  \tq{n}_{i \leftarrow 0}
+  &= \tq{n} \qq{with} n_i = 0 \\
+  n_{<i}
+  &= \sum_{j < i} n_j.
+\end{align}
+\begin{proof}
+  TODO:\@
+  Show that operators defined by \cref{eq:car-action} satisfy the CARs and
+  vice-versa.
+\end{proof}
+Then consider
+\begin{align}
+  \opr{c}_i
+  = -\qty(\prod_{j<i} -\pauli_j^z) \pauli_j^-
+\end{align}
+acting on the states
+\begin{equation}
+  \ket{\tq{n}}
+  = \prod_{i \in \ZZ_N} {\qty(\pauli_i^+)}^{n_i} \ket{\tq{0}},
+\end{equation}
+where $\ket{\tq{0}} = \ket{\downarrow}^{\tp N}$ is the state with all $z$-spins down.
+This gives the same result as \cref{eq:car-action}, so the $\opr{c}_i$ satisfy
+the CARs.
+This change from spin-1/2 sites to (non-local) fermions is known as the
+\term{Jordan-Wigner transformation}.
+We may then compute that the inverse transformations are
+\begin{align}
+  \pauli_i^+\pauli_i^-
+  &= \opr{c}_i^\dag\opr{c}_i \\
+  \pauli_i^z
+  &= 2\opr{c}_i^\dag\opr{c}_i - \idopr \\
+  \pauli_i^x
+  &= -\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  \qty(\opr{c}_i^\dag + \opr{c}_i) \\
+  \pauli_i^y
+  &= \im\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  \qty(\opr{c}_i^\dag - \opr{c}_i).
+\end{align}
+While $\pauli_i^x$ remains complicated, the product $\pauli_i^x\pauli_{i+1}^x$
+does not:
+\begin{align}
+  \pauli_i^x \pauli_{i+1}^x
+  &= \qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  \qty(\opr{c}_i^\dag + \opr{c}_i)
+  \qty(\prod_{j<i+1} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}) \\
+  &= \qty(\opr{c}_i^\dag + \opr{c}_i)
+  \qty(\idopr - 2\opr{c}_i^\dag\opr{c}_i)
+  \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}) \\
+  &= \qty(\opr{c}_i^\dag - \opr{c}_i) \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}).
+  \label{eq:paulixx}
+\end{align}
+
+We may now perform the Jordan-Wigner transformation of \cref{eq:transham} to
+obtain\todo[inline]{Where is the boundary term in Pfeuty~(2.4)? I think it is
+gone since I have defined the $\opr{c}_i$ for $i \in \ZZ_N$, so that $\opr{c}_N$
+is automatically correct and you do not need to add a correction term due to
+applying the Jordan-Wigner transform with $i = N \in \ZZ$?}
+\begin{align}
+  \ham
+  &= \sum_i \qty(\opr{c}_i - \opr{c}_i^\dag) \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1})
+  + \lambda\sum_i 2\opr{c}_i^\dag\opr{c}_i
+  - \lambda N \idopr.
+  \label{eq:cham}
+\end{align}
+We now Fourier transform with
+\begin{align}
+  \opr{c}_i
+  &= \frac{1}{\sqrt{N}}\sum_k e^{\im ki} \opr{C}_k \\
+  \shortintertext{and}
+  \opr{c}_i^\dag
+  &= \frac{1}{\sqrt{N}}\sum_k e^{-\im ki} \opr{C}_k^\dag,
+  \shortintertext{where}
+  k
+  &= \frac{2\pi n}{N} - \frac{N - 1}{N}\pi \qc
+  n \in \ZZ_N.
+\end{align}
+Now since
+\begin{equation}
+  \sum_{i\in\ZZ_N} e^{\im(k' - k) i}
+  = \delta_{kk'},
+\end{equation}
+and also
+\begin{align}
+  \opr{C}_{-k}
+  &= \frac{1}{\sqrt{N}} \sum_i e^{-\im (-k)i} \opr{c}_i \\
+  &= \frac{1}{N}\sum_{ik'} e^{\im (k' + k)i} \opr{C}_{k'}
+\end{align}
+we have that
+\begin{align}
+  \sum_i \opr{c}_i^\dag\opr{c}_i
+  &= \frac{1}{N}\sum_{ikk'} e^{\im (k' - k)i}
+  \opr{C}_k^\dag \opr{C}_{k'} \\
+  &= \sum_k \opr{C}_k^\dag \opr{C}_k,
+  \\
+  \sum_i \qty(\opr{c}_i^\dag\opr{c}_{i+1} + \opr{c}_{i+1}^\dag\opr{c}_i)
+  &= \frac{1}{N}\sum_{ikk'} e^{\im (k' - k)i} \qty(%
+  e^{\im k'} + e^{-\im k} 
+  ) \opr{C}_k^\dag \opr{C}_{k'} \\
+  &= \sum_k 2 \cos k\; \opr{C}_k^\dag \opr{C}_k,
+  \\
+  \sum_i \qty(\opr{c}_{i+1}\opr{c}_i + \opr{c}_i^\dag\opr{c}_{i+1}^\dag)
+  &= \frac{1}{N}\sum_{ikk'} \qty(%
+  e^{\im (k' + k)i} e^{\im k} \opr{C}_{k}\opr{C}_{k'}
+  + e^{-\im (k' + k)i} e^{-\im k'} \opr{C}_{k}^\dag\opr{C}_{k'}^\dag
+  ) \\
+  &= \sum_k \qty(%
+  e^{-\im k} \opr{C}_{-k} \opr{C}_k
+  + e^{\im k} \opr{C}_k^\dag \opr{C}_{-k}^\dag
+  ).
+\end{align}
+Thus \cref{eq:cham} is now
+\begin{align}
+  \ham
+  &= -\sum_k 2 \cos k\; \opr{C}_k^\dag \opr{C}_k
+  + \sum_k \qty(%
+  e^{-\im k} \opr{C}_{-k} \opr{C}_k
+  + e^{\im k} \opr{C}_k^\dag \opr{C}_{-k}^\dag
+  )
+  + \sum_k 2\lambda\opr{C}_k^\dag\opr{C}_k
+  - \lambda N \idopr
+  \\
+  &= \sum_k \qty(\lambda - \cos k)
+  \qty(%
+  \opr{C}_k^\dag \opr{C}_k
+  + \opr{C}_{-k}^\dag \opr{C}_{-k}
+  )
+  + \sum_k \im\sin k
+  \qty(%
+  \opr{C}_{-k}\opr{C}_k
+  - \opr{C}_k^\dag\opr{C}_{-k}^\dag
+  )
+  - \lambda N \idopr \\
+  &= \sum_k \vq{v}_k^\dag \mq{H}_k \vq{v}_k
+  - \lambda N \idopr,
+  \label{eq:Cham} \\
+  \shortintertext{where}
+  \mq{H}_k
+  &= \bmqty{%
+  \lambda - \cos k & -\im\sin k \\
+  \im\sin k & \cos k - \lambda
+  } \\
+  \shortintertext{and}
+  \vq{v}_k
+  &= \bmqty{\opr{C}_k \\ \opr{C}_{-k}^\dag}.
+\end{align}
+Since the $\mq{H}_k$ are Hermitian, they may be diagonalized by a unitary
+transformation of the $\vq{v}_k$. The $\mq{H}_k$ are traceless, so they have the
+eigenvalues
+\begin{align}
+  E_k^\pm
+  &= \pm\sqrt{-\det\mq{H}_k} \\
+  &= \pm\sqrt{\lambda^2 - 2\lambda\cos k + \cos^2 k + \sin^2 k} \\
+  &= \pm\sqrt{\lambda^2 - 2\lambda\cos k + 1}.
+\end{align}
+The eigenvectors are then
+\begin{equation}
+  \vq{q}_k^\pm
+  = \bmqty{%
+    -\im\sin k \\
+    E_k^\pm - (\lambda - \cos k)
+  }.
+\end{equation}
+To construct the unitary transformation, must normalize the $\vq{q}_k^\pm$. We
+find that
+\begin{align}
+  \norm{\vq{q}_k^\pm}^2
+  &= {\qty(E_k^\pm - (\lambda - \cos k))}^2 + \sin^2 k \\
+  &= {\qty(E_k^\pm)}^2 + \lambda^2 + \cos^2 k - 2\lambda\cos k - 2E_k^\pm(\lambda - \cos k) + 1 - \cos^2 k \\
+  &= 2E_k^\pm \qty(E_k^\pm - (\lambda - \cos k)).
+\end{align}
+Now
+\begin{align}
+  \frac{{\qty(\vq{q}_k^\pm)}_1}{\norm{\vq{q}_k^\pm}}
+  &= \frac{-\im\sin k}{\sqrt{2E_k^\pm \qty(E_k^\pm - (\lambda - \cos k))}} \\
+  \frac{{\qty(\vq{q}_k^\pm)}_2}{\norm{\vq{q}_k^\pm}}
+  &= \sqrt{\frac{E_k^\pm - (\lambda - \cos k)}{2E_k^\pm}}
+\end{align}
+\begin{equation}
+  \mq{U}_k^\dag
+  = \bmqty{%
+    \im\sin k & E_k^- - (\lambda - \cos k) \\
+    \im\sin k & E_k^+ - (\lambda - \cos k)
+  }.
+\end{equation}
+\begin{align}
+  \opr{\eta}_\pm
+  &= \frac{-\im\sin k}{\sqrt{2E_k^\pm \qty(E_k^\pm - (\lambda - \cos k))}}
+  \opr{C}_k
+  + \sqrt{\frac{E_k^\pm - (\lambda - \cos k)}{2E_k^\pm}}
+  \opr{C}^\dag_{-k}
+\end{align}
+Thus
+\begin{equation}
+  \ham
+  = \sum_k E_k^+\opr{\eta}_+^\dag\opr{\eta}_+
+  + \sum_k E_k^-\opr{\eta}_-^\dag\opr{\eta}_-
+  - \lambda N \idopr
+\end{equation}
+
+\section{Eigenoperators for the transverse Ising Hamiltonian}
+
+Pfeuty defines:
+\begin{align}
+  \lambda
+  &= \frac{J}{2\Gamma}
+  \label{eq:pflambda} \\
+  %
+  \opr{a}_i
+  &= \opr{S}_{xi} - \im\opr{S}_{yi} 
+  \label{eq:pfa} \\
+  %
+  \opr{a}_i^\dag
+  &= \opr{S}_{xi} + \im\opr{S}_{yi} 
+  \label{eq:pfadag} \\
+  %
+  \opr{c}_i
+  &= \exp(\pi\im\sum_{j=1}^{i-1} \opr{a}_j^\dag\opr{a}_j)\opr{a}_i
+  \label{eq:pfc} \\
+  %
+  \opr{c}_i^\dag
+  &= \opr{a}_i^\dag\exp(-\pi\im\sum_{j=1}^{i-1} \opr{a}_j^\dag\opr{a}_j)
+  \label{eq:pfcdag} \\
+  %
+  \opr{\eta}_k
+  &= \sum_i \qty(\frac{\varphi_{ki} + \psi_{ki}}{2}\opr{c}_i
+  + \frac{\varphi_{ki} - \psi_{ki}}{2}\opr{c}_i^\dag)
+  \label{eq:pfeta} \\
+  %
+  \varphi_{ki}
+  &= \sqrt{\frac{2}{N}}\begin{cases}
+    \sin(ki) & k > 0 \\
+    \cos(ki) & k \leq 0
+  \end{cases}
+  \label{eq:pfphi} \\
+  %
+  \psi_{ki}
+  &= -\Lambda_k^{-1} \qty((1 + \lambda\cos k)\varphi_{ki}
+  + (\lambda\sin k)\varphi_{-ki})
+  \label{eq:pfpsi} \\
+  %
+  \Lambda_k^2
+  &= 1 + \lambda^2 + 2\lambda\cos k
+  \label{eq:pfLambda} \\
+  %
+  k
+  &= \frac{2\pi m}{N} \qfor m = -\frac{N}{2},\, \ldots,\, \frac{N}{2} - 1,
+  \qq{$N$ even.}
+  \label{eq:pfk}
+\end{align}
+We would like to express the $\opr{S}_{xi}$ in terms of eigenoperators of the
+system Hamiltonian
+\begin{equation}
+  \ham
+  = \Gamma\sum_k \Lambda_k \opr{\eta}_k^\dag\opr{\eta}_k
+  - \frac{\Gamma}{2}\sum_k \Lambda_k.
+  \label{eq:pfH}
+\end{equation}
+We see that $\idopr$, $\opr{\eta}_k$, $\opr{\eta}_k^\dag$, and
+$\opr{\eta}_k^\dag\opr{\eta}_k$ are all eigenoperators of $\ham$. Since these
+operators form an orthonormal complete basis for the Liouville space, we then
+seek out the coefficients $\ip{\opr{S}_{xi}}{\opr{\eta}_k}$.
+
+\begin{align}
+  \psi_{ki}^2
+  &= -\Lambda_k^{-2} \qty(%
+  {(1 + \lambda\cos k)}^2\varphi_{ki}^2
+  + (1 + \lambda\cos k)(\lambda\sin k)\varphi_{ki}\varphi_{-ki}
+  + \lambda^2\sin^2 k\varphi_{-ki}^2
+  ) \\
+  &= -\Lambda_k^{-2} \qty(%
+  \qty(1 + 2\lambda\cos k + \lambda^2\cos^2 k)\varphi_{ki}^2
+  + (1 + \lambda\cos k)(\lambda\sin k)\varphi_{ki}\varphi_{-ki}
+  + \lambda^2\sin^2 k\varphi_{-ki}^2
+  )
+\end{align}
+For $k > 0$:
+\begin{align}
+  \psi_{ki}^2
+  &= -\frac{2}{N}\sin^2(ki)
+  + \frac{2}{N}\Lambda_k^{-2}\qty(
+  (1 + \lambda\cos k)(\lambda\sin k)\sin^2(ki)
+  - \lambda^2\sin^2 k\sin^2(ki)
+  ) \\
+  &= -\frac{2}{N}\sin^2(ki)
+  + \frac{2}{N}\Lambda_k^{-2}\qty(
+  (\Lambda_k^2 - \lambda\cos k - \lambda^2 + \lambda^2\sin^2 k)(\lambda\sin k)\sin^2(ki)
+  - \lambda^2\sin^2 k\sin^2(ki)
+  ) \\
+  &= -\frac{2}{N}\sin^2(ki)
+  + \frac{2}{N}\Lambda_k^{-2}\qty(
+  (\Lambda_k^2 - \lambda\cos k - \lambda^2)(\lambda\sin k)\sin^2(ki)
+  + (\lambda\sin k - 1)\lambda^2\sin^2 k\sin^2(ki)
+  ) \\
+\end{align}
+For $k \leq 0$:
+\begin{align}
+  \psi_{ki}^2
+  &= -\frac{2}{N}\cos^2(ki)
+  - \frac{2}{N}\Lambda_k^{-2}\qty(
+  (1 + \lambda\cos k)(\lambda\sin k)\cos^2(ki)
+  + \lambda^2\sin^2 k\cos^2(ki)
+  )
+\end{align}
+
+TODO:\@ Explain how having $\opr{\eta}_k$ result from the unitary
+diagonalization of a Hamiltonian expressed as a quadratic form on fermion
+operators $\tilde{\opr{c}}_k$ (after Fourier transforming, as in
+\href{https://theory.leeds.ac.uk/interaction-distance/applications/ising/map-to-free/}{Leeds})
+will preserve (anti)-commutation relations.
+\begin{align}
+  \begin{split}
+    \acomm{\opr{\eta}_k}{\opr{\eta}_k^\dag}
+  &=
+  \sum_{ij}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\varphi_{kj} + \psi_{kj}}{2}
+  \acomm{\opr{c}_i}{\opr{c}_j}
+  +
+  \sum_{ij}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\varphi_{kj} - \psi_{kj}}{2}
+  \acomm{\opr{c}_i}{\opr{c}_j^\dag} \\
+  &+
+  \sum_{ij}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\varphi_{kj} + \psi_{kj}}{2}
+  \acomm{\opr{c}_i^\dag}{\opr{c}_j}
+  +
+  \sum_{ij}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\varphi_{kj} - \psi_{kj}}{2}
+  \acomm{\opr{c}_i^\dag}{\opr{c}_j^\dag}
+  \end{split} \\
+  %
+  \begin{split}
+  &=
+  \sum_{i}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\idopr}{2}
+  +
+  \sum_{i}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \idopr \\
+  &+
+  \sum_{i}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \idopr
+  +
+  \sum_{i}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\idopr}{2}
+  \end{split} \\
+  %
+  &= \idopr\sum_i \qty(\frac{3}{4}\varphi_{ki}^2 - \frac{1}{4}\psi_{ki}^2) \\
+  &= \idopr?
+\end{align}
+
+\begin{align}
+  \begin{split}
+    \ip{\opr{\eta}_k}{\opr{\eta}_k^\dag}
+  &=
+  \sum_{ij}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\varphi_{kj} + \psi_{kj}}{2}
+  \ip{\opr{c}_i}{\opr{c}_j}
+  +
+  \sum_{ij}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\varphi_{kj} - \psi_{kj}}{2}
+  \ip{\opr{c}_i}{\opr{c}_j^\dag} \\
+  &+
+  \sum_{ij}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\varphi_{kj} + \psi_{kj}}{2}
+  \ip{\opr{c}_i^\dag}{\opr{c}_j}
+  +
+  \sum_{ij}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\varphi_{kj} - \psi_{kj}}{2}
+  \ip{\opr{c}_i^\dag}{\opr{c}_j^\dag}
+  \end{split} \\
+  &=
+  \sum_i \qty(%
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  +
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  ) \\
+  &=
+  \frac{1}{2}
+  \sum_i \qty(%
+  \varphi_{ki}^2 + \psi_{ki}^2
+  )
+\end{align}
+
+Note that the $\opr{a}_j^\dag\opr{a}_j$ commute for different $j$, so
+\begin{align}
+  \opr{c}_i
+  = -\qty(\prod_{j=1}^{i-1}\exp(\opr{a}_j^\dag\opr{a}_j))\opr{a}_i \\
+  = -\qty(\bigotimes_{j=1}^{i-1}\exp(\opr{a}_j^\dag\opr{a}_j))\opr{a}_i \\
+\end{align}
+Since $\tr(\opr{A} \tp \opr{B}) = \tr\opr{A}\tr\opr{B}$,
+\begin{align}
+  \ip{\opr{S}_{xi}}{\opr{c}_i}
+  &= -\ip{\opr{S}_{xi}}{\qty(\bigotimes_{j=1}^{i-1}\exp(\opr{a}_j^\dag\opr{a}_j))\opr{a}_i} \\
+  &= -\prod_{j=1}^{i-1}\ip{\opr{S}_{xi}\opr{a}_i^\dag}{\exp(\opr{a}_j^\dag\opr{a}_j)} \\
+  &= -\prod_{j=1}^{i-1}\ip{\opr{S}_{xi}\opr{a}_i^\dag}{\idopr - 2\opr{a}_j^\dag\opr{a}_j} \\
+  &= -\prod_{j=1}^{i-1}\ip{\opr{S}_{xi}\opr{a}_i^\dag}{\idopr - 2\opr{a}_j^\dag\opr{a}_j} \\
+  &= -\prod_{j=1}^{i-1}\qty(%
+  \ip{\opr{S}_{xi}}{\opr{a}_i}
+  + 2\ip{\opr{S}_{xi}}{\opr{a}_j^\dag\opr{a}_j\opr{a}_i} 
+  ) \\
+\end{align}
+OR (note that sign of $\im\pi$ in \cref{eq:pfc} is different in Leeds, but this
+makes no difference)
+\begin{align}
+  \ip{\opr{S}_{xi}}{\opr{c}_j}
+  &= \ip{\opr{a}_i + \opr{a}_i^\dag}{\exp(\pi\im\sum_{k=1}^{i-1}
+  \opr{a}_k^\dag\opr{a}_k)\opr{a}_j} \\
+  &= \ip{\qty(\opr{a}_i + \opr{a}_i^\dag)\opr{a}_j^\dag}{\bigotimes_{k=1}^{i-1}
+  \qty(\idopr_2 - 2\opr{a}_k^\dag\opr{a}_k)} \\
+  &= \delta_{ij}\ip{\opr{a}_i\opr{a}_i^\dag}{\bigotimes_{k=1}^{i-1}
+  \qty(\idopr_2 - 2\opr{a}_k^\dag\opr{a}_k)}
+  \\
+  &= \delta_{ij}
+  \\
+  \ip{\opr{S}_{xi}}{\opr{c}_j^\dag}
+  &= \delta_{ij}
+  \\
+  \ip{\opr{S}_{xi}}{\opr{c}_j^\dag\opr{c}_k}
+  &= \ip{\opr{a}_i + \opr{a}_i^\dag}{\opr{a}_j^\dag\opr{a}_k} \\
+  &= (\delta_{ij} + \delta_{jk} + \delta_{ki})(1 - \delta_{ij}\delta_{jk})
+  \\
+  \ip{\opr{S}_{xi}}{\opr{c}_j\opr{c}_k^\dag}
+  &= (\delta_{ij} + \delta_{jk} + \delta_{ki})(1 - \delta_{ij}\delta_{jk}).
+\end{align}
+Thus
+\begin{align}
+  \ip{\opr{S}_{xi}}{\opr{\eta}_k}
+  &= \frac{\varphi_{ki} + \psi_{ki}}{2} + \frac{\varphi_{ki} - \psi_{ki}}{2} \\
+  &= \varphi_{ki}
+  \\
+  \ip{\opr{S}_{xi}}{\opr{\eta}_k^\dag}
+  &= \varphi_{ki}
+  \\
+  \ip{\opr{S}_{xi}}{\opr{\eta}_k^\dag\opr{\eta}_k}
+  &=
+  \sum_{ab}
+  \qty(%
+  \frac{\varphi_{ka} + \psi_{ka}}{2}
+  \opr{c}_a^\dag
+  +
+  \frac{\varphi_{ka} - \psi_{ka}}{2}
+  \opr{c}_a
+  )
+  \qty(%
+  \frac{\varphi_{kb} + \psi_{kb}}{2}
+  \opr{c}_b
+  +
+  \frac{\varphi_{kb} - \psi_{kb}}{2}
+  \opr{c}_b^\dag
+  ) \\
+  &=
+  \sum_{ab}
+  \qty(%
+  \frac{\varphi_{ka} + \psi_{ka}}{2}
+  \frac{\varphi_{kb} + \psi_{kb}}{2}
+  +
+  \frac{\varphi_{ka} - \psi_{ka}}{2}
+  \frac{\varphi_{kb} - \psi_{kb}}{2}
+  )
+  (\delta_{ab} + \delta_{bi} + \delta_{ia})(1 - \delta_{ab}\delta_{bi})
+  \\
+  &=
+  \sum_a
+  \qty(%
+  {\qty(\frac{\varphi_{ka} + \psi_{ka}}{2})}^2
+  +
+  {\qty(\frac{\varphi_{ka} - \psi_{ka}}{2})}^2
+  )(1 - \delta_{ia}) \\
+  &+
+  2\sum_a
+  \qty(%
+  \frac{\varphi_{ka} + \psi_{ka}}{2}
+  \frac{\varphi_{ki} + \psi_{ki}}{2}
+  +
+  \frac{\varphi_{ka} - \psi_{ka}}{2}
+  \frac{\varphi_{ki} - \psi_{ki}}{2}
+  )
+  (1 - \delta_{ia})
+  \\
+\end{align}
+
+\end{document}
+

@@ -18,8 +18,8 @@
 \newcommand\RR{\mathbb{R}}
 
 % Named operations and special constants
-% \newcommand\im{\mathrm{i}\mkern1mu}
-\newcommand\im{i\mkern1mu}
+\newcommand\im{\mathrm{i}\mkern1mu}
+% \newcommand\im{i\mkern1mu}
 
 % Operators
 \newcommand\tp\otimes%
@@ -35,8 +35,9 @@
 \newcommand\cat\symsf%
 
 % Linear algebra
-\newcommand\vq[1]{\symbf{#1}}
-\newcommand\mq[1]{\symbf{#1}}
+\newcommand\tq[1]{\symbf{#1}} % Tuples
+\newcommand\vq[1]{\symbf{#1}} % Vectors
+\newcommand\mq[1]{\symbf{#1}} % Matrices (not transformations)
 \newcommand\trans{{\symsfup{T}}} % this is the one case when we want it upright
 
 % Quantum mechanics
@@ -45,6 +46,7 @@
 \newcommand\ham{\opr{H}}
 \newcommand\dop{\opr{ρ}}
 \newcommand\pauli{\opr{σ}}
+\newcommand\spin{\opr{S}}
 \newcommand\tprod\otimes%
 % \newcommand\lprod\ip%
 \newcommand\lprod[2]{\qty(#1,#2)}

@@ -46,6 +46,8 @@ partial=upright,
 \allsectionsfont{\normalfont\sffamily\liningnums}
 \subsubsectionfont{\normalfont\large\sffamily\liningnums}
 
+\usepackage{todonotes}
+
 \IfEq{\jobname}{\detokenize{thesis}}{% Full document
   \usepackage[titles]{tocloft}
   }{% In a subfile
@@ -53,6 +55,7 @@ partial=upright,
 }
 
 \usepackage{amsthm}
+% \renewcommand*{\proofname}{\normalfont\textsc{Proof}}
 \theoremstyle{plain}
 \newtheorem{thm}{Theorem}[section]
 \newtheorem{lem}{Lemma}
