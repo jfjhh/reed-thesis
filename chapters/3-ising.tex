@@ -56,30 +56,46 @@ corresponding states
 where $\ket{\tq{0}}$ denotes the vacuum state. It then follows that
 \begin{align}
   \opr{c}_i\ket{\tq{n}}
-  &= -{(-1)}^{n_{<i}}\ket{\tq{n}_{i \leftarrow 0}}, 
+  &= -n_i {(-1)}^{n_{<i}}\ket{\tq{n}_{i \leftarrow 0}}
   \label{eq:car-action} \\
+  \opr{c}_i^\dag\ket{\tq{n}}
+  &= -(1 - n_i){(-1)}^{n_{<i}}\ket{\tq{n}_{i \leftarrow 1}},
   \shortintertext{where}
-  \tq{n}_{i \leftarrow 0}
-  &= \tq{n} \qq{with} n_i = 0 \\
+  \tq{n}_{i \leftarrow m}
+  &= \tq{n} \qq{with} n_i = m \\
   n_{<i}
   &= \sum_{j < i} n_j.
 \end{align}
 \begin{proof}
-  TODO:\@
-  Show that operators defined by \cref{eq:car-action} satisfy the CARs and
-  vice-versa.
+  Operators defined by \cref{eq:car-action} satisfy the CARs, since
+  \begin{align}
+    \acomm{\opr{c}_i^\dag}{\opr{c}_j}\ket{\tq{n}}
+    &= {\opr{c}_i^\dag}{\opr{c}_j}\ket{\tq{n}}
+    + {\opr{c}_j}{\opr{c}_i^\dag}\ket{\tq{n}} \\
+    &= -n_j{(-1)}^{n_{<j}} {\opr{c}_i^\dag}\ket{\tq{n}_{j \leftarrow 0}}
+    - (1-n_i){(-1)}^{n_{<i}} {\opr{c}_j}\ket{\tq{n}_{i \leftarrow 1}} \\
+    &= (1 - n_i(1 - \delta_{ij}))n_j{(-1)}^{n_{<i}' + n_{<j}}
+    \ket{\tq{n}_{j \leftarrow 0,\, i \leftarrow 1}} \\
+    &+ (n_j(1 - \delta_{ij}) + \delta_{ij})(1-n_i){(-1)}^{n_{<i} + n_{<j}'}
+    \ket{\tq{n}_{i \leftarrow 1,\, j \leftarrow 0}} \\
+    &= \delta_{ij}\ket{\tq{n}}.
+    \qedhere
+  \end{align}
 \end{proof}
 Then consider
 \begin{align}
   \opr{c}_i
-  = -\qty(\prod_{j<i} -\pauli_j^z) \pauli_j^-
+  = -\qty(\prod_{j<i} \pauli_j^z) \pauli_j^-
 \end{align}
 acting on the states
 \begin{equation}
   \ket{\tq{n}}
   = \prod_{i \in \ZZ_N} {\qty(\pauli_i^+)}^{n_i} \ket{\tq{0}},
 \end{equation}
-where $\ket{\tq{0}} = \ket{\downarrow}^{\tp N}$ is the state with all $z$-spins down.
+where $\ket{\tq{0}} = \ket{\uparrow}^{\tp N}$ is the state with all $z$-spins
+up, or all zero qubits.
+\todo[inline]{Double-check up/down and make so that 1 bit is 1 occupied. I get
+the z-eigenstate conventions confused.}
 This gives the same result as \cref{eq:car-action}, so the $\opr{c}_i$ satisfy
 the CARs.
 This change from spin-1/2 sites to (non-local) fermions is known as the
@@ -91,19 +107,19 @@ We may then compute that the inverse transformations are
   \pauli_i^z
   &= 2\opr{c}_i^\dag\opr{c}_i - \idopr \\
   \pauli_i^x
-  &= -\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  &= -\qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
   \qty(\opr{c}_i^\dag + \opr{c}_i) \\
   \pauli_i^y
-  &= \im\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  &= \im\qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
   \qty(\opr{c}_i^\dag - \opr{c}_i).
 \end{align}
 While $\pauli_i^x$ remains complicated, the product $\pauli_i^x\pauli_{i+1}^x$
 does not:
 \begin{align}
   \pauli_i^x \pauli_{i+1}^x
-  &= \qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  &= \qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
   \qty(\opr{c}_i^\dag + \opr{c}_i)
-  \qty(\prod_{j<i+1} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  \qty(\prod_{j<i+1} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
   \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}) \\
   &= \qty(\opr{c}_i^\dag + \opr{c}_i)
   \qty(\idopr - 2\opr{c}_i^\dag\opr{c}_i)
@@ -136,17 +152,50 @@ We now Fourier transform with
   &= \frac{2\pi n}{N} - \frac{N - 1}{N}\pi \qc
   n \in \ZZ_N.
 \end{align}
+\begin{proof}
+  Consider $N$ fermionic operators $\opr{c}_i$ and a $N \times N$ unitary matrix
+  $\mq{U}$. We may change bases with
+  \begin{equation}
+    \opr{C}_k^\dag
+    = \sum_i U_{ik} \opr{c}_i^\dag.
+  \end{equation}
+  Then
+  \begin{align}
+    \acomm{\opr{C}_k}{\opr{C}_{k'}^\dag}
+    &= \sum_{ij} U_{ik}^*U_{jk'} \acomm{\opr{c}_i}{\opr{c}_j^\dag} \\
+    &= \sum_i U_{ik}^*U_{ik'} \\
+    &= {\qty(\mq{U}^\dag\mq{U})}_{kk'} \\
+    &= \delta_{kk'},
+  \end{align}
+  and similar for the other fermionic (anti)-commutation relations.
+\end{proof}
+\begin{proof}
+  For the Fourier transform,
+  \begin{equation}
+    F_{ik}
+    = \frac{1}{\sqrt{N}} e^{\im ki}.
+  \end{equation}
+  We may then confirm that
+  \begin{align}
+    {\qty(\mq{F}^\dag\mq{F})}_{kk'}
+    &= \sum_i \frac{1}{N} e^{\im (k' - k)i} \\
+    &= \delta_{kk'}.
+  \end{align}
+  Thus the Fourier transform is unitary.
+\end{proof}
 Now since
 \begin{equation}
-  \sum_{i\in\ZZ_N} e^{\im(k' - k) i}
+  \frac{1}{N}\sum_{i\in\ZZ_N} e^{\im(k' - k) i}
   = \delta_{kk'},
 \end{equation}
 and also
 \begin{align}
   \opr{C}_{-k}
+  &= \opr{C}_k^* \\
   &= \frac{1}{\sqrt{N}} \sum_i e^{-\im (-k)i} \opr{c}_i \\
-  &= \frac{1}{N}\sum_{ik'} e^{\im (k' + k)i} \opr{C}_{k'}
+  &= \frac{1}{N}\sum_{ik'} e^{\im (k' + k)i} \opr{C}_{k'},
 \end{align}
+\todo[inline]{Anticommutation relations for the $\opr{C}_{-k}$?}
 we have that
 \begin{align}
   \sum_i \opr{c}_i^\dag\opr{c}_i
