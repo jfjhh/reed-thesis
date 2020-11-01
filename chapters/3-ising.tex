@@ -272,7 +272,7 @@ Thus \cref{eq:cham} is now
   where $\alpha_k + \beta_{-k} = 1$.
 
   Can this be used to make $\mq{H}_k$ singular, or otherwise help so that we
-  ultimately have one term like $\opr{\eta}^\dag\opr{\eta}$?
+  ultimately have one term like $\opr{\eta}^\dag\opr{\eta}$? Probably not.
 }
 Since the $\mq{H}_k$ are Hermitian, they may be diagonalized by a unitary
 transformation of the $\vq{v}_k$. The $\mq{H}_k$ are traceless, so they have the
@@ -321,8 +321,8 @@ Now
   \shortintertext{and}
   %
   \frac{{\qty(\vq{q}_k^\pm)}_2}{\norm{\vq{q}_k^\pm}}
-  &= \sqrt{\frac{E_k^\pm - (\lambda - \cos k)}{2E_k^\pm}} \\
-  &= \sqrt{\frac{\abs{E_k^\pm} \mp (\lambda - \cos k)}{2\abs{E_k^\pm}}}
+  &= \pm\sqrt{\frac{E_k^\pm - (\lambda - \cos k)}{2E_k^\pm}} \\
+  &= \pm\sqrt{\frac{\abs{E_k^\pm} \mp (\lambda - \cos k)}{2\abs{E_k^\pm}}}
 \end{align}
 \begin{equation}
   \mq{U}_k^\dag
@@ -334,57 +334,28 @@ Now
 Then with $E_k = \abs{E_k^\pm}$,
 \begin{equation}
   \opr{\eta}_k^\pm
-  = \frac{\im\sin k}{\sqrt{2E_k\qty(E_k \mp (\lambda - \cos k))}}
+  = \frac{-\im\sin k}{\sqrt{2E_k\qty(E_k \pm (\cos k - \lambda))}}
   \opr{C}_k
-  + \sqrt{\frac{E_k \mp (\lambda - \cos k)}{2E_k}}
-  \opr{C}^\dag_{-k},
+  \pm \sqrt{\frac{E_k \pm (\cos k - \lambda)}{2E_k}}
+  \opr{C}^\dag_{-k}
 \end{equation}
 so that
 \begin{align}
-  E_k^\pm {\qty(\opr{\eta}_k^\pm)}^\dag\opr{\eta}_k^\pm
-  &= E_k^\pm
-  \qty(%
-  \frac{-\im\sin k}{\sqrt{2E_k\qty(E_k \pm (\cos k - \lambda))}}
-  \opr{C}_k^\dag
-  + \sqrt{\frac{E_k \pm (\cos k - \lambda)}{2E_k}}
-  \opr{C}_{-k}
-  ) \\
-  &\phantom{{}={E_k^\pm}}
-  \qty(%
-  \frac{\im\sin k}{\sqrt{2E_k\qty(E_k \pm (\cos k - \lambda))}}
-  \opr{C}_k
-  + \sqrt{\frac{E_k \pm (\cos k - \lambda)}{2E_k}}
-  \opr{C}_{-k}^\dag
-  )
-  \\
-  &=
-  \frac{\sin^2 k}{2\qty(E_k^\pm + (\cos k - \lambda))}
-  \opr{C}_k^\dag \opr{C}_k
-  %
-  + \frac{E_k^\pm + (\cos k - \lambda)}{2}
-  \opr{C}_{-k} \opr{C}_{-k}^\dag \\
-  %
-  &- \frac{\im\sin k}{2}
-  \opr{C}_k^\dag \opr{C}_{-k}^\dag
-  %
-  + \frac{\im\sin k}{2}
-  \opr{C}_{-k} \opr{C}_k.
-\end{align}
-and
-\begin{align}
-  E_k^\pm \acomm{{\qty(\opr{\eta}_k^\pm)}^\dag}{\opr{\eta}_k^\pm}
-  &= \frac{\sin^2 k}{2\qty(E_k^\pm + (\cos k - \lambda))}
-  + \frac{E_k^\pm + (\cos k - \lambda)}{2} \\
-  &= E_k^\pm \idopr
+  \acomm{{\qty(\opr{\eta}_k^\pm)}^\dag}{\opr{\eta}_k^\pm}
+  &= \frac{\sin^2 k}{2E_k\qty(E_k \pm (\cos k - \lambda))} \idopr
+  + \frac{E_k \pm (\cos k - \lambda)}{2E_k} \idopr \\
+  &= \idopr
   \\
   \begin{split}
-  E_k^\pm \acomm{{\qty(\opr{\eta}_k^\pm)}^\dag}{\opr{\eta}_k^\mp}
-  &= \frac{\sin^2 k}{2\sqrt{E_k \pm (\cos k - \lambda)}
-  \sqrt{E_k \mp (\cos k - \lambda)}} \\
-  &+ \frac{\sqrt{E_k \pm (\cos k - \lambda)}\sqrt{E_k \mp (\cos k - \lambda)}}{2}
+  \acomm{{\qty(\opr{\eta}_k^\pm)}^\dag}{\opr{\eta}_k^\mp}
+  &= \frac{\sin^2 k}{2E_k
+    \sqrt{E_k \pm (\cos k - \lambda)}
+  \sqrt{E_k \mp (\cos k - \lambda)}} \idopr \\
+  &- \frac{\sqrt{E_k \pm (\cos k - \lambda)}\sqrt{E_k \mp (\cos k - \lambda)}}{%
+  2 E_k} \idopr
   \end{split}
   \\
-  &= \abs{\sin k} \idopr
+  &= \zopr.
 \end{align}
 Thus \cref{eq:Cham} becomes
 \begin{align}
@@ -393,10 +364,82 @@ Thus \cref{eq:Cham} becomes
   + \sum_k E_k^-{\qty(\opr{\eta}_k^-)}^\dag\opr{\eta}_k^-
   - \idopr\sum_k \cos k.
 \end{align}
-While the $\opr{\eta}_k^\pm$ are individually fermionic, they are not compatible
-with each other.
 
-\section{Eigenoperators for the transverse Ising Hamiltonian}
+The unitary transformation of the $\opr{C}_{\pm k}$ to obtain $\opr{\eta}_k^\pm$
+is an instance of a fermionic \term{Bogoliubov transformation}:
+\begin{subequations}
+  \begin{align}
+    \opr{C}_k
+  &= u\opr{f}_k + v\opr{g}_k^\dag \\
+  \shortintertext{and}
+  \opr{C}_{-k}
+  &= -v\opr{f}_k^\dag + u\opr{g}_k.
+  \end{align}\label{eq:bogoliubov}
+\end{subequations}
+For these transformations to preserve the CARs,
+\begin{align}
+  \acomm{\opr{C}_k^\dag}{\opr{C}_k}
+  &= \abs{u}^2 \acomm{\opr{f}_k^\dag}{\opr{f}_k}
+  + \abs{v}^2 \acomm{\opr{g}_k}{\opr{g}_k^\dag}
+  + u^* v \acomm{\opr{f}_k^\dag}{\opr{g}_k^\dag}
+  + v^* u \acomm{\opr{g}_k}{\opr{f}_k} \\
+  &= \qty(\abs{u}^2 + \abs{v}^2) \idopr,
+\end{align}
+so we must have
+\begin{equation}
+  \abs{u}^2 + \abs{v}^2 = 1.
+\end{equation}
+We may choose
+\begin{subequations}
+  \begin{align}
+    u &= e^{\im\phi_1}\cos\theta \\
+    v &= e^{\im\phi_2}\sin\theta
+  \end{align}\label{eq:uv-param}
+\end{subequations}
+for real angles $\phi_1$, $\phi_2$, and $\theta$.
+
+It remains to perform the inverse transformations to obtain the $\pauli_i^x$ in
+terms of the $\opr{\eta_k^\pm}$. Shift of perspective: Instead of decomposing
+the Hilbert space $\hilb$ as the tensor product of spin operators, we decompose
+it as the tensor product of fermionic operators, where the fermionic operators
+are restricted to their subspaces in order to form an orthonormal basis for
+$\liou(\hilb)$. We may then recover $\pauli_i^x$ by the corresponding
+isomorphism of Hilbert spaces. We choose
+\begin{equation}
+  \opr{c}
+  \qc
+  \opr{c}^\dag
+  \qc
+  \opr{c}^\dag \opr{c},
+  \qand
+  \opr{c} \opr{c}^\dag
+\end{equation}
+as our basis, since they are both orthonormal and eigenoperators of
+$\opr{c}^\dag \opr{c} \angle$ with respective eigenvalues
+\[
+  -1 \qc 1 \qc 2, \qand 0.
+\]
+We may then write
+\begin{equation}
+  \pauli_x
+  = \sum_{ia} x_{ia} \opr{c}_{ia},
+\end{equation}
+where
+\begin{equation}
+  x_{ia}
+  = \ip{\pauli_x}{\opr{c}_{ia}}
+\end{equation}
+and $\opr{c}_{ia}$ is restricted to subspace $i$. That is,
+\begin{align}
+  \opr{c}_{1a}
+  &= \opr{c}_a \otimes \zopr^{\otimes(N-1)}, \\
+  \shortintertext{not}
+  \opr{c}_{1a}
+  &= \opr{c}_a \otimes \idopr^{\otimes(N-1)}
+\end{align}
+as usual.
+
+\section{Pfeuty scratch work}
 
 Pfeuty defines:
 \begin{align}
@@ -509,36 +552,37 @@ For $k \leq 0$:
   &=
   \sum_{ij}
   \frac{\varphi_{ki} + \psi_{ki}}{2}
-  \frac{\varphi_{kj} + \psi_{kj}}{2}
+  \frac{\varphi_{kj} - \psi_{kj}}{2}
   \acomm{\opr{c}_i}{\opr{c}_j}
   +
   \sum_{ij}
   \frac{\varphi_{ki} + \psi_{ki}}{2}
-  \frac{\varphi_{kj} - \psi_{kj}}{2}
+  \frac{\varphi_{kj} + \psi_{kj}}{2}
   \acomm{\opr{c}_i}{\opr{c}_j^\dag} \\
   &+
   \sum_{ij}
   \frac{\varphi_{ki} - \psi_{ki}}{2}
-  \frac{\varphi_{kj} + \psi_{kj}}{2}
+  \frac{\varphi_{kj} - \psi_{kj}}{2}
   \acomm{\opr{c}_i^\dag}{\opr{c}_j}
   +
   \sum_{ij}
   \frac{\varphi_{ki} - \psi_{ki}}{2}
-  \frac{\varphi_{kj} - \psi_{kj}}{2}
+  \frac{\varphi_{kj} + \psi_{kj}}{2}
   \acomm{\opr{c}_i^\dag}{\opr{c}_j^\dag}
   \end{split} \\
   %
-  &= \frac{\idopr}{2} \sum_{i}
-  \qty(\varphi_{ki} + \psi_{ki})\qty(\varphi_{ki} - \psi_{ki})
+  &= \frac{\idopr}{4} \sum_{i}
+  {\qty(\varphi_{ki} + \psi_{ki})}^2
+  + {\qty(\varphi_{ki} - \psi_{ki})}^2
   \\
   %
   &= \frac{\idopr}{2} \sum_{i}
-  \qty(\varphi_{ki}^2 - \psi_{ki}^2)
+  \varphi_{ki}^2 + \psi_{ki}^2
   \\
   %
   &= \idopr?
 \end{align}
-According to Mathematica, not in general.
+According to Mathematica, no?
 
 \begin{align}
   \begin{split}
