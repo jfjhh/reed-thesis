@@ -5,8 +5,6 @@
 \mathtoolsset{%
   mathic,
 }
-% \newtagform{gray}{\color{gray}(}{)}
-% \usetagform{gray}
 \allowdisplaybreaks%
 
 \usepackage[%
@@ -16,6 +14,10 @@ sans-style=italic,
 nabla=upright,
 partial=upright,
 ]{unicode-math}
+% \let\symsf\mathsf%
+% \let\symbf\mathbf%
+% \let\symsfup\mathbf%
+
 \usepackage[numbers]{natbib}
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
@@ -33,18 +35,28 @@ partial=upright,
 % Layout and styling
 \usepackage{etoolbox}
 \usepackage[final]{microtype}
-\usepackage{setspace} 
-\onehalfspacing%
+% \usepackage{setspace} 
+% \onehalfspacing%
 \usepackage{booktabs}
 \usepackage{csquotes}
 \usepackage{enumitem}
+\usepackage{fnpct}
 \setlist[enumerate,1]{label=\textbf{\arabic*.}}
 
 \usepackage[labelfont=bf]{caption}
 
 \usepackage{sectsty}
-\allsectionsfont{\normalfont\sffamily\liningnums}
-\subsubsectionfont{\normalfont\large\sffamily\liningnums}
+% \allsectionsfont{\normalfont\sffamily\liningnums}
+% \subsubsectionfont{\normalfont\large\sffamily\liningnums}
+\allsectionsfont{%
+  \normalfont\liningnums%
+}
+\sectionfont{%
+  \normalfont\Large\liningnums%
+}
+\subsubsectionfont{%
+  \normalfont\large\liningnums%
+}
 
 \usepackage{todonotes}
 
@@ -55,7 +67,7 @@ partial=upright,
 }
 
 \usepackage{amsthm}
-% \renewcommand*{\proofname}{\normalfont\textsc{Proof}}
+\renewcommand*{\proofname}{\normalfont\textbf{Proof}}
 \theoremstyle{plain}
 \newtheorem{thm}{Theorem}[section]
 \newtheorem{lem}{Lemma}
@@ -79,40 +91,47 @@ partial=upright,
 %   \endgroup%
 % }
 
-\usepackage{tcolorbox}
-\tcbuselibrary{skins,breakable}
-\tcolorboxenvironment{prf}{%
-  enhanced jigsaw,
-  breakable,
-  title={Proof},
-  fonttitle=\sffamily,
-}
-\tcolorboxenvironment{proof}{%
-  enhanced jigsaw,
-  breakable,
-  % title={Proof},
-  % fonttitle=\sffamily,
-}
+% \usepackage{tcolorbox}
+% \tcbuselibrary{skins,breakable}
+% \tcolorboxenvironment{proof}{%
+%   enhanced jigsaw,
+%   breakable,
+%   % title={Proof},
+%   % fonttitle=\sffamily,
+% }
+
+% Fonts
+\usepackage{fontspec}
+\usepackage[osf,proportional,ScaleRM=1.06,ScaleSF=1.06]{libertinus-otf}
+\setmainfont[%
+Scale=0.98,
+Numbers={OldStyle,Proportional},
+Ligatures={TeX,Common},
+]{XCharter}
+% \usepackage[uprightscript,xcharter,vvarbb,scaled=1.05]{newtxmath}
+% \usepackage[type1]{cabin}
+% \usepackage[scaled=1.04,varqu,varl]{inconsolata}
+\setmonofont[Scale=MatchLowercase]{Inconsolata}
+\usepackage[scr=kp,cal=cm]{mathalfa}
+\linespread{1.04}
+
+% \restoresymbol{TXV}{arrowvert}
+
+\usepackage{lettrine}
+% \usepackage{Zallman} % Even fancier
+% \renewcommand\LettrineFontHook{\Zallmanfamily}
+\newcommand{\dropcap}[2]{\lettrine{#1}{#2}}
+% \newcommand{\dropcap}[2]{\textsc{#1#2}}
 
 \ifdraft{\overfullrule=1mm}{}
 
-\setlength{\parskip}{0pt}
+\usepackage{parskip}
+% \setlength{\parskip}{0pt}
 
 \usepackage{imakeidx}
 \makeindex
 \newcommand{\term}[1]{\index{#1}\textbf{#1}}
 
-% Fonts
-\usepackage{fontspec}
-\usepackage[semibold,osf]{libertinus}
-\setmonofont[Scale=MatchLowercase]{Iosevka Slab}
-\usepackage[scr=boondoxo,cal=esstix]{mathalfa}
-
-\usepackage{lettrine}
-% \usepackage{Zallman} % Even fancier
-% \renewcommand\LettrineFontHook{\Zallmanfamily}
-% \newcommand{\dropcap}[2]{\lettrine{#1}{#2}}
-\newcommand{\dropcap}[2]{\textsc{#1#2}}
 
 \usepackage[switch*,pagewise]{lineno} % Before minted
 % \ifdraft{\linenumbers}{}
@@ -144,7 +163,7 @@ partial=upright,
   mathescape,
   breaklines,
   fontsize=\small,
-  baselinestretch=0.9,
+  % baselinestretch=0.9,
 }
 \setminted[wolfram]{style=mathematica}
 \ifoptionfinal{\setminted{style=bw}}{\setminted{style=friendly}}
@@ -160,8 +179,8 @@ partial=upright,
 \graphicspath{{figs/}}
 
 % Other
-\usepackage{kantlipsum}
-\ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.975}}{}
+% \usepackage{kantlipsum}
+% \ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.975}}{}
 
 % More preamble commands, separated for reuse by notebooks
 \input{preamble/math-packages}
@@ -169,9 +188,17 @@ partial=upright,
 \input{preamble/ansi-colors}
 
 % Reference management (order-sensitive)
+\usepackage{xparse}
 \usepackage[pdfusetitle,final,backref]{hyperref}
 \usepackage[all]{hypcap}
-\usepackage{cleveref}
+\usepackage[nameinlink]{cleveref}
+
+\newcommand{\rubricmark}[1]{\hspace*{-0.1em}\textsuperscript{\textcolor{rubric}{#1}}}
+\AdaptNoteNoOptNoMult{\rubricmark}
+
+\usepackage{letltxmacro}
+\LetLtxMacro\oldcref\cref%
+\RenewDocumentCommand{\cref}{m}{{\oldcref{#1}}\rubricmark{$\circ$}}
 
 \IfEq{\jobname}{\detokenize{thesis}}{% Full document
   % Nothing different
@@ -212,9 +239,10 @@ partial=upright,
 \ifdraft{}{\usepackage{autonum}}
 
 \definecolor{linkcolor}{rgb}{0.0,0.25,0.5}
+\definecolor{rubric}{rgb}{0.6,0.2,0.2}
 \hypersetup{%
-  allcolors=linkcolor,
-  citecolor=OliveGreen,
+  allcolors=black,
+  citecolor=rubric,
 }
 \urlstyle{same}
 \ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}

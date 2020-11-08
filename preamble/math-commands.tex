@@ -2,12 +2,12 @@
 
 % Semantic commands
 \newcommand{\defeq}{\equiv}
-\newcommand{\by}[1]{\qq{(#1)}}
+\newcommand{\by}[1]{\qq{#1}}
 \newcommand{\byeq}[1]{\by{\cref{#1}}}
 
 % Variant symbols
-\renewcommand\leq\leqslant%
-\renewcommand\geq\geqslant%
+\let\leq\leqslant%
+\let\geq\geqslant%
 \renewcommand\phi\varphi%
 \renewcommand\epsilon\varepsilon%
 
@@ -49,8 +49,8 @@
 \newcommand\pauli{\opr{σ}}
 \newcommand\spin{\opr{S}}
 \newcommand\tprod\otimes%
-% \newcommand\lprod\ip%
-\newcommand\lprod[2]{\qty(#1,#2)}
+\newcommand\lprod\ip%
+% \newcommand\lprod[2]{\qty(#1,#2)}
 \newcommand\ensavg[2][\dop]{\ev{#2}_{\mkern-1.5mu{#1}}}
 \newcommand\sensavg[2][\dop]{\ev*{#2}_{\mkern-1.5mu{#1}}}
 
