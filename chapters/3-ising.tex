@@ -619,9 +619,53 @@ is
     \opr{A}_{ik}^\dag \dop \opr{A}_{ik}
     - \frac{1}{2} \acomm{\opr{A}_{ik}
     \opr{A}_{ik}^\dag}{\dop}
-    ).
+    )
   \end{split}
+  \\
+  \begin{split}
+    &= \sum_{ik}
+    \frac{2L}{c} {C(-E_k)}^2 n_B(E_k)
+    \abs{a_{ik} + b_{ik}}^2
+    \qty(%
+    \opr{\eta}_k \dop \opr{\eta}_k^\dag
+    - \frac{1}{2} \acomm{\opr{\eta}_k^\dag
+    \opr{\eta}_k}{\dop}
+    ) \\
+    &+ \sum_{ik}
+    \frac{2L}{c} {C(E_k)}^2 \qty(n_B(E_k) + 1)
+    \abs{a_{ik} + b_{ik}}^2
+    \qty(%
+    \opr{\eta}_k^\dag \dop \opr{\eta}_k
+    - \frac{1}{2} \acomm{\opr{\eta}_k
+    \opr{\eta}_k^\dag}{\dop}
+    )
+  \end{split}
+  \\
+  \begin{split}
+    &= \sum_k
+    \frac{2L}{Nc} {C(-E_k)}^2 n_B(E_k)
+    \qty(%
+    \opr{\eta}_k \dop \opr{\eta}_k^\dag
+    - \frac{1}{2} \acomm{\opr{\eta}_k^\dag
+    \opr{\eta}_k}{\dop}
+    ) \\
+    &+ \sum_k
+    \frac{2L}{Nc} {C(E_k)}^2 \qty(n_B(E_k) + 1)
+    \qty(%
+    \opr{\eta}_k^\dag \dop \opr{\eta}_k
+    - \frac{1}{2} \acomm{\opr{\eta}_k
+    \opr{\eta}_k^\dag}{\dop}
+    ),
+  \end{split}
+  \label{eq:ising-diss}
 \end{align}
+since
+\begin{equation}
+  \sum_i
+  \abs{a_{ik} + b_{ik}}^2
+  = \frac{2}{N} \sum_i \sin^2(ki)
+  = \frac{1}{N}.
+\end{equation}
 If $\dop_0 = \op{\tq{0}}{\tq{0}} = \otimes_k \opr{\eta}_k \opr{\eta}_k^\dag$,
 then at $t = 0$
 \begin{equation}
@@ -633,7 +677,200 @@ then at $t = 0$
 \end{equation}
 so the ground state of the closed system is not stationary?
 
+
+\section{Characterization of two-level dissipators}
+
+If we have a two-level system with density operator $\rho$, a general form of
+the dissipator is
+\begin{align}
+  \begin{split}
+    \sopr{D}\dop
+    &= \gamma_- \abs{h_-}^2 \qty(\pauli^- \dop \pauli^+
+    - \frac{1}{2}\acomm{\pauli^+\pauli^-}{\dop}) \\
+    &+ \gamma_+ \abs{h_+}^2 \qty(\pauli^+ \dop \pauli^-
+    - \frac{1}{2}\acomm{\pauli_- \pauli^+}{\dop}) \\
+    &+ \gamma_z \abs{h_z}^2 \qty(\pauli^z \dop \pauli^z
+    - \dop),
+  \end{split}
+  \label{eq:two-level-diss}
+\end{align}
+where each of the Pauli operators $\pauli^a$ is assumed to be an eigenoperator
+of some Hamiltonian with eigenvalue $\omega_a$, and $\gamma_a =
+\gamma(\omega_a)$. We also have coefficients from expressing part of an
+interaction Hamiltonian as $\sum_a h_a \pauli^a$.
+
+We evaluate \cref{eq:two-level-diss} by substituting
+\begin{equation}
+  \dop
+  = \rho_{00} \pauli^-\pauli^+
+  + \rho_{01} \pauli^-
+  + \rho_{10} \pauli^+
+  + \rho_{11} \pauli^+ \pauli^-.
+\end{equation}
+This gives
+\begin{align}
+  \begin{split}
+    \sopr{D}\dop
+    &= \gamma_+ \abs{h_+}^2 \qty(\pauli^+ \pauli^-
+    - \pauli_- \pauli^+) \rho_{00}
+    + \gamma_- \abs{h_-}^2 \qty(\pauli^- \pauli^+
+    - \pauli^+\pauli^-) \rho_{11}
+    \\
+    &+ \gamma_- \abs{h_-}^2 \qty(%
+    - \frac{1}{2}\acomm{\pauli^+\pauli^-}{\pauli^-}) \rho_{01}
+    + \gamma_+ \abs{h_+}^2 \qty(%
+    - \frac{1}{2}\acomm{\pauli_- \pauli^+}{\pauli^-}) \rho_{01} \\
+    &+ \gamma_- \abs{h_-}^2 \qty(%
+    - \frac{1}{2}\acomm{\pauli^+\pauli^-}{\pauli^+}) \rho_{10}
+    + \gamma_+ \abs{h_+}^2 \qty(%
+    - \frac{1}{2}\acomm{\pauli_- \pauli^+}{\pauli^+}) \rho_{10} \\
+    &+ \gamma_z \abs{h_z}^2 \qty(\pauli^z \pauli^- \pauli^z
+    - \pauli^-) \rho_{01}
+    + \gamma_z \abs{h_z}^2 \qty(\pauli^z \pauli^+ \pauli^z
+    - \pauli^+) \rho_{10}
+  \end{split}
+  \\
+  \begin{split}
+    &= \gamma_+ \abs{h_+}^2 \qty(\pauli^+ \pauli^-
+    - \pauli_- \pauli^+) \rho_{00}
+    + \gamma_- \abs{h_-}^2 \qty(\pauli^- \pauli^+
+    - \pauli^+\pauli^-) \rho_{11}
+    \\
+    &- \gamma_- \abs{h_-}^2
+    \frac{1}{2}\pauli^- \rho_{01}
+    - \gamma_+ \abs{h_+}^2
+    \frac{1}{2}\pauli^- \rho_{01}
+    - \gamma_z \abs{h_z}^2 2\pauli^- \rho_{01}
+    \\
+    &- \gamma_- \abs{h_-}^2
+    \frac{1}{2}\pauli^+ \rho_{10}
+    - \gamma_+ \abs{h_+}^2
+    \frac{1}{2}\pauli^+ \rho_{10}
+    - \gamma_z \abs{h_z}^2 2\pauli^+ \rho_{10}.
+  \end{split}
+\end{align}
+Thus ignoring the Lamb shift, the density matrix in the interaction picture
+evolves according to
+\begin{subequations}
+  \begin{align}
+    \dot{\rho}_{00}
+    &= -\gamma_+ \abs{h_+}^2 \rho_{00}
+    + \gamma_- \abs{h_-}^2 \rho_{11}
+    \\
+    \dot{\rho}_{01}
+    &= -\frac{1}{2}\qty(%
+    \gamma_- \abs{h_-}^2
+    + \gamma_+ \abs{h_+}^2
+    + 4\gamma_z \abs{h_z}^2
+    ) \rho_{01}
+    \\
+    \dot{\rho}_{10}
+    &= -\frac{1}{2}\qty(%
+    \gamma_- \abs{h_-}^2
+    + \gamma_+ \abs{h_+}^2
+    + 4\gamma_z \abs{h_z}^2
+    ) \rho_{10}
+    \\
+    \dot{\rho}_{11}
+    &= \gamma_+ \abs{h_+}^2 \rho_{00}
+    - \gamma_- \abs{h_-}^2 \rho_{11}
+  \end{align}\label{eq:pauli-diss}
+\end{subequations}
+In the case where $h_z = 0$ and $h_- = h_+ \eqqcolon h$, \cref{eq:pauli-diss}
+reduces to
+\begin{subequations}
+  \begin{align}
+    \dot{\rho}_{00} \abs{h}^{-2}
+    &= -\gamma_+ \rho_{00}
+    + \gamma_- \rho_{11}
+    \\
+    \dot{\rho}_{01} \abs{h}^{-2}
+    &= -\frac{1}{2}\qty(%
+    \gamma_-
+    + \gamma_+
+    ) \rho_{01}
+    \\
+    \dot{\rho}_{10} \abs{h}^{-2}
+    &= -\frac{1}{2}\qty(%
+    \gamma_-
+    + \gamma_+
+    ) \rho_{10}
+    \\
+    \dot{\rho}_{11} \abs{h}^{-2}
+    &= \gamma_+ \rho_{00}
+    - \gamma_- \rho_{11}.
+  \end{align}\label{eq:pauli-diss-noz}
+\end{subequations}
+
+
+% \begin{align}
+%   \begin{split}
+%     \sopr{D}\dop
+%     &= \gamma(\omega_-) \abs{h_-}^2 \comm{\pauli^-}{\pauli^+} \dop_0 \\
+%     &+ \gamma(\omega_+) \abs{h_+}^2 \comm{\pauli^+}{\pauli^-} \dop_0
+%     \\
+%     &+ \gamma(\omega_-) \abs{h_-}^2 \qty(%
+%     - \frac{1}{2}\acomm{\pauli^+\pauli^-}{\pauli^-}) \dop_- \\
+%     &+ \gamma(\omega_+) \abs{h_+}^2 \qty(%
+%     - \frac{1}{2}\acomm{\pauli_- \pauli^+}{\pauli^-}) \dop_- \\
+%     &+ \gamma(\omega_z) \abs{h_z}^2 \qty(\pauli^z \pauli^- \pauli^z
+%     - \pauli^-) \rho_-
+%     \\
+%     &+ \gamma(\omega_-) \abs{h_-}^2 \qty(%
+%     - \frac{1}{2}\acomm{\pauli^+\pauli^-}{\pauli^+}) \dop_+ \\
+%     &+ \gamma(\omega_+) \abs{h_+}^2 \qty(%
+%     - \frac{1}{2}\acomm{\pauli_- \pauli^+}{\pauli^+}) \dop_+ \\
+%     &+ \gamma(\omega_z) \abs{h_z}^2 \qty(\pauli^z \pauli^+ \pauli^z
+%     - \pauli^+) \rho_+
+%     \\
+%     &+ \gamma(\omega_-) \abs{h_-}^2 \qty(\pauli^- \pauli^z \pauli^+
+%     - \frac{1}{2}\acomm{\pauli^+\pauli^-}{\pauli^z}) \dop_z \\
+%     &+ \gamma(\omega_+) \abs{h_+}^2 \qty(\pauli^+ \pauli^z \pauli^-
+%     - \frac{1}{2}\acomm{\pauli_- \pauli^+}{\pauli^z}) \dop_z
+%   \end{split}
+%   \\
+%   \begin{split}
+%     &= -\gamma(\omega_-) \abs{h_-}^2 \pauli^z \dop_0 \\
+%     &+ \gamma(\omega_+) \abs{h_+}^2 \pauli^z \dop_0
+%     \\
+%     &- \gamma(\omega_-) \abs{h_-}^2
+%     \frac{1}{2}\pauli^- \dop_- \\
+%     &- \gamma(\omega_+) \abs{h_+}^2
+%     \frac{1}{2}\pauli^- \dop_- \\
+%     &- \gamma(\omega_z) \abs{h_z}^2 2\pauli^- \rho_-
+%     \\
+%     &- \gamma(\omega_-) \abs{h_-}^2
+%     \frac{1}{2}\pauli^+ \dop_+ \\
+%     &- \gamma(\omega_+) \abs{h_+}^2
+%     \frac{1}{2}\pauli^+ \dop_+ \\
+%     &- \gamma(\omega_z) \abs{h_z}^2 2\pauli^+ \rho_+
+%     \\
+%     &+ \gamma(\omega_-) \abs{h_-}^2 \qty(\pauli^- \pauli^z \pauli^+
+%     - \frac{1}{2}\acomm{\pauli^+\pauli^-}{\pauli^z}) \dop_z \\
+%     &+ \gamma(\omega_+) \abs{h_+}^2 \qty(\pauli^+ \pauli^z \pauli^-
+%     - \frac{1}{2}\acomm{\pauli_- \pauli^+}{\pauli^z}) \dop_z
+%   \end{split}
+% \end{align}
+
 \section{Pfeuty scratch work}
+
+I have
+\begin{equation}
+  \lambda
+  = -\frac{1}{\lambda_\text{Pf}}
+  = -\frac{2\Gamma}{J},
+\end{equation}
+and my Hamiltonian \cref{eq:transham} should have
+\begin{equation}
+  \ham
+  \mapsto \frac{4}{J}\ham
+\end{equation}
+to be correctly nondimensionalized and match Pfeuty's results. Then
+\begin{equation}
+  E_k
+  = \frac{\Lambda_k}{\lambda_\text{Pf}}
+  = -\Lambda_k \lambda.
+\end{equation}
 
 Pfeuty defines:
 \begin{align}
@@ -691,54 +928,6 @@ system Hamiltonian
   - \frac{\Gamma}{2}\sum_k \Lambda_k.
   \label{eq:pfH}
 \end{equation}
-We see that $\idopr$, $\opr{\eta}_k$, $\opr{\eta}_k^\dag$, and
-$\opr{\eta}_k^\dag\opr{\eta}_k$ are all eigenoperators of $\ham$. Since these
-operators form an orthonormal complete basis for the Liouville space, we then
-seek out the coefficients $\ip{\opr{S}_{xi}}{\opr{\eta}_k}$.
-\todo[inline]{I don't think this is true! (I.e.\ the $\opr{\eta}_k$ do not
-satisfy the fermionic CARs.) All the inner products below are pointless.}
-
-\begin{align}
-  \psi_{ki}^2
-  &= -\Lambda_k^{-2} \qty(%
-  {(1 + \lambda\cos k)}^2\varphi_{ki}^2
-  + (1 + \lambda\cos k)(\lambda\sin k)\varphi_{ki}\varphi_{-ki}
-  + \lambda^2\sin^2 k\varphi_{-ki}^2
-  ) \\
-  &= -\Lambda_k^{-2} \qty(%
-  \qty(1 + 2\lambda\cos k + \lambda^2\cos^2 k)\varphi_{ki}^2
-  + (1 + \lambda\cos k)(\lambda\sin k)\varphi_{ki}\varphi_{-ki}
-  + \lambda^2\sin^2 k\varphi_{-ki}^2
-  )
-\end{align}
-For $k > 0$:
-\begin{align}
-  \psi_{ki}^2
-  &= -\frac{2}{N}\sin^2(ki)
-  + \frac{2}{N}\Lambda_k^{-2}\qty(
-  (1 + \lambda\cos k)(\lambda\sin k)\sin^2(ki)
-  - \lambda^2\sin^2 k\sin^2(ki)
-  ) \\
-  &= -\frac{2}{N}\sin^2(ki)
-  + \frac{2}{N}\Lambda_k^{-2}\qty(
-  (\Lambda_k^2 - \lambda\cos k - \lambda^2 + \lambda^2\sin^2 k)(\lambda\sin k)\sin^2(ki)
-  - \lambda^2\sin^2 k\sin^2(ki)
-  ) \\
-  &= -\frac{2}{N}\sin^2(ki)
-  + \frac{2}{N}\Lambda_k^{-2}\qty(
-  (\Lambda_k^2 - \lambda\cos k - \lambda^2)(\lambda\sin k)\sin^2(ki)
-  + (\lambda\sin k - 1)\lambda^2\sin^2 k\sin^2(ki)
-  ) \\
-\end{align}
-For $k \le 0$:
-\begin{align}
-  \psi_{ki}^2
-  &= -\frac{2}{N}\cos^2(ki)
-  - \frac{2}{N}\Lambda_k^{-2}\qty(
-  (1 + \lambda\cos k)(\lambda\sin k)\cos^2(ki)
-  + \lambda^2\sin^2 k\cos^2(ki)
-  )
-\end{align}
 
 \begin{align}
   \begin{split}
@@ -776,144 +965,8 @@ For $k \le 0$:
   %
   &= \idopr?
 \end{align}
-According to Mathematica, no?
-
-\begin{align}
-  \begin{split}
-    \ip{\opr{\eta}_k}{\opr{\eta}_k^\dag}
-  &=
-  \sum_{ij}
-  \frac{\varphi_{ki} + \psi_{ki}}{2}
-  \frac{\varphi_{kj} + \psi_{kj}}{2}
-  \ip{\opr{c}_i}{\opr{c}_j}
-  +
-  \sum_{ij}
-  \frac{\varphi_{ki} + \psi_{ki}}{2}
-  \frac{\varphi_{kj} - \psi_{kj}}{2}
-  \ip{\opr{c}_i}{\opr{c}_j^\dag} \\
-  &+
-  \sum_{ij}
-  \frac{\varphi_{ki} - \psi_{ki}}{2}
-  \frac{\varphi_{kj} + \psi_{kj}}{2}
-  \ip{\opr{c}_i^\dag}{\opr{c}_j}
-  +
-  \sum_{ij}
-  \frac{\varphi_{ki} - \psi_{ki}}{2}
-  \frac{\varphi_{kj} - \psi_{kj}}{2}
-  \ip{\opr{c}_i^\dag}{\opr{c}_j^\dag}
-  \end{split} \\
-  &=
-  \sum_i \qty(%
-  \frac{\varphi_{ki} + \psi_{ki}}{2}
-  \frac{\varphi_{ki} + \psi_{ki}}{2}
-  +
-  \frac{\varphi_{ki} - \psi_{ki}}{2}
-  \frac{\varphi_{ki} - \psi_{ki}}{2}
-  ) \\
-  &=
-  \frac{1}{2}
-  \sum_i \qty(%
-  \varphi_{ki}^2 + \psi_{ki}^2
-  )
-\end{align}
-
-Note that the $\opr{a}_j^\dag\opr{a}_j$ commute for different $j$, so
-\begin{align}
-  \opr{c}_i
-  = -\qty(\prod_{j=1}^{i-1}\exp(\opr{a}_j^\dag\opr{a}_j))\opr{a}_i \\
-  = -\qty(\bigotimes_{j=1}^{i-1}\exp(\opr{a}_j^\dag\opr{a}_j))\opr{a}_i \\
-\end{align}
-Since $\tr(\opr{A} \tp \opr{B}) = \tr\opr{A}\tr\opr{B}$,
-\begin{align}
-  \ip{\opr{S}_{xi}}{\opr{c}_i}
-  &= -\ip{\opr{S}_{xi}}{\qty(\bigotimes_{j=1}^{i-1}\exp(\opr{a}_j^\dag\opr{a}_j))\opr{a}_i} \\
-  &= -\prod_{j=1}^{i-1}\ip{\opr{S}_{xi}\opr{a}_i^\dag}{\exp(\opr{a}_j^\dag\opr{a}_j)} \\
-  &= -\prod_{j=1}^{i-1}\ip{\opr{S}_{xi}\opr{a}_i^\dag}{\idopr - 2\opr{a}_j^\dag\opr{a}_j} \\
-  &= -\prod_{j=1}^{i-1}\ip{\opr{S}_{xi}\opr{a}_i^\dag}{\idopr - 2\opr{a}_j^\dag\opr{a}_j} \\
-  &= -\prod_{j=1}^{i-1}\qty(%
-  \ip{\opr{S}_{xi}}{\opr{a}_i}
-  + 2\ip{\opr{S}_{xi}}{\opr{a}_j^\dag\opr{a}_j\opr{a}_i} 
-  ) \\
-\end{align}
-OR (note that sign of $\im\pi$ in \cref{eq:pfc} is different in Leeds, but this
-makes no difference)
-\begin{align}
-  \ip{\opr{S}_{xi}}{\opr{c}_j}
-  &= \ip{\opr{a}_i + \opr{a}_i^\dag}{\exp(\pi\im\sum_{k=1}^{i-1}
-  \opr{a}_k^\dag\opr{a}_k)\opr{a}_j} \\
-  &= \ip{\qty(\opr{a}_i + \opr{a}_i^\dag)\opr{a}_j^\dag}{\bigotimes_{k=1}^{i-1}
-  \qty(\idopr_2 - 2\opr{a}_k^\dag\opr{a}_k)} \\
-  &= \delta_{ij}\ip{\opr{a}_i\opr{a}_i^\dag}{\bigotimes_{k=1}^{i-1}
-  \qty(\idopr_2 - 2\opr{a}_k^\dag\opr{a}_k)}
-  \\
-  &= \delta_{ij}
-  \\
-  \ip{\opr{S}_{xi}}{\opr{c}_j^\dag}
-  &= \delta_{ij}
-  \\
-  \ip{\opr{S}_{xi}}{\opr{c}_j^\dag\opr{c}_k}
-  &= \ip{\opr{a}_i + \opr{a}_i^\dag}{\opr{a}_j^\dag\opr{a}_k} \\
-  &= (\delta_{ij} + \delta_{jk} + \delta_{ki})(1 - \delta_{ij}\delta_{jk})
-  \\
-  \ip{\opr{S}_{xi}}{\opr{c}_j\opr{c}_k^\dag}
-  &= (\delta_{ij} + \delta_{jk} + \delta_{ki})(1 - \delta_{ij}\delta_{jk}).
-\end{align}
-Thus
-\begin{align}
-  \ip{\opr{S}_{xi}}{\opr{\eta}_k}
-  &= \frac{\varphi_{ki} + \psi_{ki}}{2} + \frac{\varphi_{ki} - \psi_{ki}}{2} \\
-  &= \varphi_{ki}
-  \\
-  \ip{\opr{S}_{xi}}{\opr{\eta}_k^\dag}
-  &= \varphi_{ki}
-  \\
-  \ip{\opr{S}_{xi}}{\opr{\eta}_k^\dag\opr{\eta}_k}
-  &=
-  \sum_{ab}
-  \qty(%
-  \frac{\varphi_{ka} + \psi_{ka}}{2}
-  \opr{c}_a^\dag
-  +
-  \frac{\varphi_{ka} - \psi_{ka}}{2}
-  \opr{c}_a
-  )
-  \qty(%
-  \frac{\varphi_{kb} + \psi_{kb}}{2}
-  \opr{c}_b
-  +
-  \frac{\varphi_{kb} - \psi_{kb}}{2}
-  \opr{c}_b^\dag
-  ) \\
-  &=
-  \sum_{ab}
-  \qty(%
-  \frac{\varphi_{ka} + \psi_{ka}}{2}
-  \frac{\varphi_{kb} + \psi_{kb}}{2}
-  +
-  \frac{\varphi_{ka} - \psi_{ka}}{2}
-  \frac{\varphi_{kb} - \psi_{kb}}{2}
-  )
-  (\delta_{ab} + \delta_{bi} + \delta_{ia})(1 - \delta_{ab}\delta_{bi})
-  \\
-  &=
-  \sum_a
-  \qty(%
-  {\qty(\frac{\varphi_{ka} + \psi_{ka}}{2})}^2
-  +
-  {\qty(\frac{\varphi_{ka} - \psi_{ka}}{2})}^2
-  )(1 - \delta_{ia}) \\
-  &+
-  2\sum_a
-  \qty(%
-  \frac{\varphi_{ka} + \psi_{ka}}{2}
-  \frac{\varphi_{ki} + \psi_{ki}}{2}
-  +
-  \frac{\varphi_{ka} - \psi_{ka}}{2}
-  \frac{\varphi_{ki} - \psi_{ki}}{2}
-  )
-  (1 - \delta_{ia})
-  \\
-\end{align}
+According to Mathematica, no? But~\cite[pp.~452--454]{liebTwoSolubleModels1961}
+is probably right.
 
 \end{document}
 
