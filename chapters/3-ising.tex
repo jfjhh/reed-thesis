@@ -77,14 +77,10 @@ acting on the states
   = \prod_{i \in \ZZ_N} {\qty(\pauli_i^+)}^{n_i} \ket{\tq{0}},
 \end{equation}
 where $\ket{\tq{0}} = \ket{\uparrow}^{\tp N}$ is the state with all $z$-spins
-up, or all zero qubits.
-\todo[inline]{Double-check up/down and make so that 1 bit is 1 occupied. I get
-the z-eigenstate conventions confused.}
-This gives the same result as \cref{eq:car-action}, so the $\opr{c}_i$ satisfy
-the CARs.
-This change from spin-1/2 sites to (non-local) fermions is known as the
-\term{Jordan-Wigner transformation}.
-We may then compute that the inverse transformations are
+up, or all zero qubits. This gives the same result as \cref{eq:car-action}, so
+the $\opr{c}_i$ satisfy the CARs. This process of mapping spin-1/2 sites to
+non-local fermions is known as the \term{Jordan-Wigner transformation}. We may
+then compute that the inverse transformations are
 \begin{align}
   \pauli_i^+\pauli_i^-
   &= \opr{c}_i^\dag\opr{c}_i
@@ -102,7 +98,7 @@ We may then compute that the inverse transformations are
   \label{eq:pauliy}
 \end{align}
 While $\pauli_i^x$ remains complicated, the product $\pauli_i^x\pauli_{i+1}^x$
-does not:
+does not. For $i < N-1$,
 \begin{align}
   \pauli_i^x \pauli_{i+1}^x
   &= \qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
@@ -112,20 +108,27 @@ does not:
   &= \qty(\opr{c}_i^\dag + \opr{c}_i)
   \qty(\idopr - 2\opr{c}_i^\dag\opr{c}_i)
   \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}) \\
-  &= \qty(\opr{c}_i^\dag - \opr{c}_i) \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}).
+  &= \qty(\opr{c}_i^\dag - \opr{c}_i) \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}),
   \label{eq:paulixx}
 \end{align}
+and for $i = N-1$,
+\begin{equation}
+  \pauli_{N-1}^x \pauli_0^x
+  = \qty(\prod_{j < N-1} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
+  \qty(\opr{c}_{N-1}^\dag + \opr{c}_{N-1})
+  \qty(\opr{c}_0^\dag + \opr{c}_0).
+\end{equation}
 
 We may now perform the Jordan-Wigner transformation of \cref{eq:transham} to
-obtain\todo[inline]{Where is the boundary term in Pfeuty~(2.4)? I think it is
-gone since I have defined the $\opr{c}_i$ for $i \in \ZZ_N$, so that $\opr{c}_N$
-is automatically correct and you do not need to add a correction term due to
-applying the Jordan-Wigner transform with $i = N \in \ZZ$?}
+obtain\todo[inline]{Check boundary term to Pfeuty~(2.4). Why can it be neglected
+for large $N$?}
 \begin{align}
   \ham
   &= \sum_i \qty(\opr{c}_i - \opr{c}_i^\dag) \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1})
   + \lambda\sum_i 2\opr{c}_i^\dag\opr{c}_i
-  - \lambda N \idopr.
+  - \lambda N \idopr \\
+  &- \qty(\idopr - \prod_{j < N-1}\qty(2\opr{c}_j^\dag \opr{c}_j - \idopr))
+  \qty(\opr{c}_{N-1} - \opr{c}_{N-1}^\dag) \qty(\opr{c}_0^\dag + \opr{c}_0)
   \label{eq:cham}
 \end{align}
 We now Fourier transform with
@@ -485,17 +488,30 @@ Combining \cref{eq:etas,eq:fourier} gives
   \frac{1}{N}\sum_{ij} e^{\im k (i - j)}
   \qty(\opr{c}_i^\dag \opr{c}_j^\dag - \opr{c}_i \opr{c}_j)
 \end{align}
-\todo[inline]{Should the $\opr{\eta}_k$ match Pfeuty? If so, then hmm: these coefficients are
-complex while Pfeuty's are real.}
-Then using \cref{eq:paulix} as
-\begin{equation}
-  \pauli_i^x
-  = -\qty(\prod_{j<i} \qty(\opr{c}_j^\dag\opr{c}_j - \opr{c}_j\opr{c}_j^\dag))
-  \qty(\opr{c}_i^\dag + \opr{c}_i),
-\end{equation}
+\todo[inline]{%
+  Should the $\opr{\eta}_k$ match Pfeuty? If so, then hmm: these coefficients
+  are complex while Pfeuty's are real. But I don't think they need to match.
+  Having the same Hamiltonian and spectrum of energies says that the two
+  representations of the Hamiltonian in the occupation basis for the different
+  $\opr{\eta}_k$ are the same (up to permutation). However, since the spectrum
+  is degenerate (Mathematica), these states may be rotated around within each
+  degenerate eigenspace without changing the representation. It is thus possible
+  that Pfeuty's and my $\opr{\eta}_k$ are both correct. While my way of
+  obtaining the $\opr{\eta}_k$ through a Fourier transform is more
+  straightforward, it gives more complicated coefficients for the $\opr{c}_i$
+  than the method of Lieb et.\ al., which is less direct (a harder eigenvalue
+  problem than $2 \times 2$ matrices), but gives nice coefficients for the
+  $\opr{c}_i$~\cite[pp.~452--454]{liebTwoSolubleModels1961}.
+}
+We recall \cref{eq:paulix} as
 \begin{align}
+  \pauli_i^x
+  &= -\qty(\prod_{j<i} \qty(\opr{c}_j^\dag\opr{c}_j - \opr{c}_j\opr{c}_j^\dag))
+  \qty(\opr{c}_i^\dag + \opr{c}_i),
+  \\
+  \shortintertext{and write}
   \opr{\eta}_k
-  &= \sum_{i} a_{ik} \opr{c}_i + b_{ik} \opr{c}_i^\dag.
+  &= \sum_{i} a_{ik} \opr{c}_i + b_{ik} \opr{c}_i^\dag
   \\
   \opr{\eta}_k^\dag \opr{\eta}_k
   &= \sum_{ij} \qty(a_{ik}^* \opr{c}_i^\dag + b_{ik}^* \opr{c}_i)
@@ -528,7 +544,7 @@ Note that for $\opr{c}_i$ and $\opr{d}_i$ from an orthonormal basis for $\liou_i
     0 & \text{otherwise.}
   \end{cases}
 \end{align}
-We compute that
+Thus
 \begin{align}
   \ip{\pauli_i^x}{\opr{\eta}_k}
   &= -\ip{\opr{c}_i^\dag + \opr{c}_i}{%
@@ -749,8 +765,8 @@ This gives
     - \gamma_z \abs{h_z}^2 2\pauli^+ \rho_{10}.
   \end{split}
 \end{align}
-Thus ignoring the Lamb shift, the density matrix in the interaction picture
-evolves according to
+Ignoring the Lamb shift, the entries of the density matrix in the interaction
+picture are then given by
 \begin{subequations}
   \begin{align}
     \dot{\rho}_{00}
@@ -773,7 +789,7 @@ evolves according to
     \\
     \dot{\rho}_{11}
     &= \gamma_+ \abs{h_+}^2 \rho_{00}
-    - \gamma_- \abs{h_-}^2 \rho_{11}
+    - \gamma_- \abs{h_-}^2 \rho_{11}.
   \end{align}\label{eq:pauli-diss}
 \end{subequations}
 In the case where $h_z = 0$ and $h_- = h_+ \eqqcolon h$, \cref{eq:pauli-diss}
@@ -801,6 +817,10 @@ reduces to
     - \gamma_- \rho_{11}.
   \end{align}\label{eq:pauli-diss-noz}
 \end{subequations}
+Thus as $t \to \infty$, $\dop$ approaches a pure state with both levels
+fractionally occupied? (Wait, this neglects the unitary evolution. Will do in
+full.) If so,
+compare to canonical occupations?
 
 
 % \begin{align}
