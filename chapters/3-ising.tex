@@ -60,22 +60,28 @@ where $\ket{\tq{0}}$ denotes the vacuum state. It then follows that
   \label{eq:car-action} \\
   \opr{c}_i^\dag\ket{\tq{n}}
   &= -(1 - n_i){(-1)}^{n_{<i}}\ket{\tq{n}_{i \leftarrow 1}},
-  \shortintertext{where}
-  \tq{n}_{i \leftarrow m}
-  &= \tq{n} \qq{with} n_i = m \\
-  n_{<i}
-  &= \sum_{j < i} n_j.
 \end{align}
-Then consider
+where $\tq{n}_{i \leftarrow m} = \tq{n}$ with $n_i = m$ and $n_{<i} = \sum_{j <
+i} n_j$.
+
+Thus the number operator is
+\begin{align}
+  \opr{c}_i^\dag \opr{c}_i \ket{\tq{n}}
+  &= (1-0){(-1)}^{n_{<i}} n_i{(-1)}^{n_{<i}} \ket{\tq{n}_{i \leftarrow 1}} \\
+  &= n_i\ket{\tq{n}}.
+\end{align}
+
+This leads us to consider
 \begin{align}
   \opr{c}_i
-  = -\qty(\prod_{j<i} \pauli_j^z) \pauli_j^-
+  = -\qty(\prod_{j<i} -\pauli_j^z) \pauli_j^-
 \end{align}
 acting on the states
 \begin{equation}
   \ket{\tq{n}}
   = \prod_{i \in \ZZ_N} {\qty(\pauli_i^+)}^{n_i} \ket{\tq{0}},
 \end{equation}
+\todo[inline]{Fix my sign errors.}
 where $\ket{\tq{0}} = \ket{\uparrow}^{\tp N}$ is the state with all $z$-spins
 up, or all zero qubits. This gives the same result as \cref{eq:car-action}, so
 the $\opr{c}_i$ satisfy the CARs. This process of mapping spin-1/2 sites to
@@ -89,11 +95,11 @@ then compute that the inverse transformations are
   &= 2\opr{c}_i^\dag\opr{c}_i - \idopr
   \label{eq:pauliz} \\
   \pauli_i^x
-  &= -\qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
+  &= -\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
   \qty(\opr{c}_i^\dag + \opr{c}_i)
   \label{eq:paulix} \\
   \pauli_i^y
-  &= \im\qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
+  &= \im\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
   \qty(\opr{c}_i^\dag - \opr{c}_i).
   \label{eq:pauliy}
 \end{align}
@@ -306,20 +312,17 @@ The eigenvectors are then
     E_k^\pm - (\lambda - \cos k)
   },
 \end{equation}
-except if $k = 0$, in which case
+except if $k = 0$ or $-\pi$, in which case
 \begin{align}
-  \mq{H}_k
-  &= \bmqty{%
-    \lambda - 1 & 0 \\
-    0 & 1 - \lambda,
-  } \\
-  \vq{q}_0^+
-  &= \bmqty{1 \\ 0},
+  \vq{q}_k^-
+  &= \bmqty{1 \\ 0}
   \qand
-  \vq{q}_0^-
+  \vq{q}_k^+
   = \bmqty{0 \\ 1}.
 \end{align}
-To disregard this, we consider $N$ even going forward. To construct the unitary
+The $k = -\pi$ case does not appear if $N$ is odd. If also $\lambda =
+-1$, then $\mq{H}_{-\pi} = \mq{0}$.
+To construct the unitary
 transformation, we must normalize the $\vq{q}_k^\pm$. We find that
 \begin{align}
   \norm{\vq{q}_k^\pm}^2
@@ -373,7 +376,12 @@ so that
   \\
   &= \zopr.
 \end{align}
-Thus \cref{eq:Cham} becomes
+Note that \cref{eq:etas} is consistent with the edge cases in the limits $k \to
+-\pi$ and $k \to 0$. If also $\lambda = -1$, then we impose that
+$\opr{\eta}_{-\pi} = \opr{C}_\pi^\dag$, which is the same as if $\lambda \ne
+-1$.
+
+\Cref{eq:Cham} becomes
 \begin{equation}
   \ham
   = \sum_k E_k^+{\qty(\opr{\eta}_k^+)}^\dag\opr{\eta}_k^+
@@ -451,6 +459,63 @@ $\opr{c}^\dag \opr{c} \angle$ with respective eigenvalues
 \[
   -1 \qc 1 \qc 2, \qand 0.
 \]
+\begin{thm}
+  The fermionic operators $\bigcup_i \qty{\opr{c}_i,\, \opr{c}_i^\dag,\,
+  \opr{c}_i^\dag\opr{c}_i,\, \opr{c}_i\opr{c}_i^\dag}$ form an orthonormal
+  complete basis for the Liouville space $\liou\qty(\hilb_2^{\tp N})$?
+  \begin{proof} We apply the CARs to show orthogonality.
+    \begin{align}
+      \ip{\opr{c}_i}{\opr{c}_j}
+      &= \tr(\opr{c}_i^\dag\opr{c}_j) \\
+      &= \tr(\delta_{ij}\idopr - \opr{c}_j\opr{c}_i^\dag) \\
+      &= \delta_{ij}\tr\idopr - \tr(\opr{c}_j\opr{c}_i^\dag) \\
+      &= 2^N\delta_{ij} - \tr(\opr{c}_i^\dag\opr{c}_j) \\
+      &= 2^{N-1}\delta_{ij},
+      \\[1ex]
+      \ip{\opr{c}_i^\dag}{\opr{c}_j^\dag}
+      &= \tr(\opr{c}_i\opr{c}_j^\dag) \\
+      &= 2^{N-1}\delta_{ij},
+      \\[1ex]
+      \ip{\opr{c}_i^\dag}{\opr{c}_j}
+      &= \tr(\opr{c}_i\opr{c}_j) \\
+      &= -\tr(\opr{c}_j\opr{c}_i) \\
+      &= 0,
+      \\[1ex]
+      \ip{\opr{c}_i}{\opr{c}_j^\dag}
+      &= \tr(\opr{c}_i^\dag\opr{c}_j^\dag) \\
+      &= -\tr(\opr{c}_j^\dag\opr{c}_i^\dag) \\
+      &= 0,
+      \\[1ex]
+      \ip{\opr{c}_i^\dag \opr{c}_i}{\opr{c}_j}
+      &= \tr(\opr{c}_i^\dag \opr{c}_i \opr{c}_j) \\
+      &= -\tr(\opr{c}_i^\dag \opr{c}_j \opr{c}_i) \\
+      &= -\tr(\opr{c}_i \opr{c}_i^\dag \opr{c}_j)
+      \\[1ex]
+      \ip{\opr{c}_i^\dag \opr{c}_i}{\opr{c}_j^\dag \opr{c}_j}
+      &= \tr(\opr{c}_i^\dag \opr{c}_i \opr{c}_j^\dag \opr{c}_j) \\
+      &= \delta_{ij}\tr(\opr{c}_i^\dag \opr{c}_j)
+      - \tr(\opr{c}_i^\dag \opr{c}_j^\dag \opr{c}_i \opr{c}_j) \\
+      &= \delta_{ij}\tr(\opr{c}_i^\dag \opr{c}_j)
+      + \tr(\opr{c}_i^\dag \opr{c}_j^\dag \opr{c}_j \opr{c}_i) \\
+      &= \delta_{ij}\tr(\opr{c}_i^\dag \opr{c}_j)
+      + \tr(\opr{c}_i \opr{c}_i^\dag \opr{c}_j^\dag \opr{c}_j) \\
+      &= \delta_{ij}\tr(\opr{c}_i^\dag \opr{c}_j)
+      + \tr(\opr{c}_j^\dag \opr{c}_j)
+      - \tr(\opr{c}_i^\dag \opr{c}_i \opr{c}_j^\dag \opr{c}_j) \\
+      &= \frac{\delta_{ij}}{2} 2^{N-1} + \frac{1}{2} 2^{N-1} \\
+      &= \qty(\delta_{ij} + 1) 2^{N-2},
+      \\[1ex]
+      \ip{\opr{c}_i^\dag \opr{c}_i}{\opr{c}_j \opr{c}_j^\dag}
+      &= \tr(\opr{c}_i^\dag \opr{c}_i \opr{c}_j \opr{c}_j^\dag) \\
+      &= \tr(\opr{c}_i^\dag \opr{c}_i)
+      - \tr(\opr{c}_i^\dag \opr{c}_i \opr{c}_j^\dag \opr{c}_j) \\
+      &= 2^{N-1} - \qty(\delta_{ij} + 1) 2^{N-2} \\
+      &= \qty(1 - \delta_{ij}) 2^{N-2}.
+    \end{align}
+    Thus only $\opr{c}_i$ and $\opr{c}_i^\dag$ are orthogonal, but still require
+    normalization. The full set is not orthogonal.
+  \end{proof}
+\end{thm}
 We may then write
 \begin{equation}
   \pauli_x
@@ -512,6 +577,7 @@ We recall \cref{eq:paulix} as
   \shortintertext{and write}
   \opr{\eta}_k
   &= \sum_{i} a_{ik} \opr{c}_i + b_{ik} \opr{c}_i^\dag
+  \label{eq:eta-cs}
   \\
   \opr{\eta}_k^\dag \opr{\eta}_k
   &= \sum_{ij} \qty(a_{ik}^* \opr{c}_i^\dag + b_{ik}^* \opr{c}_i)
@@ -533,6 +599,64 @@ We recall \cref{eq:paulix} as
   + b_{ik}^* a_{jk} \opr{c}_i \opr{c}_j
   ).
 \end{align}
+
+Suppose that \cref{eq:eta-cs} has been inverted to give coefficients
+$\alpha_{ik}$ and $\beta_{ik}$ such that
+\begin{equation}
+  \opr{c}_i
+  = \sum_{k} \alpha_{ik} \opr{\eta}_k + \beta_{ik} \opr{\eta}_k^\dag.
+\end{equation}
+We may then expand \cref{eq:paulix} as
+\begin{align}
+  \pauli_i^x
+  &= -\qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
+  \qty(\opr{c}_i^\dag + \opr{c}_i)
+  \\
+  &= -\qty(\prod_{j<i} \qty(2\qty(\sum_{kk'}
+  \alpha_{ik}^* \alpha_{jk} \opr{\eta}_k^\dag \opr{\eta}_{k'}
+  + \alpha_{ik}^* \beta_{jk} \opr{\eta}_k^\dag \opr{\eta}_{k'}^\dag
+  + \beta_{ik}^* \alpha_{jk} \opr{\eta}_k \opr{\eta}_{k'}
+  + \beta_{ik}^* \beta_{jk} \opr{\eta}_k \opr{\eta}_{k'}^\dag
+  ) - \idopr))
+  \\
+  &\qty(%
+  \sum_k
+  \qty(\alpha_{ik} + \beta_{ik}^\dag) \opr{\eta}_k
+  + \qty(\alpha_{ik}^\dag + \beta_{ik}) \opr{\eta}_k^\dag
+  )
+  \\
+  &\sim -\qty(\prod_{j} \qty(x_j - \idopr)) \\
+  &\qty(%
+  \sum_k
+  \qty(\alpha_{ik} + \beta_{ik}^\dag) \opr{\eta}_k
+  + \qty(\alpha_{ik}^\dag + \beta_{ik}) \opr{\eta}_k^\dag
+  )
+  \\
+  &\sim -\qty(\sum_{I:J\to\ZZ_2} \prod_{j \in J} {(-1)}^{I(j) + 1} x_j^{I(j)}) \\
+  &\qty(%
+  \sum_k
+  \qty(\alpha_{ik} + \beta_{ik}^\dag) \opr{\eta}_k
+  + \qty(\alpha_{ik}^\dag + \beta_{ik}) \opr{\eta}_k^\dag
+  )
+\end{align}
+
+We see that $\pauli_i^x$ is a generic normal order expression in the
+$\opr{\eta}_k$, so the eigenoperators we found at each site do not suffice, even
+if we got around them not being orthogonal.
+
+Evaluation with projectors is intractable because a projector has one occupation
+state, but an $\opr{\eta}_k$ has many. Normal order expressions will have an
+intermediate number of non-identity factors.
+
+Therefore, evaluate with $2^N$ dimensional matrices on a computer? Then $\dop$
+will only be known in coordinates and we may only consider numerical solutions
+for small $N$.
+
+\notebook{transverse-ising}
+
+
+\section{Previous calculations}
+
 Note that for $\opr{c}_i$ and $\opr{d}_i$ from an orthonormal basis for $\liou_i$,
 \begin{align}
   \ip{\bigotimes\nolimits_i a_i \opr{c}_i}{\bigotimes\nolimits_i b_i \opr{d}_i}

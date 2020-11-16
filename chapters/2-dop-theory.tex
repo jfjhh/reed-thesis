@@ -120,14 +120,152 @@ on to considering the more general dynamics of interacting quantum systems.
 
 \section{Composite quantum systems\label{sec:composite}}
 
-Consider two quantum systems in Hilbert spaces $\hilb_A$ and $\hilb_B$. 
-The Hilbert space of the composite system is the \term{tensor product}
-$\hilb = \hilb_A \tp \hilb_B$ (\cref{def:tensors}). How might a density operator $\dop$ for the
-composite system admit a \term{reduced density operator} $\dop_A$ for system $A$?
-Consider an observable $\opr{O}$ of system $A$, for which the corresponding
-composite observable is $\opr{O} \tp \idopr$. Regardless of the
-representation (composite or subsystem), the ensemble average of $\opr{O}$
-should be the same:
+\todo[inline]{Clean up inner product notation.}
+
+Consider two quantum systems described by Hilbert spaces $\hilb_A$ and
+$\hilb_B$. We should be able to view both systems as parts of a composite
+quantum system described by some Hilbert space $\hilb$. For the moment, we
+will only consider the Hilbert spaces as vector spaces. Mathematically, we have
+a map $\phi:\hilb_A \times \hilb_B \to \hilb$. The simplest choice would be
+$\hilb = \hilb_A \times \hilb_B$, but this does not make physical sense. For
+the assignment of composite states to be consistent, if a linear combination is
+taken in $\hilb_A$ then joined with $\hilb_B$, the result must be the same as
+first joining and then taking the linear combination. If $\ket{a_1}$, $\ket{a_2}
+\in \hilb_A$, $\ket{b} \in \hilb_B$, and $\alpha$, $\beta \in \CC$, then
+\begin{equation}
+  \phi\qty(\alpha\ket{a_1} + \beta\ket{a_2},\, \ket{b})
+  = \alpha\phi\qty(\ket{a_1},\, \ket{b}) + \beta\phi\qty(\ket{a_2},\, \ket{b}),
+  \label{eq:consistent-composite}
+\end{equation}
+so that $\phi$ is bilinear.
+
+Taking $\hilb = \hilb_A \times \hilb_B$ by doing operations elementwise is
+known as the \term{direct sum} $\hilb_A \oplus \hilb_B$. Applying $\phi':\hilb_A
+\times \hilb_B \to \hilb_A \oplus \hilb_B$ gives
+\begin{align}
+  \alpha\phi'\qty(\ket{a_1},\, \ket{b}) + \beta\phi'\qty(\ket{a_2},\, \ket{b})
+  &= \alpha\qty(\ket{a_1},\, \ket{b}) + \beta\qty(\ket{a_2},\, \ket{b}) \\
+  &= \qty(\alpha\ket{a_1} + \beta\ket{a_2},\, 2\ket{b}) \\
+  &\ne \qty(\alpha\ket{a_1} + \beta\ket{a_2},\, \ket{b}) \\
+  &= \phi'\qty(\alpha\ket{a_1} + \beta\ket{a_2},\, \ket{b}),
+\end{align}
+since $\ket{b}$ is normalized in $\hilb_B$. Thus the direct sum is not a
+physically consistent construction of a composite system.
+
+Instead, we may define the composite system and corresponding map so that they
+satisfy \cref{eq:consistent-composite}. We consider the combination of two
+states first as a symbol, giving the set of symbols
+\begin{equation}
+  B
+  = \qty{\tilde{\phi}\qty(\ket{a}, \ket{b}) : \ket{a} \in \hilb_A,\, \ket{b} \in
+  \hilb_B}.
+\end{equation}
+The formal complex linear combinations of elements of $B$ form a vector space,
+known as the \term{free vector space} $F(\hilb_A \times \hilb_B)$. The composite
+system is then the quotient vector space $\hilb = F(\hilb_A \times \hilb_B)
+/\sim$, where $\sim$ is an equivalence relation that identifies linear
+combinations like in \cref{eq:consistent-composite}. These equivalence classes
+are known as \term{tensors}. We write the class $\phi\qty(\ket{a}, \ket{b}) =
+[\tilde{\phi}(\ket{a}, \ket{b})]$ as $\ket{a} \tp \ket{b}$, which is often
+abbreviated to $\ket{a}\ket{b}$ or $\ket{a,b}$.
+
+To make $\hilb$ a Hilbert space, we may complete it with a suitable inner
+product. Consider the special case when the states are normalized and
+$\ip{a_1}{a_2} = 0$. We have another consistency criterion: the composite state
+should also be normalized. We find
+\begin{align}
+  1
+  &= \ip{\qty(\alpha\ket{a_1} + \beta\ket{a_1}) \tp \ket{b}}{%
+  \qty(\alpha\ket{a_1} + \beta\ket{a_1}) \tp \ket{b}} \\
+  &= \abs{\alpha}^2 \ip{\ket{a_1} \tp \ket{b}}{\ket{a_1} \tp \ket{b}}
+  + \abs{\beta}^2 \ip{\ket{a_2} \tp \ket{b}}{\ket{a_2} \tp \ket{b}} \\
+  &+ \alpha\beta^* \ip{\ket{a_1} \tp \ket{b}}{\ket{a_2} \tp \ket{b}}
+  + \alpha^*\beta \ip{\ket{a_2} \tp \ket{b}}{\ket{a_1} \tp \ket{b}} \\
+  &= \abs{\alpha}^2 + \abs{\beta}^2
+  + \alpha\beta^* \ip{\ket{a_1} \tp \ket{b}}{\ket{a_2} \tp \ket{b}}
+  + \alpha^*\beta \ip{\ket{a_2} \tp \ket{b}}{\ket{a_1} \tp \ket{b}}.
+\end{align}
+This requires that
+\begin{equation}
+  \alpha\beta^* \ip{\ket{a_1} \tp \ket{b}}{\ket{a_2} \tp \ket{b}}
+  = -\alpha^*\beta \ip{\ket{a_1} \tp \ket{b}}{\ket{a_2} \tp \ket{b}}^*,
+\end{equation}
+so if $\alpha$, $\beta \neq 0$, the inner product $\ip{\ket{a_1} \tp
+\ket{b}}{\ket{a_2} \tp \ket{b}}$ must be purely imaginary. But since the
+superposition state is to 1, this establishes that $\ket{a_1} \tp \ket{b}$ and
+$\ket{a_2} \tp \ket{b}$ must be orthonormal. In general, consistency requires
+that
+\begin{equation}
+  \ip{\ket{a_i} \tp \ket{b_m}}{\ket{a_j} \tp \ket{b_n}}
+  = \delta_{ij}\delta_{mn}.
+\end{equation}
+Hence consistency has determined the inner product. For arbitrary vectors
+$\ket{a} = \sum_i c_i \ket{a_i}$, $\ket{\tilde{a}} = \sum_j c_j' \ket{a_j}$,
+$\ket{b} = \sum_m d_m \ket{b_m}$, and $\ket{\tilde{b}} = \sum_n d_n' \ket{b_n}$,
+\begin{align}
+  \ip{\ket{a} \tp \ket{b}}{\ket{\tilde a} \tp \ket{\tilde b}}
+  &= \sum_{ijmn} c_i \tilde{c}_j^* d_m \tilde{d}_n^*
+  \ip{\ket{a_i} \tp \ket{b_m}}{\ket{a_j} \tp \ket{b_n}}
+  \\
+  &= \sum_{ijmn} c_i \tilde{c}_j^* d_m \tilde{d}_n^*
+  \delta_{ij}\delta_{mn}
+  \\
+  &= \qty(\sum_{ij} c_i \tilde{c}_j^* \ip{a_i}{a_j})
+  \qty(\sum_{mn} d_m \tilde{d}_n^* \ip{b_m}{b_n})
+  \\
+  &= \ip{a}{\tilde{a}} \ip{b}{\tilde{b}}.
+  \label{eq:composite-ip}
+\end{align}
+\Cref{eq:composite-ip} is then a valid definition for the inner product, with
+consistency upheld by extending to linear combinations of tensors.
+
+Given an operator $\opr{A}$ on $\hilb_A$, what is the corresponding operator
+$\tilde{\opr{A}}$ on $\hilb$? For $\ev{\tilde{\opr{A}}}{a,b} = \ev{\opr{A}}{a}$,
+we must have
+\begin{equation}
+  \tilde{\opr{A}}
+  = \opr{A} \tp \idopr,
+\end{equation}
+where action of the operator $\opr{A} \tp \opr{B}$ on $\hilb$ is defined by
+\begin{equation}
+  (\opr{A} \tp \opr{B})(\ket{a} \tp \ket{b})
+  = \opr{A}\ket{a} \tp \opr{B}\ket{b}.
+\end{equation}
+The \term{adjoint} $\opr{T}^\dag$ of $\opr{T}:\hilb_A \to \hilb_B$ satisfies that
+\begin{equation}
+  \ip{\opr{T}\ket{a}}{\ket{b}}
+  = \ip{\ket{a}}{\opr{T}^\dag\ket{b}}
+  \qfor \ket{a} \in \hilb_A,\, \ket{b} \in \hilb_B.
+\end{equation}
+Thus for $\opr{A} \tp \opr{B}: \hilb \to \hilb$,
+\begin{align}
+  \ip{(\opr{A} \tp \opr{B})(\ket{a} \tp \ket{b})}{\ket{c} \tp \ket{d}}
+  &= \ip{\opr{A}\ket{a} \tp \opr{B}\ket{b}}{\ket{c} \tp \ket{d}} \\
+  &= \ip{\opr{A}\ket{a}}{\ket{c}} \ip{\opr{B}\ket{b}}{\ket{d}} \\
+  &= \ip{\ket{a}}{\opr{A}^\dag\ket{c}} \ip{\ket{b}}{\opr{B}^\dag\ket{d}} \\
+  &= \ip{\ket{a} \tp \ket{b}}{\opr{A}^\dag\ket{c} \tp \opr{B}^\dag\ket{d}} \\
+  &= \ip{\ket{a} \tp \ket{b}}{\qty(\opr{A}^\dag \tp \opr{B}^\dag)(\ket{c} \tp
+  \ket{d})}.
+\end{align}
+Hence
+\begin{equation}
+  {\qty(\opr{A} \tp \opr{B})}^\dag
+  = \opr{A}^\dag \tp \opr{B}^\dag.
+\end{equation}
+Given $\ket{a,b} \in \hilb$, we will often use an operator on part of $\hilb$ as
+if it were an operator on $\hilb$. For example, $\opr{A}\ket{a,b}$ is taken to
+mean $(\opr{A} \tp \idopr)\ket{a,b}$. This can be dangerous: we also write
+expressions like $(\opr{A} + \opr{B})\ket{a,b}$, which we intend to mean
+$\opr{A}\ket{a} \tp \opr{B}\ket{b}$, but this conflicts with using
+$\opr{A}\opr{B}$ to do the same thing. Additionally, using the product notation
+makes $\opr{B}\opr{A} = (\idopr \tp \opr{B})(\opr{A} \tp \idopr) =
+\opr{A}\opr{B}$ so that the ``commutator'' $\comm{\opr{A}}{\opr{B}} = \zopr$.
+
+How might a density operator $\dop$ for the composite system admit a
+\term{reduced density operator} $\dop_A$ for system $A$? Consider an observable
+$\opr{O}$ of system $A$, for which the corresponding composite observable is
+$\opr{O} \tp \idopr$. Regardless of the representation (composite or subsystem),
+the ensemble average of $\opr{O}$ should be the same:
 \begin{equation}
   \ensavg{\opr{O}_A \tp \idopr}
   = \ensavg[\dop_A]{\opr{O}_A}.
@@ -686,11 +824,11 @@ picture of decoherence a bit more clear.
   Consider vector spaces $V(k)$, $W(k)$, and $Z$. For any bilinear map $h:V
   \times W \to Z$, the \term{tensor product} $V \tp W$ and associated
   bilinear map $\phi:V \times W \to V \tp W$ map have the property that there
-  is a unique bilinear map $g:V \tp W \to Z$ such that $h = g \circ \phi$.
-  For tensor products of Hilbert spaces, the inner product is defined on each
+  is a unique linear map $g:V \tp W \to Z$ such that $h = g \circ \phi$. For
+  tensor products of Hilbert spaces, the inner product is defined on each
   element of a product and then the space is completed. There is then a natural
-  correspondence between the element $v \tp f$ of the tensor product $V
-  \tp V^*$ and the linear map $T:V \to V$ defined by $Tx = f(x)v$.
+  correspondence between the element $v \tp f$ of the tensor product $V \tp V^*$
+  and the linear map $T:V \to V$ defined by $Tx = f(x)v$.
 
   This induces an extension of Dirac notation where all pairs $f \tp x$ of
   dual and usual vectors from the same space are evaluated as $\ip{f}{x} = f(x)$

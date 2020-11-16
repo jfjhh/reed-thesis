@@ -110,8 +110,7 @@ Ligatures={TeX,Common},
 ]{XCharter}
 % \usepackage[uprightscript,xcharter,vvarbb,scaled=1.05]{newtxmath}
 % \usepackage[type1]{cabin}
-% \usepackage[scaled=1.04,varqu,varl]{inconsolata}
-\setmonofont[Scale=MatchLowercase]{Inconsolata}
+\setmonofont[Scale=MatchLowercase]{Iosevka} % We need unicode
 \usepackage[scr=kp,cal=cm]{mathalfa}
 \linespread{1.04}
 
@@ -199,6 +198,8 @@ Ligatures={TeX,Common},
 \usepackage{letltxmacro}
 \LetLtxMacro\oldcref\cref%
 \RenewDocumentCommand{\cref}{m}{{\oldcref{#1}}\rubricmark{$\circ$}}
+\LetLtxMacro\oldCref\Cref%
+\RenewDocumentCommand{\Cref}{m}{{\oldCref{#1}}\rubricmark{$\circ$}}
 
 \IfEq{\jobname}{\detokenize{thesis}}{% Full document
   % Nothing different
