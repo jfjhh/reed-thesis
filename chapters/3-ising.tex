@@ -652,6 +652,38 @@ Therefore, evaluate with $2^N$ dimensional matrices on a computer? Then $\dop$
 will only be known in coordinates and we may only consider numerical solutions
 for small $N$.
 
+\begin{thm}
+  Let $N > 1$ be a positive integer and $\lambda \leqslant 0$ be a real parameter.
+  Define
+  \begin{align}
+    k_i
+    &= \frac{2\pi i}{N} - \frac{N - [\text{$N$ odd}]}{N}\pi \qc
+    i \in \ZZ_N \\
+    \shortintertext{and}
+    E(k_i)
+    &= \sqrt{\lambda^2 - 2\lambda\cos k_i + 1}.
+  \end{align}
+  Consider tuples of the form $\tq{n} = {\qty(n_i)}_{i \in \ZZ_N}$ where the
+  $n_i \in \ZZ_2$, and define the corresponding sum
+  \begin{equation}
+    E(\tq{n})
+    = \sum_i n_i E(k_i).
+  \end{equation}
+  Let $K = {\qty(\ZZ_2)}^N$ denote the set of all such tuples. Then
+  \begin{equation}
+    0 < \varepsilon(N,\, \lambda) \leqslant \abs{E(\tq{n}) - E(\tq{n}')}
+  \end{equation}
+  for all $\tq{n}$, $\tq{n'} \in K$ such that $E(\tq{n}) \neq E(\tq{n}')$.
+
+  Find a $\varepsilon(N,\, \lambda)$. If possible, find a closed form for
+  \begin{equation}
+    \varepsilon_\text{max}(N,\, \lambda)
+    = \min_{\tq{n},\, \tq{n}' \in K} \abs{E(\tq{n}) - E(\tq{n}')}.
+  \end{equation}
+  Approximations and lower bounds suffice.
+\end{thm}
+
+
 \notebook{transverse-ising}
 
 
