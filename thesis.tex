@@ -76,30 +76,6 @@ partial=upright,
 \newtheorem{rmk}{Remark}
 \newtheorem{post}{Postulate}
 
-% \usepackage{marginnote}
-% \renewcommand*{\marginfont}{\color{linkcolor}\small\sffamily}
-
-% \usepackage{wasysym}
-% \newcounter{prf}[chapter]
-% \newenvironment{prf}[1][]{%
-%   \begingroup%
-%   \stepcounter{prf}
-%   \marginnote{\textcolor{linkcolor}{\hypertarget{prf:end-\theprf}{\hyperlink{prf:\theprf}{\DOWNarrow}}}}
-%   }{%
-%   \marginnote{\textcolor{linkcolor}{\hypertarget{prf:\theprf}{\hyperlink{prf:end-\theprf}{\UParrow}}}}
-%   \addtocounter{prf}{-1}
-%   \endgroup%
-% }
-
-% \usepackage{tcolorbox}
-% \tcbuselibrary{skins,breakable}
-% \tcolorboxenvironment{proof}{%
-%   enhanced jigsaw,
-%   breakable,
-%   % title={Proof},
-%   % fonttitle=\sffamily,
-% }
-
 % Fonts
 \usepackage{fontspec}
 \usepackage[osf,proportional,ScaleRM=1.06,ScaleSF=1.06]{libertinus-otf}
@@ -188,16 +164,18 @@ Ligatures={TeX,Common},
 \usepackage{xparse}
 \usepackage[pdfusetitle,final,backref]{hyperref}
 \usepackage[all]{hypcap}
-\usepackage[nameinlink]{cleveref}
+\usepackage{cleveref}
 
-\newcommand{\rubricmark}[1]{\hspace*{-0.1em}\textsuperscript{\textcolor{rubric}{#1}}}
-\AdaptNoteNoOptNoMult{\rubricmark}
+% \usepackage[nameinlink]{cleveref}
 
-\usepackage{letltxmacro}
-\LetLtxMacro\oldcref\cref%
-\RenewDocumentCommand{\cref}{m}{{\oldcref{#1}}\rubricmark{$\circ$}}
-\LetLtxMacro\oldCref\Cref%
-\RenewDocumentCommand{\Cref}{m}{{\oldCref{#1}}\rubricmark{$\circ$}}
+% \newcommand{\rubricmark}[1]{\hspace*{-0.1em}\textsuperscript{\textcolor{rubric}{#1}}}
+% \AdaptNoteNoOptNoMult{\rubricmark}
+
+% \usepackage{letltxmacro}
+% \LetLtxMacro\oldcref\cref%
+% \RenewDocumentCommand{\cref}{m}{{\oldcref{#1}}\rubricmark{$\circ$}}
+% \LetLtxMacro\oldCref\Cref%
+% \RenewDocumentCommand{\Cref}{m}{{\oldCref{#1}}\rubricmark{$\circ$}}
 
 \IfEq{\jobname}{\detokenize{thesis}}{% Full document
   % Nothing different
@@ -238,10 +216,10 @@ Ligatures={TeX,Common},
 \ifdraft{}{\usepackage{autonum}}
 
 \definecolor{linkcolor}{rgb}{0.0,0.25,0.5}
-\definecolor{rubric}{rgb}{0.6,0.2,0.2}
+\definecolor{rubric}{rgb}{0.7,0.05,0.0}
+\definecolor{screentext}{rgb}{0.075,0.075,0.075} % For easier reading on a backlit screen.
 \hypersetup{%
-  allcolors=black,
-  citecolor=rubric,
+  allcolors=rubric,
 }
 \urlstyle{same}
 \ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
@@ -259,6 +237,7 @@ Ligatures={TeX,Common},
 \department{Physics}
 
 \begin{document}
+\ifoptionfinal{}{\color{screentext}}
 \maketitle
 \pagenumbering{roman}
 \frontmatter
@@ -272,9 +251,12 @@ Ligatures={TeX,Common},
 
 \mainmatter%
 \pagestyle{fancyplain}
-\tableofcontents
-\listoffigures
-\listoftables
+{%
+  \hypersetup{linkcolor=black}
+  \tableofcontents
+  \listoffigures
+  \listoftables
+}
 
 % \ifdraft{\setstretch{1.5}}{}
 
