@@ -8,10 +8,18 @@
 We consider the Hamiltonian
 \begin{equation}
   \ham
+  = -J\sum_{i \in \ZZ_N} \opr{S}_i^x\opr{S}_{i+1}^x
+  - \Gamma\sum_{i \in \ZZ_N} \opr{S}_i^z,
+\end{equation}
+which we nondimensionalize as
+\begin{equation}
+  \frac{4}{J}\ham
   = -\sum_{i \in \ZZ_N} \pauli_i^x\pauli_{i+1}^x
   + \lambda\sum_{i \in \ZZ_N} \pauli_i^z
   \label{eq:transham}
 \end{equation}
+\todo[inline]{Note that $\ham$ does not have $4/J$ below. Fix this and change
+$\lambda$ (Striff) to $-\alpha$.}
 for the periodic transverse Ising chain with $N$ spins. We notice that the
 operators
 \begin{equation}
@@ -345,14 +353,14 @@ Now
 \begin{equation}
   \mq{U}_k^\dag
   = \bmqty{%
-    {\qty(\hat{\vq{q}}_k^+)}^\dag \\
-    {\qty(\hat{\vq{q}}_k^-)}^\dag
+    {\qty(\hat{\vq{q}}_k^-)}^\dag \\
+    {\qty(\hat{\vq{q}}_k^+)}^\dag
   }.
 \end{equation}
 Then with $E_k = \abs{E_k^\pm}$,
 \begin{equation}
   \opr{\eta}_k^\pm
-  = \frac{-\im\sin k}{\sqrt{2E_k\qty(E_k \pm (\cos k - \lambda))}}
+  = \frac{\im\sin k}{\sqrt{2E_k\qty(E_k \pm (\cos k - \lambda))}}
   \opr{C}_k
   \pm \sqrt{\frac{E_k \pm (\cos k - \lambda)}{2E_k}}
   \opr{C}^\dag_{-k}
@@ -651,44 +659,6 @@ intermediate number of non-identity factors.
 Therefore, evaluate with $2^N$ dimensional matrices on a computer? Then $\dop$
 will only be known in coordinates and we may only consider numerical solutions
 for small $N$.
-
-\begin{thm}
-  Let $N > 1$ be a positive integer and $\lambda \leqslant 0$ be a real parameter.
-  Define
-  \begin{align}
-    k_i
-    &= \frac{2\pi i}{N} - \frac{N - [\text{$N$ odd}]}{N}\pi \qc
-    i \in \ZZ_N \\
-    \shortintertext{and}
-    E(k_i)
-    &= \sqrt{\lambda^2 - 2\lambda\cos k_i + 1}.
-  \end{align}
-  Consider tuples of the form $\tq{n} = {\qty(n_i)}_{i \in \ZZ_N}$ where the
-  $n_i \in \ZZ_2$, and define the corresponding sum
-  \begin{equation}
-    E(\tq{n})
-    = \sum_i n_i E(k_i).
-  \end{equation}
-  Let $K = {\qty(\ZZ_2)}^N$ denote the set of all such tuples. Then
-  \begin{equation}
-    0 < \varepsilon(N,\, \lambda) \leqslant \abs{E(\tq{n}) - E(\tq{n}')}
-  \end{equation}
-  for all $\tq{n}$, $\tq{n'} \in K$ such that $E(\tq{n}) \neq E(\tq{n}')$.
-
-  Find a $\varepsilon(N,\, \lambda)$. If possible, find a closed form for
-  \begin{equation}
-    \varepsilon_\text{max}(N,\, \lambda)
-    = \min_{\tq{n},\, \tq{n}' \in K} \abs{E(\tq{n}) - E(\tq{n}')}.
-  \end{equation}
-  Approximations and lower bounds suffice.
-\end{thm}
-
-\begin{proof}
-  Note that the list $E(K)$ of all energies (with duplicates) may be used to
-  define an empirical cumulative distribution function (\textsc{ecdf}). For
-  example, if instead $E(k_i) = i$, then
-\end{proof}
-
 
 
 \notebook{transverse-ising}
