@@ -1,0 +1,414 @@
+\documentclass[12pt,c]{beamer}
+
+\usepackage[normalem]{ulem}
+\usepackage{multicol}
+
+\usepackage{mathtools} % Load before newtxmath
+\mathtoolsset{%
+  mathic,
+}
+\usepackage[%
+math-style=ISO,
+bold-style=ISO,
+sans-style=italic,
+nabla=upright,
+partial=upright,
+]{unicode-math}
+
+
+\definecolor{rubric}{rgb}{0.7,0.05,0.0}
+
+\usecolortheme[snowy]{owl}
+\setbeamercolor{title}{fg=rubric}
+\setbeamerfont{frametitle}{shape=\itshape}
+\setbeamercolor{frametitle}{bg=white}
+\setbeamertemplate{frametitle}[default]%[center]
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\setbeamercolor{section in toc}{fg=normal text.fg}
+\setbeamercolor{footnote}{fg=gray}
+\setbeamercolor{alerted text}{fg=rubric}
+\setbeamercolor*{bibliography item}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry author}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry title}{fg=rubric}
+\setbeamercolor*{bibliography entry location}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry note}{fg=normal text.fg}
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \color{normal text.fg}
+    \hspace{1em}%
+    \insertframenumber\,/\,\inserttotalframenumber%
+}
+
+\usepackage[sorting=none,doi=false,url=false,isbn=false]{biblatex}
+\addbibresource{references.bib}
+\renewcommand*{\bibfont}{\footnotesize}
+
+% Fonts
+\usefonttheme[stillsansserifsmall]{serif} % So beamer won't change fonts
+\usepackage[full]{textcomp} % to get the right copyright, etc.
+\usepackage{libertinus-otf}
+\usepackage[T1]{fontenc} % LY1 also works
+\setmainfont[Numbers={OldStyle,Proportional}]{fbb}
+\setsansfont[Scale=0.95]{Cabin}
+\usepackage[supstfm=fbb-Regular-sup-t1]{superiors}
+% \setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
+\setmonofont[Scale=MatchLowercase]{Iosevka} % We need unicode
+\usepackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
+
+\newcommand{\spacedsc}{\scshape\addfontfeatures{LetterSpace=5}}
+
+
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\hypersetup{%
+  pdfborder={0 0 0},
+  breaklinks=true,
+}
+\urlstyle{same} % don't use monospace font for urls
+
+% \setlength{\parindent}{0pt}
+% \setlength{\parskip}{6pt plus 2pt minus 1pt}
+% \setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\tikzset{% Animate with beamer overlays
+  invisible/.style={opacity=0},
+  visible on/.style={alt={#1{}{invisible}}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+
+\graphicspath{{./figs/}}
+
+\input{preamble/math-packages}
+\input{preamble/math-commands}
+
+\renewcommand\footnoterule{}
+\renewcommand\thefootnote{\textcolor{gray}{\arabic{footnote}}}
+% \setbeamertemplate{footnote}{%
+%   \scriptsize\noindent\raggedright$^*$\insertfootnotetext\par%
+% }
+
+\title{Interaction of the transverse-field Ising model with a bath}
+\author{Alex Striff \\ Advisor: Darrell Schroeter}
+\institute{\itshape Reed College \\ Thesis Mini Oral}
+\date{December 8, 2020}
+
+\begin{document}
+
+{%
+  \beamertemplatenavigationsymbolsempty%
+  \begin{frame}<article:0>[plain]
+    \begin{tikzpicture}[remember picture,overlay,opacity=0.333333]
+      \node[at=(current page.center)] {%
+          % \includegraphics[keepaspectratio,
+          % width=\paperwidth,
+          % height=\paperheight]{strogatz}
+        };
+    \end{tikzpicture}
+    \titlepage%
+  \end{frame}
+}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Why care about the transverse-field Ising model?}
+
+\begin{frame}{The transverse-field Ising model}
+  \[
+    \ham
+    = -\sum_{i \in \ZZ_N} \pauli_i^x\pauli_{i+1}^x
+    - \lambda\sum_{i \in \ZZ_N} \pauli_i^z
+  \]
+  \begin{itemize}
+    \item Cannot be described with classical statistical mechanics
+    \item Show thermalization from microscopic interactions
+    \item Undergoes a quantum phase transition at $\lambda = 1$
+    \item Learn new techniques
+    \item Relatively simple
+  \end{itemize}
+\end{frame}
+
+\section{What is an open quantum system?}
+
+\begin{frame}{Open quantum systems}
+  A quantum system is described by a \alert{density operator} $\dop$
+  \vspace{\baselineskip}
+
+  \textbf{Setup}:
+  Liouville space $\liou$ of operators with finite norm
+  \[
+    \lprod{\opr{A}}{\opr{B}}
+    = \tr(\opr{A}^\dag \opr{B})
+  \]
+
+  \textbf{Expectations}: Self-adjoint $\opr{O}$ has $\ev{\opr{O}} =
+  \lprod{\dop}{\opr{O}}$
+
+  \begin{itemize}
+    \item $\ev{\alpha\idopr} = \alpha$ for $\alpha \in \CC$ requires $\tr\dop =
+      1$
+
+    \item All $\ev{\opr{O}}$ real requires $\dop = \dop^\dag$
+
+    \item All $\ev{\opr{O}}$ positive for positive $\opr{O}$ requires $\dop$
+      positive
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Composite systems}
+  \alert{Epistemically independent} systems $A$ and $B$ form a composite system:
+  \[
+    \sopr{C}(\dop_A + \dop_A', \dop_B)
+    = \sopr{C}(\dop_A, \dop_B) + \sopr{C}(\dop_A', \dop_B)
+  \]
+  Equivalence classes are called tensors in $\liou_A \tp \liou_B$
+
+  For $\dop_A \tp \dop_B$ to be normalized,
+  \begin{align*}
+    \ip{\dop_A \tp \dop_B}{\dop_A \tp \dop_B}
+    &= \ip{\dop_A}{\dop_A}\ip{\dop_B}{\dop_B} \\
+    \shortintertext{This requires}
+    (\dop_A \tp \dop_B)(\opr{A} \tp \opr{B})
+    &= \dop_A\opr{A} \tp \dop_B\opr{B}
+  \end{align*}
+  Undo with $\tr_B\dop = \dop_A$.
+\end{frame}
+
+\begin{frame}{Time evolution}
+  \textit{A priori}, anything can happen to $\dop$\footnote{$\dop$ cannot start
+  entangled if it follows a \textsc{cptp} map}
+  \[
+    \dop \mapsto \sum_i \opr{B}_i \dop \opr{B}_i^\dag,
+    \qq{where}
+    \sum_i \opr{B}_i \opr{B}_i^\dag \leqslant \idopr
+  \]
+  Usually $\dop(t)$ depends only on $\dop$ now:
+  \begin{align*}
+    \dop(t)
+    &= \sopr{V}_t\dop(0) \\
+    \sopr{V}_{t + t'}
+    &= \sopr{V}_t\sopr{V}_{t'}
+  \end{align*}
+  The \alert{Lindblad equation} generates $\sopr{V}_t$ that are \textsc{cptp}
+  \[
+    \dot{\dop}
+    = -\im\comm{\ham}{\dop}
+    + \sum_i \gamma_i \qty(%
+    \opr{J}_i\dop\opr{J}_i^\dag
+    - \frac{1}{2}\acomm{\opr{J}_i^\dag\opr{J}_i}{\dop}
+    )
+  \]
+\end{frame}
+
+\begin{frame}{Weak-coupling approximations}
+  System coupled to stationary bath:
+  \begin{align*}
+    \ham
+    &= \ham_S \tp \idopr + \idopr \tp \ham_B + \ham_I \\
+    \ham_I
+    &= \sum_i \opr{A}_i \tp \opr{B}_i
+  \end{align*}
+  Lindblad equation for $\dop_S(t) = \tr_B\dop(t)$ has
+  \[
+    \gamma_i(\omega)
+    = \int_{-\infty}^\infty\dd{s} e^{\im\omega s}
+    \ev{\opr{B}_i^\dag(t)\opr{B}_i(t - s)}
+  \]
+\end{frame}
+
+\section{What effect does the bath have?}
+
+\begin{frame}{Spins in a bosonic bath}
+  For a single spin in a one-dimensional cavity:
+  \begin{align*}
+    \ham_B
+    &= \sum_\omega \omega\, \opr{a}_\omega^\dag \opr{a}_\omega \\
+    \ham_I
+    &= \pauli_x \tp \sum_\omega\sqrt{J(\omega)}\qty(\opr{a}_\omega^\dag +
+    \opr{a}_\omega)
+  \end{align*}
+  Only $J(\omega) \propto \omega$ for small $\omega$ produces interactions.
+
+  With an upper cutoff, this is the \alert{Ohmic spectral density}
+  \[
+    J(\omega)
+    \propto \frac{\omega}{1 + {(\omega/\Omega)}^2}
+  \]
+  Electric dipole interactions have the same coupling
+\end{frame}
+
+\section{How do we solve interacting spin systems?}
+
+\begin{frame}{Solving the transverse-field Ising model}
+  \[
+    \ham
+    = -\sum_{i \in \ZZ_N} \pauli_i^x\pauli_{i+1}^x
+    - \lambda\sum_{i \in \ZZ_N} \pauli_i^z
+  \]
+  \begin{itemize}
+    \item A solution by E.\ Leib et.\ al.\ requires deriving and solving a
+      $N$-eigenvalue problem.
+
+    \item A series of transformations provide a simpler route.
+  \end{itemize}
+  \[
+    \pauli_i
+    \to
+    \opr{c}_i
+    \to
+    \opr{C}_k
+    \to
+    \opr{\eta}_k
+  \]
+\end{frame}
+
+\begin{frame}{\color{gray}
+    ${\usebeamercolor[fg]{frame title}\pauli_i \to
+  \opr{c}_i} \to \opr{C}_k \to \opr{\eta}_k$}
+  Fermions at each site with $\pauli_i^+$ and $\pauli_i^-$?
+  \[
+    \acomm{\pauli_i^+}{\pauli_j^-} \neq \delta_{ij} \idopr
+  \]
+  Actual fermions act like
+  \begin{align*}
+    \opr{c}_i\ket{\tq{n}}
+    &= -{(-1)}^{\sum_{j<i} n_j}n_i\ket{\tq{n}_{i \leftarrow 0}} \\
+    \ket{\tq{n}}
+    &= \prod_i {\qty(\opr{c}_i^\dag)}^{n_i} \ket{\tq{0}}
+  \end{align*}
+  Same effect:
+  \begin{align*}
+    \opr{c}_i
+    &= -\qty(\prod_{j<i} -\pauli_j^z) \pauli_i^- \\
+    \ket{\tq{n}}
+    &= \prod_i {\qty(\pauli_i^+)}^{n_i} \ket{\tq{0}}
+  \end{align*}
+\end{frame}
+
+\begin{frame}{\color{gray}
+    ${\usebeamercolor[fg]{frame title}\pauli_i \to
+  \opr{c}_i} \to \opr{C}_k \to \opr{\eta}_k$}
+  After Jordan-Wigner transform:
+  \begin{align*}
+    \ham
+  &= \sum_i \qty(\opr{c}_i - \opr{c}_i^\dag) \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1})
+  - \lambda\sum_i 2\opr{c}_i^\dag\opr{c}_i
+  + \lambda N \idopr \\
+  &\color{gray}- \qty(\idopr - \prod_{j < N-1}\qty(2\opr{c}_j^\dag \opr{c}_j - \idopr))
+  \qty(\opr{c}_{N-1} - \opr{c}_{N-1}^\dag) \qty(\opr{c}_0^\dag + \opr{c}_0)
+  \end{align*}
+  $\ham$ is translation invariant without the \textcolor{gray}{\bfseries
+  boundary term}.
+\end{frame}
+
+\begin{frame}{\color{gray}
+    $\pauli_i \to
+    {\usebeamercolor[fg]{frame title}\opr{c}_i \to \opr{C}_k}
+  \to \opr{\eta}_k$}
+  Fourier transform:
+  \[
+    \opr{c}_i
+    = \frac{1}{\sqrt{N}}\sum_k e^{\im ki} \opr{C}_k
+  \]
+  Now the Hamiltonian is
+  \begin{align*}
+    \ham
+  &= -\sum_k \qty(\lambda + \cos k)
+  \qty(%
+  \opr{C}_k^\dag \opr{C}_k
+  - \opr{C}_{-k} \opr{C}_{-k}^\dag
+  )
+  + \sum_k \im\sin k
+  \qty(%
+  \opr{C}_{-k}\opr{C}_k
+  - \opr{C}_k^\dag\opr{C}_{-k}^\dag
+  ) \\
+  &= \sum_k \vq{v}_k^\dag \mq{H}_k \vq{v}_k,
+  \end{align*}
+  where
+  \begin{align*}
+    \mq{H}_k
+  &= \bmqty{%
+    -(\lambda + \cos k) & -\im\sin k \\
+    \im\sin k & \lambda + \cos k
+  } \\
+  \vq{v}_k
+  &= \bmqty{\opr{C}_k \\ \opr{C}_{-k}^\dag}
+  \end{align*}
+\end{frame}
+
+\begin{frame}{\color{gray}
+    $\pauli_i \to \opr{c}_i \to {\usebeamercolor[fg]{frame title}\opr{C}_k \to
+  \opr{\eta}_k}$}
+  Diagonalize the quadratic form:
+  \begin{align*}
+    E_k
+    &= \sqrt{\lambda^2 + 2\lambda\cos k + 1}
+    \\
+    \opr{\eta}_k
+    &= \frac{\im\sin k}{\sqrt{2E_k\qty(E_k + \cos k + \lambda)}}
+    \opr{C}_k
+    + \sqrt{\frac{E_k + \cos k + \lambda}{2E_k}}
+    \opr{C}^\dag_{-k}
+  \end{align*}
+  Now the Hamiltonian is
+  \begin{align*}
+    \ham
+    &= \sum_k
+    \bmqty{\opr{\eta}_k^\dag & \opr{\eta}_{-k}}
+    \bmqty{E_k & 0 \\ 0 & -E_k}
+    \bmqty{\opr{\eta}_k \\ \opr{\eta}_{-k}^\dag} \\
+               &= \sum_k 2E_k\opr{\eta}_k^\dag\opr{\eta}_k
+               - \idopr\sum_k E_k
+  \end{align*}
+  $\opr{c}_i \to \opr{\eta}_k$ is unitary, so we have \alert{independent
+  fermions}
+\end{frame}
+
+\section{How do we compute the jump operators?}
+
+\begin{frame}{Computing jump operators}
+  Jump operators are \alert{superoperators} of the Hamiltonian:
+  \[
+    \comm{\ham}{\opr{J}_i(\omega)}
+    = \omega\opr{J}_i(\omega),
+  \]
+  where
+  \begin{align*}
+    \opr{J}_i(\omega)
+  &= \sum_{E_2 - E_1 = \omega} \opr{P}(E_1)\pauli_i^x\opr{P}(E_2) \\
+  \opr{P}(E)
+  &= \sum_{\tq{n} \mathbin{:} E = \sum_k E_k n_k} \op{\tq{n}}
+  \end{align*}
+  Do inverse transformations \alert{$\opr{\eta}_k \to \pauli_i$} for $\pauli_i^x$
+\end{frame}
+
+\begin{frame}
+  \centering
+  \includegraphics[width=\linewidth]{time-evolution}
+\end{frame}
+
+\section{What next?}
+
+\section*{References}
+
+\begin{frame}{References}
+  \nocite{opensys,liebTwoSolubleModels1961,pfeutyOnedimensionalIsingModel1970}
+  \printbibliography%
+\end{frame}
+
+\end{document}
+
