@@ -3,15 +3,15 @@
 
 \chapter{Density operator theory}
 
-\dropcap{I}{f quantum mechanics} is so weird, then why aren't we? The answer lies in the
-phenomenon of \term{decoherence}, which was first considered in depth in the
-1970's by Zeh~\cite{zeh}. Despite being a late comer to the history of quantum
-mechanics, the theory of decoherence is crucial to understanding how classical
-results are obtained from many interacting quantum systems. While there are
-other routes to decoherence, the most common is through interaction with a
-memoryless (Markovian) environment~\cite{decoherence}. This leads to the theory
-of quantum Markovian master equations, which describe transformations of a
-system in the presence of such an environment. The most general form of these
+\dropcap{I}{f quantum mechanics} is so weird, then why aren't we? The answer
+lies in the phenomenon of \term{decoherence}, which was first considered in
+depth in the 1970's by Zeh~\cite{zeh}. Despite being a late comer to the history
+of quantum mechanics, the theory of decoherence is crucial to understanding how
+classical results are obtained from many interacting quantum systems. While
+there are other routes to decoherence, the most common is through interaction
+with a memoryless (Markovian) environment~\cite{decoherence}. This leads to the
+theory of quantum Markovian master equations, which describe transformations of
+a system in the presence of such an environment. The most general form of these
 transformations was first extended to quantum mechanics by Gorini, Kossakowski,
 Lindblad, and Sudarshan to give the \textsc{\term{gkls}} or \term{Lindblad
 equation}~\cite{gks,lindblad}.
@@ -920,6 +920,293 @@ We consider the Hamiltonian (in natural units)
   + \sum_{ik} C_k \qty(\opr{a}_{ik}^\dag + \opr{a}_{ik})\pauli_{zi} \\
   &\equiv \ham_S \tp \idopr + \idopr \tp \ham_B + \ham_I.
 \end{align}
+
+The bath Hamiltonian is
+\begin{equation}
+  \ham_B
+  = \sum_{\vq{k},\, \lambda} \hbar\omega_{\vq{k}}
+  \opr{a}^\dag_{\vq{k},\lambda}\opr{a}_{\vq{k},\lambda}.
+  \label{eq:bath-hamiltonian}
+\end{equation}
+The vacuum energy $\sum_{\vq{k},\, \lambda} \hbar\omega_{\vq{k}} / 2$ is
+dropped, since it diverges in the continuum limit.
+
+The interaction Hamiltonian for spin-$s$ objects in a magnetic field
+is\footnote{The time dependence of the field is absorbed into
+$\opr{a}_{\vq{k},\lambda}$.}
+\begin{align}
+  \ham_I
+  &= -\int\dd{\vq{r}} \vecopr{\mu} \vdot \vecopr{B}
+  \\
+  \begin{split}
+  &= -\int\dd{\vq{r}} \sum_i m_s g_s \mu_B \delta(\vq{r}_i) \vecopr{\pauli}_i \\
+  &\vdot
+  \im\sum_{\vq{k},\, \lambda} \sqrt{\frac{\hbar c^2 \mu_0}{2V\omega_{\vq{k}}}}
+  \qty(%
+  \qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})
+  e^{\im\vq{k}\vdot\vq{r}} \opr{a}_{\vq{k},\lambda}
+  - \qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})
+  e^{-\im\vq{k}\vdot\vq{r}} \opr{a}^\dag_{\vq{k},\lambda}
+  )
+  \end{split}
+  \\
+  &= -\sum_{i,\,\mu} m_s g_s \mu_B \pauli_i^\mu \opr{B}_i^\mu,
+\end{align}
+where we have defined the Hermitian operator
+\begin{equation}
+  \opr{B}_i^\mu
+  = \im\sum_{\vq{k},\, \lambda} \sqrt{\frac{\hbar c^2 \mu_0}{2V\omega_{\vq{k}}}}
+  \qty(%
+  {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  e^{\im\vq{k}\vdot\vq{r}_i} \opr{a}_{\vq{k},\lambda}
+  - {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
+  e^{-\im\vq{k}\vdot\vq{r}_i} \opr{a}^\dag_{\vq{k},\lambda}
+  ).
+  \label{eq:Bimu-schrodinger}
+\end{equation}
+In the interaction picture:
+\begin{align}
+  \opr{B}_i^\mu(t)
+  &= e^{\im\ham_B t/\hbar} \opr{B}_i^\mu e^{-\im\ham_B t/\hbar} \\
+  &= \im\sum_{\vq{k},\, \lambda} \sqrt{\frac{\hbar c^2 \mu_0}{2V\omega_{\vq{k}}}}
+  \qty(%
+  {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  e^{\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t)} \opr{a}_{\vq{k},\lambda}
+  - {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
+  e^{-\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t)} \opr{a}^\dag_{\vq{k},\lambda}
+  ).
+  \label{eq:Bimu-interaction}
+\end{align}
+
+The spectral correlation tensor is then
+\begin{align}
+  \Gamma_{i\mu,j\nu}(\omega)
+  &= \frac{1}{\hbar^2} \int_0^\infty \dd{s} e^{\im\omega s}
+  \ev{\opr{B}_i^\mu{(t)}^\dag \opr{B}_j^\nu(t - s)}
+  \\
+  \begin{split}
+  &= -\frac{1}{\hbar^2} \frac{\hbar c^2 \mu_0}{2V} \int_0^\infty \dd{s}
+  \sum_{\vq{k},\, \vq{k}',\, \lambda,\, \lambda'}
+  \sqrt{\frac{1}{\omega_{\vq{k}} \omega_{\vq{k'}}}}
+  :
+  \\
+  &{\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k}' \cross \vq{e}_{\vq{k}',\lambda'})}_\nu
+    e^{\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t + \vq{k}'\vdot\vq{r}_j -
+    \omega_{\vq{k}'} (t-s) + \omega s)}
+  \ev{%
+    \opr{a}_{\vq{k},\lambda}\opr{a}_{\vq{k}',\lambda'}
+  } \\
+  &-
+    {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k}' \cross \vq{e}^*_{\vq{k}',\lambda'})}_\nu
+    e^{\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t - \vq{k}'\vdot\vq{r}_j +
+    \omega_{\vq{k}'} (t-s) + \omega s)}
+  \ev{%
+    \opr{a}_{\vq{k},\lambda}\opr{a}^\dag_{\vq{k}',\lambda'}
+  } \\
+  &-
+    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k}' \cross \vq{e}_{\vq{k}',\lambda'})}_\nu
+    e^{-\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t - \vq{k}'\vdot\vq{r}_j +
+    \omega_{\vq{k}'} (t-s) - \omega s)}
+  \ev{%
+    \opr{a}^\dag_{\vq{k},\lambda}\opr{a}_{\vq{k}',\lambda'}
+  } \\
+  &+
+    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k}',\lambda'})}_\nu
+    e^{-\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t + \vq{k}'\vdot\vq{r}_j -
+    \omega_{\vq{k}'} (t-s) - \omega s)}
+  \ev{%
+    \opr{a}^\dag_{\vq{k},\lambda}\opr{a}^\dag_{\vq{k}',\lambda'}
+  }.
+\end{split}
+\end{align}
+
+In the thermal state
+\begin{equation}
+  \dop_B
+  = \frac{e^{-\beta\ham_B}}{\tr e^{-\beta\ham_B}}
+  = \prod_{\vq{k},\,\lambda} \qty(1 - e^{-\beta\hbar\omega_{\vq{k}}})
+  e^{-\beta\hbar\omega_{\vq{k}} \opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k},\lambda}}
+\end{equation}
+\todo[inline]{Explicit calculation.}
+\begin{align}
+  \ev{\opr{a}_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
+  &= \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}^\dag_{\vq{k}',\lambda'}}
+  = 0
+  \\
+  \ev{\opr{a}_{\vq{k},\lambda} \opr{a}^\dag_{\vq{k}',\lambda'}}
+  &= \delta_{\vq{k}\vq{k}'} \delta_{\lambda\lambda'}
+  \qty(1 + n_B(\omega_{\vq{k}}))
+  \\
+  \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
+  &= \delta_{\vq{k}\vq{k}'} \delta_{\lambda\lambda'} n_B(\omega_{\vq{k}})
+\end{align}
+the spectral correlation tensor becomes
+\begin{align}
+  \begin{split}
+  \Gamma_{i\mu,j\nu}(\omega)
+  &= \frac{c^2 \mu_0}{2\hbar V} \int_0^\infty \dd{s}
+  \sum_{\vq{k},\,\lambda}
+  \frac{1}{\omega_{\vq{k}}}
+  :
+  \\
+  &{\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
+    e^{\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) + s(\omega - \omega_{\vq{k}}))}
+    \qty(1 + n_B(\omega_{\vq{k}}))
+  \\
+  &+
+    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\nu
+    e^{-\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) - s(\omega + \omega_{\vq{k}}))}
+    n_B(\omega_{\vq{k}}).
+\end{split}\label{eq:Gamma-precontinuum}
+\end{align}
+\todo[inline]{%
+  $\vq{k}$ in exponent of original integral. Is there a reason why the
+  external field $\vq{k}$ would be the same as a reciprocal lattice vector? Like
+  optical phonon branch. Magnons? Just no absorption for off frequencies?
+}
+
+To evaluate \cref{eq:Gamma-precontinuum}, we now consider a chain of $N$ spins
+along the $z$-axis, so that $\vq{r}_i = ia \vu{z}$.\footnote{We could consider
+any axis given the spherical symmetry, but the $z$-axis is the simplest to
+evaluate.} Then $\vq{k} \vdot (\vq{r}_i - \vq{r}_j) = (i - j)k^z a$.
+
+In the continuum limit,
+\begin{equation}
+  \frac{1}{V}\sum_{\vq{k}}
+  \mapsto
+  \int \frac{\dd{\vq{k}}}{{(2\pi)}^3}
+  = \frac{1}{{(2\pi c)}^3} \int_0^\infty \dd{\omega_k} \omega_k^2
+  \int\dd{\Omega},
+\end{equation}
+where the integral over solid angle is
+\begin{equation}
+  \int\dd{\Omega}
+  = \int\dd{\phi}\int\dd{\theta}\sin\theta.
+  \label{eq:solid-angle}
+\end{equation}
+To apply this limit to \cref{eq:Gamma-precontinuum}, we first note that
+\begin{align}
+  \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
+  &= \sum_{abcd} \varepsilon_{\mu ab}\varepsilon_{\nu cd} k^a k^c 
+  \sum_\lambda e_{\vq{k},\lambda}^b {\qty(e_{\vq{k},\lambda}^d)}^*
+  \\
+  &= \sum_{abcd} \varepsilon_{\mu ab}\varepsilon_{\nu cd} k^a k^c 
+  \qty(\delta_{bd} - \frac{k^b k^d}{k^2})
+  \\
+  &= \sum_{abc} \varepsilon_{\mu ab}\varepsilon_{\nu cb} k^a k^c 
+  \\
+  &= \sum_{ac} \qty(\delta_{\mu\nu}\delta_{ac} - \delta_{\mu c}\delta_{a\nu}) k^a k^c 
+  \\
+  &= k^2 \delta_{\mu\nu} - k^\mu k^\nu.
+\end{align}
+Thus
+\begin{equation}
+  \int\dd{\Omega}
+  e^{\pm\im k_z a (i - j)}
+  \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
+  = 4\pi k^2 \delta_{\mu\nu} \sinc(ka(i - j)).
+\end{equation}
+We are now left with (TODO)
+\begin{align}
+  \begin{split}
+  \Gamma_{i\mu,j\nu}(\omega)
+  &= \frac{c^2 \mu_0}{2\hbar} \int_0^\infty \dd{s}
+  \frac{1}{{(2\pi c)}^3} \int_0^\infty \dd{\omega_k} \omega_k^2
+  \int\dd{\Omega}
+  \frac{1}{\omega_k}
+  :
+  \\
+  &{\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
+    e^{\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) + s(\omega - \omega_k))}
+    \qty(1 + n_B(\omega_k))
+  \\
+  &+
+    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
+    {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\nu
+    e^{-\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) - s(\omega + \omega_k))}
+    n_B(\omega_k)
+\end{split} \\
+\begin{split}
+  &= \delta_{\mu\nu} \frac{c^2 \mu_0}{2\hbar} \int_0^\infty \dd{s}
+  \frac{1}{{(2\pi c)}^3} \int_0^\infty \dd{\omega_k} \omega_k^2
+  \frac{1}{\omega_k}
+  \frac{4\pi \omega_k^2}{c^2} \sinc(\omega_k a(i - j)/c) \\
+  &\cdot
+  \qty(e^{\im s(\omega - \omega_k)} \qty(1 + n_B(\omega_k))
+  + e^{\im s(\omega + \omega_k)} n_B(\omega_k))
+\end{split} \\
+\begin{split}
+  &= \delta_{\mu\nu}
+  \frac{\mu_0}{4\hbar\pi^2 c^3}
+  \int_0^\infty \dd{\omega_k}
+  \omega_k^3 \sinc(\omega_k a(i - j)/c) \\
+  &\cdot
+  \int_0^\infty \dd{s}
+  \qty(e^{\im s(\omega - \omega_k)} \qty(1 + n_B(\omega_k))
+  + e^{\im s(\omega + \omega_k)} n_B(\omega_k))
+\end{split}
+\end{align}
+
+The definite integral is
+\begin{equation}
+  \int\dd{\Omega} \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
+  = 4\pi k^2 \delta_{\mu\nu} - \int\dd{\Omega} k^\mu k^\nu.
+\end{equation}
+By symmetry, the integrand must have $\mu = \nu$ to not vanish. In that case,
+the integral gives the volume of the sphere with radius $k$. Now the integral
+reduces to
+\begin{equation}
+  \int\dd{\Omega} \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
+  = \frac{8\pi\omega_k^2}{3c^2} \delta_{\mu\nu}.
+\end{equation}
+Substituting this into \cref{eq:Gamma-precontinuum} gives the continuum limit:
+(TODO)
+\begin{align}
+  \begin{split}
+  \Gamma_{i\mu,j\nu}(\omega)
+  &= \delta_{\mu\nu} \frac{\mu_0}{6\hbar\pi^2 c^3}
+   \int_0^\infty \dd{\omega_k} \omega_k^3
+  :
+  \\
+  & \qty(1 + n_B(\omega_{\vq{k}})) e^{\im \vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
+  \int_0^\infty \dd{s} e^{\im s(\omega - \omega_{\vq{k}})}
+  \\
+  &+ n_B(\omega_{\vq{k}}) e^{-\im\vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
+  \int_0^\infty \dd{s} e^{\im s(\omega + \omega_{\vq{k}})}.
+\end{split}
+\end{align}
+We now use that
+\begin{equation}
+  \int_0^\infty \dd{s} e^{-\im\omega s}
+  = \pi\delta(\omega) - \im\pv\frac{1}{\omega},
+\end{equation}
+where $\pv$ denotes the Cauchy principal value, to find (TODO)
+\begin{align}
+  \begin{split}
+  \Gamma_{i\mu,j\nu}(\omega)
+  &= \delta_{\mu\nu} \frac{\mu_0}{6\hbar\pi^2 c^3}
+   \int_0^\infty \dd{\omega_k} \omega_k^3
+  :
+  \\
+  & \qty(1 + n_B(\omega_{\vq{k}})) e^{\im \vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
+  \int_0^\infty \dd{s} e^{\im s(\omega - \omega_{\vq{k}})}
+  \\
+  &+ n_B(\omega_{\vq{k}}) e^{-\im\vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
+  \int_0^\infty \dd{s} e^{\im s(\omega + \omega_{\vq{k}})}.
+\end{split}
+\end{align}
+
 The Schrodinger picture operators of the interaction Hamiltonian
 \begin{equation}
   \ham_I
