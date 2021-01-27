@@ -912,15 +912,6 @@ picture of decoherence a bit more clear.
 \section{The Born-Markov approximation for the Ising chain in a
 bath\label{sec:bm-ising}}
 
-We consider the Hamiltonian (in natural units)
-\begin{align}
-  \ham
-  &= \qty(-J\sum_i \pauli_{zi}\pauli_{z(i+1)} - h\sum_i \pauli_{xi})
-  + \sum_{ik} \omega_{ik} \opr{a}_{ik}^\dag \opr{a}_{ik}
-  + \sum_{ik} C_k \qty(\opr{a}_{ik}^\dag + \opr{a}_{ik})\pauli_{zi} \\
-  &\equiv \ham_S \tp \idopr + \idopr \tp \ham_B + \ham_I.
-\end{align}
-
 The bath Hamiltonian is
 \begin{equation}
   \ham_B
@@ -932,8 +923,9 @@ The vacuum energy $\sum_{\vq{k},\, \lambda} \hbar\omega_{\vq{k}} / 2$ is
 dropped, since it diverges in the continuum limit.
 
 The interaction Hamiltonian for spin-$s$ objects in a magnetic field
-is\footnote{The time dependence of the field is absorbed into
-$\opr{a}_{\vq{k},\lambda}$.}
+is\footnote{The time dependence of the field is absorbed into the operators
+$\opr{a}_{\vq{k},\lambda}$, and the prefactor is chosen so that these operators
+are dimensionless, but $\vecopr{B}$ is not.}
 \begin{align}
   \ham_I
   &= -\int\dd{\vq{r}} \vecopr{\mu} \vdot \vecopr{B}
@@ -1031,7 +1023,29 @@ In the thermal state
   = \prod_{\vq{k},\,\lambda} \qty(1 - e^{-\beta\hbar\omega_{\vq{k}}})
   e^{-\beta\hbar\omega_{\vq{k}} \opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k},\lambda}}
 \end{equation}
-\todo[inline]{Explicit calculation.}
+Since $\comm{\opr{a}_{\vq{k},\lambda}}{\opr{a}^\dag_{\vq{k}',\lambda'}} =
+\delta_{\vq{k},\vq{k}'}\delta_{\lambda\lambda'} \idopr$,
+\begin{align}
+  \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
+  &= {\tr(e^{-\beta\ham_B})}^{-1} \tr(e^{-\beta\ham_B}
+  \opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'})
+  \\
+  &= {\tr(e^{-\beta\ham_B})}^{-1} \tr(e^{-\beta\ham_B}
+  \opr{a}_{\vq{k}',\lambda'} \opr{a}^\dag_{\vq{k},\lambda})
+  - \delta_{\vq{k},\vq{k}'}\delta_{\lambda\lambda'}
+  \\
+  &= {\tr(e^{-\beta\ham_B})}^{-1} \tr(
+  e^{\beta\hbar \omega_{\vq{k}}}
+  \opr{a}_{\vq{k}',\lambda'} e^{-\beta\ham_B} \opr{a}^\dag_{\vq{k},\lambda})
+  - \delta_{\vq{k},\vq{k}'}\delta_{\lambda\lambda'}
+  \\
+  &= e^{\beta\hbar \omega_{\vq{k}}}
+  \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
+  - \delta_{\vq{k},\vq{k}'}\delta_{\lambda\lambda'}
+  \\
+  &= \delta_{\vq{k},\vq{k}'}\delta_{\lambda\lambda'} n_B(\omega_{\vq{k}}).
+\end{align}
+Similarly,
 \begin{align}
   \ev{\opr{a}_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
   &= \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}^\dag_{\vq{k}',\lambda'}}
@@ -1039,12 +1053,9 @@ In the thermal state
   \\
   \ev{\opr{a}_{\vq{k},\lambda} \opr{a}^\dag_{\vq{k}',\lambda'}}
   &= \delta_{\vq{k}\vq{k}'} \delta_{\lambda\lambda'}
-  \qty(1 + n_B(\omega_{\vq{k}}))
-  \\
-  \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
-  &= \delta_{\vq{k}\vq{k}'} \delta_{\lambda\lambda'} n_B(\omega_{\vq{k}})
+  \qty(1 + n_B(\omega_{\vq{k}})).
 \end{align}
-the spectral correlation tensor becomes
+Then for a thermal bath, the spectral correlation tensor becomes
 \begin{align}
   \begin{split}
   \Gamma_{i\mu,j\nu}(\omega)
@@ -1068,13 +1079,14 @@ the spectral correlation tensor becomes
 \todo[inline]{%
   $\vq{k}$ in exponent of original integral. Is there a reason why the
   external field $\vq{k}$ would be the same as a reciprocal lattice vector? Like
-  optical phonon branch. Magnons? Just no absorption for off frequencies?
+  optical phonon branch. Magnons? Just no absorption for off frequencies? Or do
+  typical scales enforce limits?
 }
 
 To evaluate \cref{eq:Gamma-precontinuum}, we now consider a chain of $N$ spins
-along the $z$-axis, so that $\vq{r}_i = ia \vu{z}$.\footnote{We could consider
+along the $z$-axis, so that $\vq{r}_i = r_i \vu{z}$.\footnote{We could consider
 any axis given the spherical symmetry, but the $z$-axis is the simplest to
-evaluate.} Then $\vq{k} \vdot (\vq{r}_i - \vq{r}_j) = (i - j)k^z a$.
+evaluate.} Then $\vq{k} \vdot (\vq{r}_i - \vq{r}_j) = k_z \Delta r_{ij}$.
 
 In the continuum limit,
 \begin{equation}
@@ -1108,103 +1120,77 @@ To apply this limit to \cref{eq:Gamma-precontinuum}, we first note that
 \end{align}
 Thus
 \begin{equation}
-  \int\dd{\Omega}
-  e^{\pm\im k_z a (i - j)}
+  \int\dd{\Omega} e^{\pm\im k_z \Delta r_{ij}}
   \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
   {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
-  = 4\pi k^2 \delta_{\mu\nu} \sinc(ka(i - j)).
+  = \frac{8\pi\omega_k^2}{3c^2} \delta_{\mu\nu}
+  \Omega_{\mu\nu}\qty(\frac{\omega_k\Delta r_{ij}}{c}),
+  \label{eq:angular-integral}
 \end{equation}
-We are now left with (TODO)
+where
+\begin{equation}
+  \Omega_{\mu\nu}(u)
+  = \qty(\delta_{\nu z} - \frac{\delta_{\nu x} + \delta_{\nu y}}{2})
+  \frac{\sinc u - \cos u}{u^2}
+  + \frac{\delta_{\nu x} + \delta_{\nu y}}{2} \sinc u.
+\end{equation}
+Now \cref{eq:angular-integral} gives that the continuum limit of the spectral
+correlation tensor for the spin chain is
 \begin{align}
   \begin{split}
   \Gamma_{i\mu,j\nu}(\omega)
-  &= \frac{c^2 \mu_0}{2\hbar} \int_0^\infty \dd{s}
-  \frac{1}{{(2\pi c)}^3} \int_0^\infty \dd{\omega_k} \omega_k^2
-  \int\dd{\Omega}
-  \frac{1}{\omega_k}
+  &= \delta_{\mu\nu} \frac{\mu_0}{6\pi^2 \hbar c^3}
+  \int_0^\infty \dd{\omega_k} \omega_k^3
+  \Omega_{\mu\nu}\qty(\frac{\omega_k \Delta r_{ij}}{c})
   :
   \\
-  &{\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
-    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
-    e^{\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) + s(\omega - \omega_k))}
-    \qty(1 + n_B(\omega_k))
-  \\
-  &+
-    {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
-    {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\nu
-    e^{-\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) - s(\omega + \omega_k))}
-    n_B(\omega_k)
-\end{split} \\
-\begin{split}
-  &= \delta_{\mu\nu} \frac{c^2 \mu_0}{2\hbar} \int_0^\infty \dd{s}
-  \frac{1}{{(2\pi c)}^3} \int_0^\infty \dd{\omega_k} \omega_k^2
-  \frac{1}{\omega_k}
-  \frac{4\pi \omega_k^2}{c^2} \sinc(\omega_k a(i - j)/c) \\
-  &\cdot
-  \qty(e^{\im s(\omega - \omega_k)} \qty(1 + n_B(\omega_k))
-  + e^{\im s(\omega + \omega_k)} n_B(\omega_k))
-\end{split} \\
-\begin{split}
-  &= \delta_{\mu\nu}
-  \frac{\mu_0}{4\hbar\pi^2 c^3}
-  \int_0^\infty \dd{\omega_k}
-  \omega_k^3 \sinc(\omega_k a(i - j)/c) \\
-  &\cdot
-  \int_0^\infty \dd{s}
-  \qty(e^{\im s(\omega - \omega_k)} \qty(1 + n_B(\omega_k))
-  + e^{\im s(\omega + \omega_k)} n_B(\omega_k))
-\end{split}
-\end{align}
-
-The definite integral is
-\begin{equation}
-  \int\dd{\Omega} \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
-  {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
-  = 4\pi k^2 \delta_{\mu\nu} - \int\dd{\Omega} k^\mu k^\nu.
-\end{equation}
-By symmetry, the integrand must have $\mu = \nu$ to not vanish. In that case,
-the integral gives the volume of the sphere with radius $k$. Now the integral
-reduces to
-\begin{equation}
-  \int\dd{\Omega} \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
-  {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
-  = \frac{8\pi\omega_k^2}{3c^2} \delta_{\mu\nu}.
-\end{equation}
-Substituting this into \cref{eq:Gamma-precontinuum} gives the continuum limit:
-(TODO)
-\begin{align}
-  \begin{split}
-  \Gamma_{i\mu,j\nu}(\omega)
-  &= \delta_{\mu\nu} \frac{\mu_0}{6\hbar\pi^2 c^3}
-   \int_0^\infty \dd{\omega_k} \omega_k^3
-  :
-  \\
-  & \qty(1 + n_B(\omega_{\vq{k}})) e^{\im \vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
-  \int_0^\infty \dd{s} e^{\im s(\omega - \omega_{\vq{k}})}
-  \\
-  &+ n_B(\omega_{\vq{k}}) e^{-\im\vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
-  \int_0^\infty \dd{s} e^{\im s(\omega + \omega_{\vq{k}})}.
-\end{split}
+  &\qty(1 + n_B(\omega_k)) \int_0^\infty \dd{s} e^{\im s(\omega - \omega_k)}
+  + n_B(\omega_k) \int_0^\infty \dd{s} e^{\im s(\omega + \omega_k)}.
+  \end{split}
 \end{align}
 We now use that
+\begin{equation}
+  n_B(-\omega)
+  = -\qty(1 + n_B(\omega))
+\end{equation}
+and 
 \begin{equation}
   \int_0^\infty \dd{s} e^{-\im\omega s}
   = \pi\delta(\omega) - \im\pv\frac{1}{\omega},
 \end{equation}
-where $\pv$ denotes the Cauchy principal value, to find (TODO)
+where $\pv$ denotes the Cauchy principal value, to find
 \begin{align}
-  \begin{split}
   \Gamma_{i\mu,j\nu}(\omega)
-  &= \delta_{\mu\nu} \frac{\mu_0}{6\hbar\pi^2 c^3}
-   \int_0^\infty \dd{\omega_k} \omega_k^3
-  :
+  &= \frac{1}{2}\gamma_{i\mu,j\nu}(\omega) + \im S_{i\mu,j\nu}(\omega),
   \\
-  & \qty(1 + n_B(\omega_{\vq{k}})) e^{\im \vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
-  \int_0^\infty \dd{s} e^{\im s(\omega - \omega_{\vq{k}})}
+  \shortintertext{where}
+  \gamma_{i\mu,j\nu}(\omega)
+  &= \delta_{\mu\nu} \frac{\mu_0 \omega^3}{3\pi \hbar c^3}
+  \Omega_{\mu\nu}\qty(\frac{\abs{\omega} \Delta r_{ij}}{c})
+  (1 + n_B(\omega))
   \\
-  &+ n_B(\omega_{\vq{k}}) e^{-\im\vq{k}\vdot(\vq{r}_i - \vq{r}_j)}
-  \int_0^\infty \dd{s} e^{\im s(\omega + \omega_{\vq{k}})}.
-\end{split}
+  S_{i\mu,j\nu}(\omega)
+  &= \delta_{\mu\nu} \frac{\mu_0}{6\pi^2 \hbar c^3}
+  \pv\int_0^\infty \dd{\omega_k} \omega_k^3
+  \Omega_{\mu\nu}\qty(\frac{\omega_k \Delta r_{ij}}{c})
+  \qty(\frac{1 + n_B(\omega_k)}{\omega - \omega_k}
+  + \frac{n_B(\omega_k)}{\omega + \omega_k}).
+\end{align}
+\todo[inline]{%
+  Should the $n_B$ and $1 + n_B$ above be flipped? Otherwise I don't think the
+  principal value integral is finite as $\omega_k \to \infty$. However, the
+  divergent form is also in~\cite[p.~145]{opensys}.
+}
+
+\subsection{Old}
+
+We consider the Hamiltonian (in natural units)
+\begin{align}
+  \ham
+  &= \qty(-J\sum_i \pauli_{zi}\pauli_{z(i+1)} - h\sum_i \pauli_{xi})
+  + \sum_{ik} \omega_{ik} \opr{a}_{ik}^\dag \opr{a}_{ik}
+  + \sum_{ik} C_k \qty(\opr{a}_{ik}^\dag + \opr{a}_{ik})\pauli_{zi} \\
+  &\equiv \ham_S \tp \idopr + \idopr \tp \ham_B + \ham_I.
 \end{align}
 
 The Schrodinger picture operators of the interaction Hamiltonian
