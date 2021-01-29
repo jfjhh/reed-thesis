@@ -4,11 +4,47 @@ using LinearAlgebra, Arpack, QuantumOptics
 
 export TransverseIsingModel, ThermalOhmicBath, jumpoperators
 
+
 # Systems
 
 abstract type System end
 hamiltonian(s::System) = undef
 eigen(s::System) = eigenstates(dense(hamiltonian(s)))
+
+sparsify(xs, atol=sqrt(eps(1.0))) = sparse([abs(x) > atol ? x : 0.0 for x in xs])
+
+function sparsify(op::Operator)
+    bl, br = op.basis_l, op.basis_r
+    Operator(bl, br, sparsify(op.data))
+end
+
+function eigenmatrices(eb::EigenBasis)
+    s = eb.system
+    H = hamiltonian(s)
+    bl, br = H.basis_l, H.basis_r
+    vals, vecs = eigen(dense(H).data)
+    P = Operator(eb, br, inv(vecs))
+    Pinv = Operator(bl, eb, vecs)
+    P, Pinv
+end
+
+
+# Eigenbases
+
+struct EigenBasis <: Basis
+    shape::Vector{Int}
+    system::System
+    function EigenBasis(system)
+        H = hamiltonian(system)
+        bl, br = H.basis_l, H.basis_r
+        if bl != br
+            error("System Hamiltonian changes bases.")
+        end
+        shape = [prod(bl.shape)]
+        new(shape, system)
+    end
+end
+
 
 # Utilities
 
@@ -48,6 +84,7 @@ end
 
 acomm_tables(s::System, f; kwargs...) = acomm_tables(i -> f(s, i), s.N; kwargs...)
 fermionic(args...; kwargs...) = acomm_tables(args...; kwargs..., show=false)
+
 
 # Spins
 
@@ -119,7 +156,9 @@ E(s, m) = Heigs(s, m).values[2] # Positive energy
 E0(s) = -sum(E(s, m) for m in 1:s.N)
 Hη(s) = sum(2E(s, m)*ηt(s, m)*η(s, m) for m in 1:s.N) + E0(s)*Ispin(s)
 
+# For tests:
 # all(fermionic(sys, f) for f in [c, C, η])
+
 
 # Many-body basis
 
@@ -160,6 +199,7 @@ cmb(s, i) = sum(exp(im*k(s, m)*(i-1)) * Cmbs(s, m) for m in 1:s.N) / √s.N
 cmbt = dagger ∘ cmb
 sxmb(s, i) = -(i == 1 ? Imb(s) : prod(Imb(s) - 2*cmbt(s, j)*cmb(s, j) for j in 1:(i-1))) * (cmbt(s, i) + cmb(s, i))
 
+
 # Spectral correlations for an ohmic bath in a thermal state
 
 # TODO: Bath type hierarchy?
@@ -191,6 +231,7 @@ function γ(bath::ThermalOhmicBath, ω)
         g * spectraldensity(bath, ω) * nB
     end
 end
+
 
 # Construction of jump operators
 
@@ -231,8 +272,9 @@ struct SystemInteraction{SO <: AbstractOperator}
     As::AbstractVector{SO}
 end
 
-# TODO: Working in the spin basis takes too much memory, so figure out how to
+# TODO: Working in the spin basis takes too much memory? Figure out how to
 # automatically do sparse transformations to the energy eigenbasis.
+# Generator?
 function jumpoperators(si::SystemInteraction, bath::Bath)
     opdict = Dict()
     rates = []
@@ -240,11 +282,14 @@ function jumpoperators(si::SystemInteraction, bath::Bath)
     Πs = projectors(eigdict)
     ωs = energydiffs(eigdict)
 
-    for A in si.As, (ω, Ediffs) in ωs
-        Aω = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in Ediffs)
-        if tracenorm(Aω) > √(eps(1.0))
+    for (ω, Ediffs) in ωs
+        for A in si.As
+            Aω = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in Ediffs)
+            # TODO: Make zero comparison faster?
+            # if tracenorm(Aω) > √(eps(1.0))
             addentry!(opdict, ω, Aω, isapprox)
             push!(rates, γ(bath, ω))
+            # end
         end
     end
     opdict, rates
