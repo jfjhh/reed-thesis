@@ -9,24 +9,8 @@ export TransverseIsingModel, ThermalOhmicBath, jumpoperators
 
 abstract type System end
 hamiltonian(s::System) = undef
+basis(s::System) = undef
 eigen(s::System) = eigenstates(dense(hamiltonian(s)))
-
-sparsify(xs, atol=sqrt(eps(1.0))) = sparse([abs(x) > atol ? x : 0.0 for x in xs])
-
-function sparsify(op::Operator)
-    bl, br = op.basis_l, op.basis_r
-    Operator(bl, br, sparsify(op.data))
-end
-
-function eigenmatrices(eb::EigenBasis)
-    s = eb.system
-    H = hamiltonian(s)
-    bl, br = H.basis_l, H.basis_r
-    vals, vecs = eigen(dense(H).data)
-    P = Operator(eb, br, inv(vecs))
-    Pinv = Operator(bl, eb, vecs)
-    P, Pinv
-end
 
 
 # Eigenbases
@@ -34,19 +18,28 @@ end
 struct EigenBasis <: Basis
     shape::Vector{Int}
     system::System
-    function EigenBasis(system)
-        H = hamiltonian(system)
-        bl, br = H.basis_l, H.basis_r
-        if bl != br
-            error("System Hamiltonian changes bases.")
-        end
-        shape = [prod(bl.shape)]
-        new(shape, system)
-    end
+    EigenBasis(system) = new([prod(basis(system).shape)], system)
+end
+
+function eigenmatrices(s)
+    eb = EigenBasis(s)
+    H = hamiltonian(s)
+    bl, br = H.basis_l, H.basis_r
+    vals, vecs = eigen(dense(H).data)
+    P = Operator(eb, br, inv(vecs))
+    Pinv = Operator(bl, eb, vecs)
+    P, Pinv, vals
 end
 
 
 # Utilities
+
+sparsify(xs, atol=sqrt(eps(1.0))) = sparse([abs(x) > atol ? x : 0.0 for x in xs])
+
+function sparsify(op::Operator)
+    bl, br = op.basis_l, op.basis_r
+    Operator(bl, br, sparsify(op.data))
+end
 
 trnorm(op) = tracenorm(dense(op))
 comm(x, y) = x*y - y*x
@@ -113,6 +106,7 @@ end
 
 Hspin(s) = -sum(-s.λ*sz(s, i) + sx(s, i)*sx(s, i+1) for i in 1:s.N)
 
+basis(s::TransverseIsingModel) = spinbasis(s)
 hamiltonian(s::TransverseIsingModel) = Hspin(s)
 
 k(s, m) = 2π*(m-1)/s.N - π*(s.N - (s.N%2))/s.N # for m in 1:s.N
@@ -235,6 +229,30 @@ end
 
 # Construction of jump operators
 
+function dictby(A; isequal=isequal, keyof=(i, x) -> x, valof=(i, x) -> i)
+    i0 = firstindex(A)
+    x0 = A[i0]
+    k0, v0 = keyof(i0, x0), valof(i0, x0)
+    dict = Dict(k0 => typeof(v0)[])
+    for (i, x) in enumerate(A)
+        k, v = keyof(i, x), valof(i, x)
+        if isequal(k, k0)
+            push!(dict[k0], v)
+        else
+            k0 = k
+            dict[k0] = [v]
+        end
+    end
+    dict
+end
+
+function dictbysort(itr; keyof=(i, x) -> x[1], valof=(i, x) -> x[2],
+        isequal=isequal, by=x -> x[1], kwargs...)
+    A = sort([(keyof(i, x), valof(i, x)) for (i, x) in enumerate(itr)];
+        by=by, kwargs...)
+    dictby(A, isequal=isequal, keyof=(i, x) -> x[1], valof=(i, x) -> x[2])
+end
+
 function addentry!(dict, key, value, isequal=isequal)
     for k in keys(dict)
         if isequal(k, key)
@@ -246,20 +264,11 @@ function addentry!(dict, key, value, isequal=isequal)
     dict
 end
 
-function eigendict(s::System)
-    d = Dict()
-    for (energy, state) in zip(eigen(s)...)
-        addentry!(d, energy, state, isapprox)
-    end
-    d
-end
+eigendict(s::System) = dictbysort(zip(eigen(s)...), isequal=isapprox)
 
 function energydiffs(eigdict)
-    d = Dict()
-    for E1 in keys(eigdict), E2 in keys(eigdict)
-        addentry!(d, E2 - E1, (E1, E2), ≈)
-    end
-    d
+    Es = keys(eigdict)
+    dictbysort(((E2 - E1, (E1, E2)) for E1 in Es for E2 in Es), isequal=isapprox)
 end
 
 function projectors(eigdict)
@@ -267,37 +276,20 @@ function projectors(eigdict)
          for (energy, eigstates) in eigdict)
 end
 
-struct SystemInteraction{SO <: AbstractOperator}
-    sys::System
-    As::AbstractVector{SO}
-end
-
-# TODO: Working in the spin basis takes too much memory? Figure out how to
-# automatically do sparse transformations to the energy eigenbasis.
-# Generator?
-function jumpoperators(si::SystemInteraction, bath::Bath)
-    opdict = Dict()
-    rates = []
-    eigdict = eigendict(si.sys)
+# TODO: Generator?
+function jumpoperators(system, As)
+    eigdict = eigendict(system)
     Πs = projectors(eigdict)
-    ωs = energydiffs(eigdict)
-
-    for (ω, Ediffs) in ωs
-        for A in si.As
-            Aω = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in Ediffs)
-            # TODO: Make zero comparison faster?
-            # if tracenorm(Aω) > √(eps(1.0))
-            addentry!(opdict, ω, Aω, isapprox)
-            push!(rates, γ(bath, ω))
-            # end
-        end
-    end
-    opdict, rates
+    Dict(ω => [sum(Πs[E1] * A * Πs[E2] for (E1, E2) in Ediffs)
+                     for A in As] for (ω, Ediffs) in energydiffs(eigdict))
 end
 
-function jumpoperators(s::TransverseIsingModel, b::Bath)
-    As = Iterators.flatten([sx(s, i), sy(s, i), sz(s, i)] for i in 1:s.N)
-    jumpoperators(SystemInteraction(s, collect(As)), b)
+# TODO: Combine us so that there is only one `eigen` call, and allow eigenbasis
+# calculations.
+function jumpoperators(s::TransverseIsingModel)
+    P, Pinv, Es = eigenmatrices(s)
+    As = [op(s, i) for i in 1:s.N for op in [sx, sy, sz]]
+    jumpoperators(s, As)
 end
 
 end
