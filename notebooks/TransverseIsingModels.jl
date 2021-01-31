@@ -51,6 +51,7 @@ end
 
 # Utilities
 
+# This is slow.
 sparsify(A, atol=sqrt(eps(1.0))) = sparse([abs(x) > atol ? x : zero(x) for x in A])
 
 function sparsify(op::Operator)
@@ -127,6 +128,10 @@ end
 Hspin(s) = -sum(-s.λ*sz(s, i) + sx(s, i)*sx(s, i+1) for i in 1:s.N)
 
 hamiltonian(s::TransverseIsingModel) = Hspin(s)
+
+# Lower bound. Could be refined or made certain.
+ΔEbound(s::TransverseIsingModel) = (1/3) * 3.0^-s.N
+isapproxΔE(s::TransverseIsingModel) = (x, y) -> isapprox(x, y, atol=ΔEbound(s))
 
 k(s, m) = 2π*(m-1)/s.N - π*(s.N - (s.N%2))/s.N # for m in 1:s.N
 
@@ -251,7 +256,6 @@ end
 firstvalue(i, (x, y)) = x
 lastvalue(i,  (x, y)) = y
 
-# TODO: Rewrite things to use dictmap to fmap over ωs.
 dictmap(f, dict) = Dict(key => f(value) for (key, value) in dict)
 
 function dictby(A; isequal=isequal, keyof=firstvalue, valof=lastvalue)
@@ -278,21 +282,22 @@ function dictbysort(itr; keyof=firstvalue, valof=lastvalue,
 end
 
 # `Es` are guaranteed to be sorted.
-eigendict(Es, kets) = dictby(zip(Es, kets), isequal=isapprox)
+eigendict(Es, kets; isequal=isapprox) = dictby(zip(Es, kets), isequal=isequal)
 
-function energydiffs(eigdict)
+function energydiffs(eigdict; isequal=isapprox)
     Es = keys(eigdict)
-    dictbysort(((E2 - E1, (E1, E2)) for E1 in Es for E2 in Es), isequal=isapprox)
+    dictbysort(((E2 - E1, (E1, E2)) for E1 in Es for E2 in Es), isequal=isequal)
 end
 
-function projectors(eigdict)
-    Dict(energy => sum(projector(state) for state in eigstates)
-         for (energy, eigstates) in eigdict)
-end
+sumprojector(A) = sum(projector(a) for a in A)
+projectors(eigdict) = dictmap(sumprojector, eigdict)
 
 function changebasis(As, P, Pinv; sparse=true)
-    Bs = [P * A * Pinv for A in As]
-    sparse ? sparsify.(Bs) : Bs
+    if sparse
+        [sparsify(P * A * Pinv) for A in As]
+    else
+        [P * A * Pinv for A in As]
+    end
 end
 
 # This recalculates the eigensystem, so a better way of only calculating this
@@ -302,22 +307,29 @@ function changebasis(As, s::System; basis=eigenbasis(s), kwargs...)
     changebasis(As, P, Pinv; kwargs...)
 end
 
-# TODO: Double-check energies. N=8 looked like 0-ish dict keys were not joined.
+interactions(s::TransverseIsingModel) = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
+
+# TODO: Make jumpoperators somehow into generators, so that only the full computation
+# resulting in just numbers is stored.
+
+jumpoperator(ΔEs, A, Πs) = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in ΔEs)
+ωjumpoperators(ΔEs, As, Πs) = [jumpoperator(ΔEs, A, Πs) for A in As]
+
 function jumpoperators(s::SpinSystem, interactions; basis=eigenbasis(s))
     Es, kets, P, Pinv = basiseigen(s, basis)
-    eigdict = eigendict(Es, kets)
+    approxΔE = isapproxΔE(s)
+    eigdict = eigendict(Es, kets, isequal=approxΔE)
     As = changebasis(interactions, P, Pinv)
     Πs = projectors(eigdict)
-    Dict(ω => [sum(Πs[E1] * A * Πs[E2] for (E1, E2) in Ediffs)
-               for A in As] for (ω, Ediffs) in energydiffs(eigdict))
+    ωs = energydiffs(eigdict, isequal=approxΔE)
+    # From here on, everything can be lazily computed.
+    dictmap(ΔEs -> ωjumpoperators(ΔEs, As, Πs), ωs)
 end
-
-interactions(s::TransverseIsingModel) = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
 
 jumpoperators(s::SpinSystem; kwargs...) = jumpoperators(s, interactions(s); kwargs...)
 
-function qubitjumps(s::SpinSystem; basis=eigenbasis(s))
-    Qs = [op(s, i) for i in 1:s.N, op in [sp, sm]]
+function sitejumps(s::SpinSystem; basis=eigenbasis(s))
+    Qs = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
     changebasis(Qs, s, basis=basis)
 end
 
@@ -328,15 +340,15 @@ opnorm(A) = √opip(A)
 opnormalize(A) = A / opnorm(A)
 opcos(A, B) = real(abs(opip(A, B)) / (opnorm(A) * opnorm(B)))
 
-# TODO: Handle zero jump operators.
+# TODO: Handle zero jump operators differently?
 
 project(P, J) = J == zero(J) ? zero(eltype(J)) : opip(P / opip(P), J)
 jumpprojections(Js, Ps) = [project(P, J) for J in Js, P in Ps]
-jumpprojections(Jωs::Dict, Ps) = Dict(ω => jumpprojections(Js, Ps) for (ω, Js) in Jωs)
+jumpprojections(Jωs::Dict, Ps) = dictmap(Js -> jumpprojections(Js, Ps), Jωs)
 
 jumpcos(P, J) = J == zero(J) ? real(one(eltype(J))) : opcos(P, J)
 jumpcosines(Js, Ps) = [jumpcos(P, J) for J in Js, P in Ps]
-jumpcosines(Jωs::Dict, Ps) = Dict(ω => jumpcosines(Js, Ps) for (ω, Js) in Jωs)
+jumpcosines(Jωs::Dict, Ps) = dictmap(Js -> jumpcosines(Js, Ps), Jωs)
 
 end
 
