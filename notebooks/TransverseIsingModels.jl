@@ -2,7 +2,11 @@ module TransverseIsingModels
 
 using LinearAlgebra, Arpack, QuantumOptics
 
-export TransverseIsingModel, ThermalOhmicBath, jumpoperators
+export TransverseIsingModel, TranslationInvariantTransverseIsingModel
+export hamiltonian, basis, eigenbasis
+export ThermalOhmicBath
+export spectraldensity, γ
+export interactions, sitejumps, jumpoperators, jumpprojections, jumpcosines
 
 
 # Systems
@@ -112,7 +116,16 @@ spinbasis(s::SpinSystem) = tpow(sb, s.N)
 Ispin(s::SpinSystem) = identityoperator(spinbasis(s))
 basis(s::SpinSystem) = spinbasis(s)
 
+# Lower bound. Could be refined or made certain.
+ΔEbound(s::SpinSystem) = (1/3) * 3.0^-s.N
+isapproxΔE(s::SpinSystem) = (x, y) -> isapprox(x, y, atol=ΔEbound(s))
+
 struct TransverseIsingModel <: SpinSystem
+    N::Int
+    λ::Number # Currently λ_Striff. Should change to g = -λ_Striff in the future
+end
+
+struct TranslationInvariantTransverseIsingModel <: SpinSystem
     N::Int
     λ::Number # Currently λ_Striff. Should change to g = -λ_Striff in the future
 end
@@ -129,10 +142,6 @@ Hspin(s) = -sum(-s.λ*sz(s, i) + sx(s, i)*sx(s, i+1) for i in 1:s.N)
 
 hamiltonian(s::TransverseIsingModel) = Hspin(s)
 
-# Lower bound. Could be refined or made certain.
-ΔEbound(s::TransverseIsingModel) = (1/3) * 3.0^-s.N
-isapproxΔE(s::TransverseIsingModel) = (x, y) -> isapprox(x, y, atol=ΔEbound(s))
-
 k(s, m) = 2π*(m-1)/s.N - π*(s.N - (s.N%2))/s.N # for m in 1:s.N
 
 function c(s, i) # for i in 1:s.N
@@ -148,6 +157,11 @@ ct = dagger ∘ c
 Lend(s) = sum(ct(s, i)*c(s, i) for i in 1:s.N)
 Hend(s) = (ct(s, s.N) - c(s, s.N))*(ct(s, 1) + c(s, 1))*((sparse ∘ exp ∘ dense)(im*π*Lend(s)) + Ispin(s))
 Htrans(s) = Hspin(s) - Hend(s)
+
+herm(A) = (A + dagger(A)) * (one(eltype(A)) / 2)
+
+# Take the Hermitian part of a Hermitian matrix to remove non-Hermitian float errors.
+hamiltonian(s::TranslationInvariantTransverseIsingModel) = herm(Htrans(s))
 
 Hc(s) = Ispin(s)*(s.N * -s.λ) + Hend(s) - sum(
     (2 * -s.λ)*ct(s, i)*c(s, i) + (ct(s, i) - c(s, i))*(ct(s, i+1) + c(s, i+1))
@@ -307,13 +321,17 @@ function changebasis(As, s::System; basis=eigenbasis(s), kwargs...)
     changebasis(As, P, Pinv; kwargs...)
 end
 
-interactions(s::TransverseIsingModel) = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
+interactions(s::SpinSystem) = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
+
+# TODO: Verify computation with the translation-invariant Hamiltonian. 
 
 # TODO: Make jumpoperators somehow into generators, so that only the full computation
 # resulting in just numbers is stored.
 
+# TODO: Handle zero jump operators differently?
+
 jumpoperator(ΔEs, A, Πs) = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in ΔEs)
-ωjumpoperators(ΔEs, As, Πs) = [jumpoperator(ΔEs, A, Πs) for A in As]
+ωjumpoperators(ΔEs, As, Πs) = (jumpoperator(ΔEs, A, Πs) for A in As)
 
 function jumpoperators(s::SpinSystem, interactions; basis=eigenbasis(s))
     Es, kets, P, Pinv = basiseigen(s, basis)
@@ -322,15 +340,17 @@ function jumpoperators(s::SpinSystem, interactions; basis=eigenbasis(s))
     As = changebasis(interactions, P, Pinv)
     Πs = projectors(eigdict)
     ωs = energydiffs(eigdict, isequal=approxΔE)
+
     # From here on, everything can be lazily computed.
     dictmap(ΔEs -> ωjumpoperators(ΔEs, As, Πs), ωs)
+    # dictmap(ΔEs -> f(A -> jumpoperator(ΔEs, A, Πs)), ωs)
 end
 
 jumpoperators(s::SpinSystem; kwargs...) = jumpoperators(s, interactions(s); kwargs...)
 
 function sitejumps(s::SpinSystem; basis=eigenbasis(s))
-    Qs = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
-    changebasis(Qs, s, basis=basis)
+    Ps = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
+    changebasis(Ps, s, basis=basis)
 end
 
 # These can likely be made more efficient.
@@ -339,8 +359,6 @@ opip(A) = tr(dagger(A) * A)
 opnorm(A) = √opip(A)
 opnormalize(A) = A / opnorm(A)
 opcos(A, B) = real(abs(opip(A, B)) / (opnorm(A) * opnorm(B)))
-
-# TODO: Handle zero jump operators differently?
 
 project(P, J) = J == zero(J) ? zero(eltype(J)) : opip(P / opip(P), J)
 jumpprojections(Js, Ps) = [project(P, J) for J in Js, P in Ps]
