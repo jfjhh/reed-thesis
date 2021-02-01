@@ -6,7 +6,8 @@ export TransverseIsingModel, TranslationInvariantTransverseIsingModel
 export hamiltonian, basis, eigenbasis
 export ThermalOhmicBath
 export spectraldensity, γ
-export interactions, sitejumps, jumpoperators, jumpprojections, jumpcosines
+export basiseigen, changebasis, jumpoperators
+export interactions, sitejumps, jumpprojections, jumpcosines
 
 
 # Systems
@@ -43,13 +44,13 @@ end
 function _basiseigen(vals, vecs, bl, br, b::Basis)
     P, Pinv = identityoperator(b, br), identityoperator(bl, b)
     kets = [Ket(b, vecs[:, i]) for i in eachindex(vals)]
-    vals, kets, P, Pinv
+    (vals=vals, kets=kets, P=P, Pinv=Pinv)
 end
 
 function _basiseigen(vals, vecs, bl, br, b::EigenBasis)
     P, Pinv = Operator(b, br, inv(vecs)), Operator(bl, b, vecs)
     kets = [basisstate(b, i, sparse=true) for i in eachindex(vals)]
-    vals, kets, P, Pinv
+    (vals=vals, kets=kets, P=P, Pinv=Pinv)
 end
 
 
@@ -306,51 +307,71 @@ end
 sumprojector(A) = sum(projector(a) for a in A)
 projectors(eigdict) = dictmap(sumprojector, eigdict)
 
-function changebasis(As, P, Pinv; sparse=true)
-    if sparse
-        [sparsify(P * A * Pinv) for A in As]
+function changebasis(A; basiseigensys, sparse=true)
+    P, Pinv = basiseigensys.P, basiseigensys.Pinv
+    sparse ? sparsify(P * A * Pinv) : P * A * Pinv
+end
+
+function default_basiseigensys(s, basis, basiseigensys)
+    if basiseigensys == nothing
+        if basis == :eigenbasis
+            basis = eigenbasis(s)
+        end
+        basiseigensys = basiseigen(s, basis)
     else
-        [P * A * Pinv for A in As]
+        if basis != :eigenbasis && basis != basiseigensys.Pinv.basis_r
+            error("The basis of the eigensystem is not `basis`.")
+        end
+    end
+    basiseigensys
+end
+
+function basiseigensys_resolved(f)
+    function wrap_basiseigensys(s, args...; kwargs...)
+        kw = Dict(kwargs)
+        basis = get(kw, :basis, :eigenbasis)
+        basiseigensys = get(kw, :basiseigensys, nothing)
+        delete!(kw, :basis)
+        delete!(kw, :basiseigensys)
+        f(s, args...; basiseigensys=default_basiseigensys(s, basis, basiseigensys), kw...)
     end
 end
 
-# This recalculates the eigensystem, so a better way of only calculating this
-# once may be necessary to consider larger N.
-function changebasis(As, s::System; basis=eigenbasis(s), kwargs...)
-    _, _, P, Pinv = basiseigen(s, basis)
-    changebasis(As, P, Pinv; kwargs...)
-end
-
-interactions(s::SpinSystem) = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
-
-# TODO: Verify computation with the translation-invariant Hamiltonian. 
-
-# TODO: Make jumpoperators somehow into generators, so that only the full computation
-# resulting in just numbers is stored.
-
-# TODO: Handle zero jump operators differently?
 
 jumpoperator(ΔEs, A, Πs) = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in ΔEs)
 ωjumpoperators(ΔEs, As, Πs) = (jumpoperator(ΔEs, A, Πs) for A in As)
 
-function jumpoperators(s::SpinSystem, interactions; basis=eigenbasis(s))
-    Es, kets, P, Pinv = basiseigen(s, basis)
+# TODO: Top-level eigenbasis choice that is passed down to everything.
+
+# TODO: Verify computation with the translation-invariant Hamiltonian. 
+
+# TODO: Make jumpoperators somehow into generators, so that only the full computation
+# resulting in just numbers is stored. Take a function for `do` syntax.
+
+# TODO: Handle zero jump operators differently? Filter step.
+
+function _jumpoperators(s::SpinSystem; basiseigensys)
+    Es, kets, P, Pinv = basiseigensys
     approxΔE = isapproxΔE(s)
     eigdict = eigendict(Es, kets, isequal=approxΔE)
-    As = changebasis(interactions, P, Pinv)
     Πs = projectors(eigdict)
     ωs = energydiffs(eigdict, isequal=approxΔE)
 
     # From here on, everything can be lazily computed.
-    dictmap(ΔEs -> ωjumpoperators(ΔEs, As, Πs), ωs)
-    # dictmap(ΔEs -> f(A -> jumpoperator(ΔEs, A, Πs)), ωs)
+    # dictmap(ΔEs -> ωjumpoperators(ΔEs, As, Πs), ωs)
+    f -> dictmap(ΔEs -> f(A -> jumpoperator(ΔEs, A, Πs)), ωs)
 end
 
-jumpoperators(s::SpinSystem; kwargs...) = jumpoperators(s, interactions(s); kwargs...)
+jumpoperators(f, args...; kwargs...) = basiseigensys_resolved(_jumpoperators)(args...; kwargs...)(f)
 
-function sitejumps(s::SpinSystem; basis=eigenbasis(s))
-    Ps = [op(s, i) for i in 1:s.N, op in [sx, sy, sz]]
-    changebasis(Ps, s, basis=basis)
+function interactions(s::SpinSystem; basiseigensys)
+    (changebasis(op(s, i); basiseigensys=basiseigensys)
+        for i in 1:s.N, op in [sx, sy, sz])
+end
+
+function sitejumps(s::SpinSystem; basiseigensys)
+    (changebasis(op(s, i); basiseigensys=basiseigensys)
+        for i in 1:s.N, op in [sx, sy, sz])
 end
 
 # These can likely be made more efficient.
