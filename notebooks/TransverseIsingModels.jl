@@ -6,7 +6,8 @@ export TransverseIsingModel, TranslationInvariantTransverseIsingModel
 export hamiltonian, basis, eigenbasis
 export ThermalOhmicBath
 export spectraldensity, γ
-export basiseigen, changebasis, jumpoperators
+export dictmap
+export basiseigen, changebasis, jumpoperators, jumpoperator, jumpinfo
 export interactions, sitejumps, jumpprojections, jumpcosines
 
 
@@ -44,13 +45,13 @@ end
 function _basiseigen(vals, vecs, bl, br, b::Basis)
     P, Pinv = identityoperator(b, br), identityoperator(bl, b)
     kets = [Ket(b, vecs[:, i]) for i in eachindex(vals)]
-    (vals=vals, kets=kets, P=P, Pinv=Pinv)
+    vals, kets, P, Pinv
 end
 
 function _basiseigen(vals, vecs, bl, br, b::EigenBasis)
     P, Pinv = Operator(b, br, inv(vecs)), Operator(bl, b, vecs)
     kets = [basisstate(b, i, sparse=true) for i in eachindex(vals)]
-    (vals=vals, kets=kets, P=P, Pinv=Pinv)
+    vals, kets, P, Pinv
 end
 
 
@@ -297,7 +298,7 @@ function dictbysort(itr; keyof=firstvalue, valof=lastvalue,
 end
 
 # `Es` are guaranteed to be sorted.
-eigendict(Es, kets; isequal=isapprox) = dictby(zip(Es, kets), isequal=isequal)
+energydict(Es, kets; isequal=isapprox) = dictby(zip(Es, kets), isequal=isequal)
 
 function energydiffs(eigdict; isequal=isapprox)
     Es = keys(eigdict)
@@ -308,61 +309,40 @@ sumprojector(A) = sum(projector(a) for a in A)
 projectors(eigdict) = dictmap(sumprojector, eigdict)
 
 function changebasis(A; basiseigensys, sparse=true)
-    P, Pinv = basiseigensys.P, basiseigensys.Pinv
+    _, _, P, Pinv = basiseigensys
     sparse ? sparsify(P * A * Pinv) : P * A * Pinv
 end
-
-function default_basiseigensys(s, basis, basiseigensys)
-    if basiseigensys == nothing
-        if basis == :eigenbasis
-            basis = eigenbasis(s)
-        end
-        basiseigensys = basiseigen(s, basis)
-    else
-        if basis != :eigenbasis && basis != basiseigensys.Pinv.basis_r
-            error("The basis of the eigensystem is not `basis`.")
-        end
-    end
-    basiseigensys
-end
-
-function basiseigensys_resolved(f)
-    function wrap_basiseigensys(s, args...; kwargs...)
-        kw = Dict(kwargs)
-        basis = get(kw, :basis, :eigenbasis)
-        basiseigensys = get(kw, :basiseigensys, nothing)
-        delete!(kw, :basis)
-        delete!(kw, :basiseigensys)
-        f(s, args...; basiseigensys=default_basiseigensys(s, basis, basiseigensys), kw...)
-    end
-end
-
 
 jumpoperator(ΔEs, A, Πs) = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in ΔEs)
 ωjumpoperators(ΔEs, As, Πs) = (jumpoperator(ΔEs, A, Πs) for A in As)
 
-# TODO: Top-level eigenbasis choice that is passed down to everything.
-
-# TODO: Verify computation with the translation-invariant Hamiltonian. 
-
-# TODO: Make jumpoperators somehow into generators, so that only the full computation
-# resulting in just numbers is stored. Take a function for `do` syntax.
-
-# TODO: Handle zero jump operators differently? Filter step.
-
-function _jumpoperators(s::SpinSystem; basiseigensys)
+function jumpoperators(f, s::SpinSystem; basiseigensys)
     Es, kets, P, Pinv = basiseigensys
     approxΔE = isapproxΔE(s)
-    eigdict = eigendict(Es, kets, isequal=approxΔE)
+    eigdict = energydict(Es, kets, isequal=approxΔE)
     Πs = projectors(eigdict)
     ωs = energydiffs(eigdict, isequal=approxΔE)
 
     # From here on, everything can be lazily computed.
     # dictmap(ΔEs -> ωjumpoperators(ΔEs, As, Πs), ωs)
-    f -> dictmap(ΔEs -> f(A -> jumpoperator(ΔEs, A, Πs)), ωs)
+    dictmap(ΔEs -> f(A -> jumpoperator(ΔEs, A, Πs)), ωs)
+    # As = interactions(s, basiseigensys=basiseigensys)
+    # dictmap(ωs) do ΔEs
+    #     # A -> jumpoperator(ΔEs, A, Πs)
+    #     [jumpoperator(ΔEs, A, Πs) for A in As]
+    # end
 end
 
-jumpoperators(f, args...; kwargs...) = basiseigensys_resolved(_jumpoperators)(args...; kwargs...)(f)
+function jumpinfo(s::SpinSystem; basiseigensys)
+    Es, kets, P, Pinv = basiseigensys
+    approxΔE = isapproxΔE(s)
+    eigdict = energydict(Es, kets, isequal=approxΔE)
+    Πs = projectors(eigdict)
+    ωs = energydiffs(eigdict, isequal=approxΔE)
+    # A -> dictmap(ΔEs -> jumpoperator(ΔEs, A, Πs), ωs)
+    # (A, ΔEs) -> jumpoperator(ΔEs, A, Πs)
+    Πs, ωs
+end
 
 function interactions(s::SpinSystem; basiseigensys)
     (changebasis(op(s, i); basiseigensys=basiseigensys)
