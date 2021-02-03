@@ -14,8 +14,7 @@ export interactions, sitejumps, jumpprojections, jumpcosines
 # Systems
 #
 # TODO: System functions like `hamiltonian`, `sx`, etc. are not type-stable. A
-# solution would be to have the number of spins as a type parameter and make
-# `tpow` type-stable.
+# solution would be to have the number of spins as a type parameter.
 abstract type System end
 hamiltonian(s::System) = undef
 basis(s::System) = undef
@@ -105,42 +104,70 @@ fermionic(args...; kwargs...) = acomm_tables(args...; kwargs..., show=false)
 
 # Spins
 
+abstract type SpinSystem{T} <: System end
+
 const sb = SpinBasis(1//2)
 const σx, σy, σz = sigmax(sb), sigmay(sb), sigmaz(sb)
 const σp, σm = sigmap(sb), sigmam(sb)
 
-"`tpow(x, n)` takes the tensor product of `x` with itself `n` times."
-tpow(x, n) = ⊗(repeat([x], n)...)
-
-abstract type SpinSystem <: System end
-
-spinbasis(s::SpinSystem) = tpow(sb, s.N)
+spinbasis(s::SpinSystem{N}) where N = CompositeBasis(fill(length(sb), N), ntuple(_->sb, Val(N)))
 Ispin(s::SpinSystem) = identityoperator(spinbasis(s))
 basis(s::SpinSystem) = spinbasis(s)
+
+kronpow(A, ::Val{N}) where N = reduce(kron, ntuple(_->A, Val(N)))::typeof(A)
+
+function embedkron(A, N, I)::typeof(A)
+    M = N - I - 1
+    if M == 0
+        if I == 0
+            A
+        else
+            kron(A, kronpow(one(A), Val(I)))
+        end
+    else
+        if I == 0
+            kron(kronpow(one(A), Val(M)), A)
+        else
+            kron(kronpow(one(A), Val(M)), A, kronpow(one(A), Val(I)))
+        end
+    end
+end
+
+# TODO: kron data looks wrong.
+# TODO: Since type of kron depends on N + M, op index must be a val, which is
+# bad. Fix: make it depend only on N.
+
+function embedop(s::SpinSystem{N}, op, i) where N
+    Operator(basis(s), basis(s), embedkron(op.data, N, i))
+end
 
 # Lower bound. Could be refined or made certain.
 ΔEbound(s::SpinSystem) = (1/3) * 3.0^-s.N
 isapproxΔE(s::SpinSystem) = (x, y) -> isapprox(x, y, atol=ΔEbound(s))
 
-struct TransverseIsingModel <: SpinSystem
+struct TransverseIsingModel{M,T} <: SpinSystem{M}
     N::Int
-    λ::Number # Currently λ_Striff. Should change to g = -λ_Striff in the future
+    λ::T # Currently λ_Striff. Should change to g = -λ_Striff in the future
 end
+TransverseIsingModel(N, λ::T) where T = TransverseIsingModel{N,T}(N, λ)
 
-struct TranslationInvariantTransverseIsingModel <: SpinSystem
+struct TranslationInvariantTransverseIsingModel{T} <: SpinSystem{T}
     N::Int
     λ::Number # Currently λ_Striff. Should change to g = -λ_Striff in the future
 end
+TranslationInvariantTransverseIsingModel(N, λ) = TranslationInvariantTransverseIsingModel{N}(N, λ)
 
 # Define the Pauli operators at each site
 for (opi, op) in [(:sx,:σx), (:sy,:σy), (:sz,:σz), (:sp,:σp), (:sm,:σm)]
     eval(:(export $opi))
     eval(:($opi()  = $op))
     eval(:($opi(s) = $op))
-    eval(:($opi(s, i) = embed(spinbasis(s), (i-1)%s.N + 1, $op)))
+    eval(:($opi(s::SpinSystem{N}, i) where N = embedop(s, $op, mod(i-1, N))))
 end
 
-Hspin(s) = -sum(-s.λ*sz(s, i) + sx(s, i)*sx(s, i+1) for i in 1:s.N)
+function Hspin(s::TransverseIsingModel{N}) where N
+    sum(s.λ*sz(s, i) - sx(s, i)*sx(s, i+1) for i in 1:N)
+end
 
 hamiltonian(s::TransverseIsingModel) = Hspin(s)
 
@@ -163,7 +190,7 @@ Htrans(s) = Hspin(s) - Hend(s)
 herm(A) = (A + dagger(A)) * (one(eltype(A)) / 2)
 
 # Take the Hermitian part of a Hermitian matrix to remove non-Hermitian float errors.
-hamiltonian(s::TranslationInvariantTransverseIsingModel) = herm(Htrans(s))
+hamiltonian(s::TranslationInvariantTransverseIsingModel{N}) where N = herm(Htrans(TransverseIsingModel(N, s.λ)))
 
 Hc(s) = Ispin(s)*(s.N * -s.λ) + Hend(s) - sum(
     (2 * -s.λ)*ct(s, i)*c(s, i) + (ct(s, i) - c(s, i))*(ct(s, i+1) + c(s, i+1))
@@ -311,6 +338,11 @@ projectors(eigdict) = dictmap(sumprojector, eigdict)
 function changebasis(A; basiseigensys, sparse=true)
     _, _, P, Pinv = basiseigensys
     sparse ? sparsify(P * A * Pinv) : P * A * Pinv
+end
+
+function changebasis(A; basiseigensys)
+    _, _, P, Pinv = basiseigensys
+    P * A * Pinv |> sparsify
 end
 
 jumpoperator(ΔEs, A, Πs) = sum(Πs[E1] * A * Πs[E2] for (E1, E2) in ΔEs)
