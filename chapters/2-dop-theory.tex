@@ -25,6 +25,245 @@ some flaws). This leads us to consider the weak-coupling limit in
 \cref{sec:example}. Issues with the method are discussed briefly in
 \cref{sec:limitations}.
 
+\section{The quantum formalism as information processing}\label{sec:dop-info}
+
+A goal of science is to predict the results of our actions through experiments.
+The formalism of quantum mechanics provides guidance on what results to expect,
+given what one already believes about an experiment.
+
+Upon taking an action, we expect that different sensations could result. In
+experiments, we limit sensations to parts of the world that we understand.
+
+Experiments have different outcomes.
+
+Consider an experiment with $M$ designated outcomes. Before, one expects each
+outcome with some probability. An experiment constitutes a \term{measurement} if
+repeating the experiment does not change the probability of an outcome. That is,
+measuring an outcome again tells you nothing. More precisely, the outcome of a
+measurement proper cannot be dependent on additional information, so that one is
+able to undo a measurement by forgetting the outcome.\todo[inline]{Clarify and
+distinguish selective vs nonselective measurements, and relate to decoherence.}
+
+A state $\dop$ encodes one's beliefs about the outcomes of measurements, if any.
+States are classified by the numbers of outcomes they can describe.
+
+As the result of an experiment, one assigns a probability $p_m$ to each outcome
+$m$. The defining characteristic of a state $\dop$ is the maximum amount of
+information it can contain about the outcomes of a measurement.
+The entropy $H(m)$.
+
+The size of a system is the largest number $N$ of outcomes distinguishable by a
+measurement.
+
+A quantum state $\dop$ of \term{dimension} $N$ represents one's beliefs about
+measurements with at most $N$ outcomes.
+
+One takes an action with an uncertain outcome. This uncertainty can be
+quantified by how much one would bet ($b$) that it would not happen. If something is
+certain, nobody would bet anything and $b = 0$. If something is certain not to
+happen, one would bet as much as possible, written as $b = \infty$. The more
+uncertain, the more one would bet. Also, if two actions are independent, then
+one bets for both the sum of the bets for each.
+
+This uncertainty is quantified by
+a probability $p_1$. If one takes two actions, there are four possibilities.
+
+For independent actions, performing one action does not change the probability
+of the others. Then $\dop = (p_1,\, p_2)$ describes bettability for both.
+\begin{equation}
+  P_m(p_1,\, \ldots,\, p_n) = p_m
+\end{equation}
+
+Given what one knows, one gives a probability assignment. But one may have
+reason to give several probability assignments, each with some further
+probability that it is sound. This is expressed as a formal linear combination:
+\begin{equation}
+  \rho
+  = \sum_i p_i \rho_i,
+\end{equation}
+which means that the probability of outcome $m$ is
+\begin{equation}
+  P_m(\rho)
+  = \sum_i p_i P_m(\rho_i),
+\end{equation}
+
+We need three ingredients:
+\begin{itemize}
+  \item The quantum state $\dop$.
+  \item A map $\ev{\dop}$ for the probability that one of the outcomes is
+    realized.
+  \item Maps $\sopr{O}_m$ for $m \in M$.
+\end{itemize}
+The state after measurement is $\sopr{O}_m(\dop)$.
+One may combine states $\dop_i$ with probabilities $p_i$ to form a new state
+$\dop$ such that
+\begin{equation}
+  P_m(\dop)
+  = \sum_i p_i P_m(\dop_i)
+\end{equation}
+\begin{equation}
+  \sopr{O}_m(\dop)
+  = \sum_i p_i P_m(\dop_i) \sopr{O}_m(\dop_i)
+\end{equation}
+Complete positivity?
+
+\begin{equation}
+  \sopr{O}_m\qty(\sum_i p_i \dop_i)
+  = \sum_i p_i \sopr{O}_m\qty(\dop_i)
+  \label{eq:meas-convex-linear}
+\end{equation}
+
+\begin{equation}
+  \qty(\sopr{O}_m \tp \idopr)\qty(\sum_i p_i \dop_i \tp \dop_i')
+  = \sum_i p_i \sopr{O}_m\qty(\dop_i) \tp \dop_i'
+  \label{eq:meas-convex-linear}
+\end{equation}
+
+\begin{itemize}
+  \item Actions $\sopr{A}$.
+  \item Bet $\dop$.
+  \item Certain bet $\idopr_A$.
+  \item $A(\idopr_{A'}) = p_{A'A} \idopr_A$.
+  \item $A(a\idopr_{A'} + \idopr_B) = a A(\idopr_{A'}) + A(\idopr_B)$.
+  \item Bet for two independent actions $\dop \tp \dop'$
+  \item Split bet $\dop = p\dop + (1 - p)\dop'$, where $0 \leq p \leq 1$.
+  \item Bet probability $\ev{\dop}$.
+  \item $\ev{\idopr} = 1$.
+  \item $\ev{\zopr} = 0$.
+  \item $\ev{\dop \tp \dop'} = \ev{\dop}\ev{\dop'}$.
+  \item $\ev{p\dop + p'\dop'} = p\ev{\dop} + p'\ev{\dop'}$.
+  \item $\sopr{A}_m$
+\end{itemize}
+
+\begin{post}\label{post:dop}
+  A \term{state} is described by a \term{density operator} $\dop \in \liou$,
+  which is positive and self-adjoint.
+\end{post}
+
+The result of an operation on a state may be uncertain. So long as the result is as
+expected, we say that the state remains present.
+
+\begin{post}\label{post:prob}
+  The probability $\ev{\dop}$ that a state is present is $\tr\dop$.
+\end{post}
+
+Often a state is always present, and this is supposed to be the starting point
+for a series of operations. Such states have $\tr\dop = 1$ and are said to be
+\term{normalized}.
+
+One may be uncertain about which state to use. We may consider states $\dop_i$,
+each with credence $p_i$. The expected probability that the state is present is
+then
+\begin{equation}
+  \sum_i p_i \tr\dop_i
+  = \tr(\sum_i p_i \dop_i).
+\end{equation}
+Thus \cref{post:prob} allows one to encode this collection of states as the
+convex sum $\dop = \sum_i p_i \dop_i$. We have $\sum_i p_i = 1$ so that a
+combination of normalized states remains normalized.
+
+\begin{post}\label{post:operation}
+  An \term{operation}\footnote{Quantum operations are also called generalized
+    measurements. However, many operations are not thought of as measurements of
+  physical quantities.} on a state with $M$ possible outcomes is described by a set of $M$
+  maps $\sopr{O}_m: \liou \to \liou$. After possibly effecting outcome $m$, the
+  state is $\sopr{O}_m \dop$.
+\end{post}
+
+Thus the probability of outcome $m$ is $\tr\sopr{O}_m\dop$.
+There are two ways that an operation may change expectations about a
+state.\footnote{For operations which may be thought of as measurements, these
+  two ways are also known as selective and non-selective measurements,
+  respectively. Selective measurements measure an outcome as usual, while
+  non-selective measurements are said to measure an outcome and then forget the
+results.}
+
+\begin{enumerate}
+  \item 
+    To perform an operation on a state is to form expectations about the state
+    by considering each of the possible outcomes:
+    \begin{equation}
+      \dop'
+      = \sum_m \sopr{O}_m \dop.
+    \end{equation}
+
+  \item
+    If outcome $m$ is possibly present, one may instead form expectations
+    conditioned on the event that outcome $m$ was the result of the operation:
+    \begin{equation}
+      \dop'
+      = \frac{\sopr{O}_m \dop}{\tr\sopr{O}_m \dop}.
+    \end{equation}
+\end{enumerate}
+
+One may again consider a collection of states, where one expects the probability
+of outcome $m$ to be
+\begin{equation}
+  \sum_i p_i \tr\sopr{O}_m\dop_i
+  = \tr\qty(\sum_i p_i \sopr{O}_m\dop_i).
+\end{equation}
+This should be consistent with
+\begin{equation}
+  \tr\sopr{O}_m\dop
+  = \tr\sopr{O}_m\qty(\sum_i p_i \dop_i).
+\end{equation}
+This suggests our next postulate.
+\begin{post}
+  Operations are convex linear:
+  \begin{equation}
+    \sopr{O}_m\qty(\sum_i p_i \dop_i) = \sum_i p_i \sopr{O}_m(\dop_i).
+  \end{equation}
+\end{post}
+
+Some operations are independent. This situation may be described with two states
+$\dop_1 \in \liou_1$ and $\dop_2 \in \liou_2$. We would like to consider both
+states simultaneously as a composite state $(\dop_1, \dop_2)$, such as where
+both $\dop_1$ is present and $\dop_2$ is not. As before, one may be uncertain
+which composite state to choose, so we may form combinations like
+\begin{equation}
+  \dop
+  = p(\dop_1, \dop_2) + p'(\dop_1', \dop_2).
+\end{equation}
+This means that we consider the composite state $(\dop_1, \dop_2)$ with credence
+$p$ and $(\dop_1', \dop_2)$ with credence $p'$. In either case, we consider
+that the second state is $\dop_2$, while the first state is $\dop_1$ or
+$\dop_1'$. As such, this is the same as considering the composite state
+\begin{equation}
+  \dop'
+  = (p\dop_1 + p'\dop_1', \dop_2).
+\end{equation}
+While $\dop$ and $\dop'$ formally different linear combinations of states, they
+mean the same thing. We thus consider composite states as equivalence classes of
+formal linear combinations. The classes are known as \term{tensors}, and the
+corresponding map $\tp$ from $\liou_1 \times \liou_2$ to the space of tensors
+$\liou_1 \tp \liou_2$ is known as the \term{tensor product}. The composite of
+$\dop_1$ and $\dop_2$ is written as $\dop_1 \tp \dop_2$. The probability that
+both systems are present is $\tr(\dop_1 \tp \dop_2) \coloneqq
+\tr\dop_1\tr\dop_2$.
+
+Maps $\sopr{O}_1$ on $\liou_1$ and $\sopr{O}_2$ on $\liou_2$ admit a composite
+map which acts on $\liou_1 \tp \liou_2$ defined by
+\begin{equation}
+  (\sopr{O}_1 \tp \sopr{O}_2)(\dop_1 \tp \dop_2)
+  = \sopr{O}_1\dop_1 \tp\sopr{O}_2\dop_2
+\end{equation}
+and extended linearly.\footnote{%
+  Thus $\liou_1 \tp \liou_2$ is also a Liouville space under the Hilbert-Schmidt
+  inner product.
+}
+As such, an operation on $\dop_1$ can only change $\dop_1$, no matter how it is
+considered as a composite with other states. This is our final postulate.
+\begin{post}
+  Operation maps are \term{completely positive}. That is, for any Liouville
+  space $\liou'$, the map $\sopr{O}_m \tp \idopr$ defined by
+  \begin{equation}
+    \qty(\sopr{O}_m \tp \idopr)\qty(\sum_i \opr{A}_i \tp \opr{B}_i)
+    \coloneqq \sum_i \sopr{O}_m\qty(\opr{A}_i) \tp \opr{B}_i
+  \end{equation}
+  is positive if $\opr{A}_i \in \liou$ and $\opr{B}_i \in \liou'$ are positive.
+\end{post}
+
+
 \section{Different perspectives on density operators\label{sec:dop}}
 
 For a statistical perspective on quantum mechanics, we will make two postulates.
@@ -121,6 +360,9 @@ on to considering the more general dynamics of interacting quantum systems.
 \section{Composite quantum systems\label{sec:composite}}
 
 \todo[inline]{Clean up inner product notation.}
+
+Consider a quantum system described by a Hilbert space $\hilb$ that appears to
+be made of two subsystems.
 
 Consider two quantum systems described by Hilbert spaces $\hilb_A$ and
 $\hilb_B$. We should be able to view both systems as parts of a composite

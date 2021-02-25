@@ -41,6 +41,7 @@ partial=upright,
 \usepackage{booktabs}
 \usepackage{csquotes}
 \usepackage{enumitem}
+\usepackage{rotating}
 \usepackage{fnpct}
 \setlist[enumerate,1]{label=\textbf{\arabic*.}}
 
@@ -53,10 +54,10 @@ partial=upright,
   \normalfont\liningnums%
 }
 \sectionfont{%
-  \normalfont\Large\liningnums%
+  \normalfont\itshape\liningnums%
 }
 \subsubsectionfont{%
-  \normalfont\large\liningnums%
+  \normalfont\itshape\liningnums%
 }
 
 \usepackage{todonotes}
@@ -75,6 +76,7 @@ partial=upright,
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}
 \newtheorem{rmk}{Remark}
+\newtheorem{ex}{Example}
 \newtheorem{post}{Postulate}
 
 % Fonts
@@ -86,9 +88,14 @@ partial=upright,
 \setmainfont[Numbers={OldStyle,Proportional}]{fbb}
 \usepackage[supstfm=fbb-Regular-sup-t1]{superiors}
 % \setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
-\setmonofont[Scale=MatchLowercase]{Iosevka} % We need unicode
+% \setmonofont[Scale=MatchLowercase]{Iosevka} % We need unicode
+\setmonofont[Scale=MatchLowercase]{JuliaMono} % We need unicode
 \usepackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
-\linespread{1.04}
+
+% 1.5 / 1.208, where 1.208 is the default baseline skip to font size ratio.
+% That is, for 12pt font, the default baseline skip is 14.5pt
+% https://www.tug.org/svn/texlive/trunk/Master/texmf-dist/tex/latex/base/size12.clo?view=co
+\linespread{1.24137}
 
 % \restoresymbol{TXV}{arrowvert}
 
@@ -132,11 +139,12 @@ partial=upright,
 
 % Code highlighting
 \usepackage{textcomp}
-\usepackage{upquote}
+% \usepackage{upquote}
 \usepackage[final]{minted}
 \setminted{%
   mathescape,
   breaklines,
+  fontsize=\small,
 }
 \setminted[wolfram]{style=mathematica}
 \ifoptionfinal{\setminted{style=bw}}{\setminted{style=friendly}}
@@ -149,7 +157,7 @@ partial=upright,
 % \usepackage{float}
 % \usepackage{tikz}
 
-\graphicspath{{figs/}}
+\graphicspath{{figs/}{notebooks/tex/}}
 
 % Other
 % \usepackage{kantlipsum}
