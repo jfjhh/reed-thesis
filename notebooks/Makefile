@@ -1,5 +1,6 @@
 PD = pandoc
 NBC = jupyter-nbconvert
+NBTEMPLATE = template.tplx
 TEXDIR = tex
 MINTED_FILTER = minted.py
 SUBDIRS = tex
@@ -25,12 +26,14 @@ notebook: gentex
 .PHONY: gentex
 gentex: $(NOTEBOOKS:%=tex/%.tex)
 
-tex/%.tex: %.ipynb
+# --TagRemovePreprocessor.remove_cell_tags='{"hide"}' \
+
+tex/%.tex: %.ipynb $(NBTEMPLATE)
 	# Implicity uses config file and template
 	$(NBC) \
 		--to latex \
 		--output-dir=$(TEXDIR) \
-		--TagRemovePreprocessor.remove_cell_tags='{"hide"}' \
+		--TagRemovePreprocessor.remove_cell_tags "hide" \
 		$<
 
 .PHONY: subdirs $(CLEANDIRS)
