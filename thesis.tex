@@ -103,8 +103,8 @@ partial=upright,
 \usepackage{lettrine}
 % \usepackage{Zallman} % Even fancier
 % \renewcommand\LettrineFontHook{\Zallmanfamily}
-\newcommand{\dropcap}[2]{\lettrine{#1}{#2}}
-% \newcommand{\dropcap}[2]{\textsc{#1#2}}
+% \newcommand{\dropcap}[2]{\lettrine{#1}{#2}}
+\newcommand{\dropcap}[2]{\textsc{#1#2}}
 
 \ifdraft{\overfullrule=1mm}{}
 
@@ -114,6 +114,7 @@ partial=upright,
 \usepackage{imakeidx}
 \makeindex
 \newcommand{\term}[1]{\index{#1}\textbf{#1}}
+\newcommand{\termalt}[2]{\index{#1}\textbf{#2}}
 
 
 \usepackage[switch*,pagewise]{lineno} % Before minted

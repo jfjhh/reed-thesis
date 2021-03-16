@@ -6,8 +6,8 @@
 \newcommand{\byeq}[1]{\by{\cref{#1}}}
 
 % Variant symbols
-\let\leq\leqslant%
-\let\geq\geqslant%
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}
 \renewcommand\phi\varphi%
 \renewcommand\epsilon\varepsilon%
 
@@ -48,6 +48,8 @@
 % Quantum mechanics
 \newcommand\hilb{\mathcal{H}}
 \newcommand\liou{\mathcal{L}}
+\newcommand\bounded{\mathcal{B}}
+\newcommand\effect{\mathcal{E}}
 \newcommand\ham{\opr{H}}
 \newcommand\dop{\opr{ρ}}
 \newcommand\pauli{\opr{σ}}

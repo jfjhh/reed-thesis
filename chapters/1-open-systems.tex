@@ -1,0 +1,255 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+
+\chapter{Open quantum systems}
+
+\dropcap{W}{hat} happens after performing an operation on a physical system?
+Our actions are uncertain, so the best we can do is to assign probabilities to
+the possible outcomes. Quantum mechanics is a theory for determining the
+probabilities of such outcomes. Physical theories model the relevant aspects of
+phenomena by abstracting away unnecessary information. Newtonian mechanics
+considers point masses while neglecting the material composition of bodies. This
+enables a simpler description of motion. Just as Newtonian mechanics models
+physical systems as ``Newtonian systems'' of point masses, quantum mechanics
+models physical systems with \termalt{quantum state}{quantum states} which
+represent only the probabilistic description of operation outcomes. A penny and
+a quarter are different physical systems that correspond to the same ``quantum
+system{,}'' as far as the outcomes of coin tosses are concerned.\footnote{%
+  That is, in an ideal sense. Actual coins made from many atoms are not
+  two-outcome systems. For example, the coin atoms could melt into a blob,
+  rendering them unflippable.
+}
+
+\section{A sketch of quantum mechanics}
+
+What follows is a sketch of quantum theory that helps motivate the mathematical
+formalism we use later.
+
+We are interested in performing operations that have consistent effects, for
+otherwise we could make little sense of the world. Consider performing an
+operation with $m$ outcomes on a quantum system. Given a particular outcome,
+this operation is a \term{measurement} if repeating the operation gives the same
+outcome with probability one.\footnote{%
+  On this view, the result of a measurement is defined operationally. This
+  avoids confusion with properties of \emph{physical} systems: an outcome with
+  probability one is a different kind of thing than a physical property.
+}
+
+We may then characterize a quantum system by its \term{dimension} $N$, which is
+the maximum number of outcomes distinguishable by a measurement.\footnote{%
+  This supposes that such systems exist, which requires experimental
+  verification. For example, Stern-Gerlach type experiments demonstrate the
+  existence of a two-dimensional quantum system. Given what we know about
+  systems like atoms in quantum physics, it is justified to assert the existence
+  of quantum systems with any finite dimension. Infinite dimensional systems
+  present some issues, but they may be regarded as being purely mathematical,
+  since they can be well-approximated by finite dimensional systems as far as
+  measurement outcomes are concerned. We usually consider only
+  finite-dimensional systems in what follows.
+}
+Conversely, an operation with more than $N$ outcomes cannot result in a single
+outcome with certainty.
+
+\subsection{Entropy}
+
+Since quantum states encode the probabilities of outcomes, it is relevant to
+have a measure for how uncertain we are about which outcome will happen.
+
+To do so, we must quantify the uncertainty expressed by a probability
+distribution of outcomes. The most successful definition of this uncertainty due
+to Shannon considers the \term{self-information} or \term{surprisal} $I$ of an
+event with probability $p$~\cite{shannonMathematicalTheoryCommunication1948}.
+This is a function $I$ that has the following intuitive properties:\footnote{%
+  Technically, $I$ is defined for a random variable $X$ with support
+  $\mathcal{X}$, so that $I:\mathcal{X} \to \RR$ is a function of the
+  probability of an event: $I(x) = f(P(x))$.
+}
+\begin{enumerate}
+  \item $I(1) = 0$: Certain events are uninformative or unsurprising.
+  \item $I(p) < I(p')$ if $p' < p$: Less probable events are more surprising.
+  \item $I(p) \ge 0$: The information learned from an event is nonnegative.
+  \item $I(p,\, p') = I(p) + I(p')$: The information learned from independent
+    events is the sum of the information learned from each event.
+\end{enumerate}
+The only functions with these properties are $I(p) = b\log p$ for $b < 0$.
+Choosing $b$ amounts to choosing the base of the logarithm and the unit of
+information. It is standard to use base two for which the unit of the
+self-information
+\begin{equation}
+  I(p) = -\log p
+  \label{eq:self-information}
+\end{equation}
+is the \term{bit}. The uncertainty expressed by a probability distribution of
+outcomes is called the \term{Shannon entropy}, and is defined as the expected
+surprisal of an outcome:
+\begin{align}
+  H
+  &= \ev{I} \\
+  &= -\sum_i p_i \log p_i,
+  \label{eq:entropy}
+\end{align}
+where $0 \log 0 \coloneqq \lim_{p \to 0} p \log p = 0$. Thus an operation with a
+certain outcome has $H = 0$. The most uncertain one can be in a $m$-outcome
+operation is to have $p_i = 1/m$. In that case, $H = \log m$.
+
+We now define the \term{von Neumann entropy} $S$ of a quantum state $\dop$ to be
+the minimum entropy of any measurement of the state. If $S(\dop) = 0$, there is
+a measurement with a definite outcome for $\dop$. Since the other outcomes are
+excluded, $\dop$ is called a \term{pure state}, rather than a \term{mixed state}
+which has probability spread out over more than one outcome.
+
+\subsection{Hardy's postulates}\label{sec:hardy}
+
+Now that we have the notion of a pure state, we may indicate postulates of
+quantum theory.
+
+We expect that $K$ real numbers are needed to describe a quantum state $\dop$
+and to predict the probabilities of outcomes. In quantum theory, we posulate the
+following statements about $N$ and $K$:
+\begin{enumerate}
+  \item $K$ is a function of $N$, which we may select to be the smallest value
+    consistent with the remaining postulates.
+  \item A $N$-dimensional system constrained to only $M$ states distinguishable
+    by measurement behaves like a system of dimension $M$.
+  \item A composite system consisting of subsystems $A$ and $B$ satisfies $N =
+    N_A N_B$ and $K = K_A K_B$.
+\end{enumerate}
+These statements apply equally well to classical probability theory. Quantum
+theory is distinguished by the final postulate:
+\begin{enumerate}
+  \item[\textbf{4.}] There is a continuous and reversible transformation between
+    any two pure states of a system.
+\end{enumerate}
+These postulates are enough to reproduce quantum mechanics as we know it. While
+this has been just a sketch, Hardy gives a more precise description and
+demonstrates agreement with the formalism to
+follow~\cite{hardyQuantumTheoryFive2001}. In particular, Hardy shows that $K =
+N^2$, which corresponds to considering a complex Hilbert space.
+
+\section{The mathematical formalism}
+
+Different mathematical formalisms for quantum mechanics differ in how they
+represent states and operations, but they agree on the assignment of
+probabilities to outcomes. Motivated by \cref{sec:hardy}, we now make the
+following postulates:
+\begin{post}\label{post:hilb}
+  A quantum system is described by a complex Hilbert space $\hilb$.
+\end{post}
+
+\begin{post}\label{post:effects}
+  An outcome corresponds to an \term{effect} $\opr{E}$, which is a self-adjoint
+  operator on $\hilb$ such that $\zopr \le \opr{E} \le \idopr$.\footnotemark%
+\end{post}
+\footnotetext{%
+  The notation $\opr{A} \le \opr{B}$ means that $\mel{v}{\opr{A}}{v} \le
+  \mel{v}{\opr{B}}{v}$ for all $v \in \hilb$.
+}
+
+\begin{post}\label{post:probability_measure}
+  A state corresponds to a \term{probability measure} $P$ on effects. That is:
+  \begin{enumerate}
+    \item $0 \le P(\opr{E}) \le 1$ for all effects $\opr{E}$,
+    \item $P(\idopr) = 1$,
+    \item $P(\opr{E}_1 + \opr{E}_2 + \cdots) = P(\opr{E}_1) + P(\opr{E}_2)
+      + \cdots$ for any sequence of events with $\opr{E}_1 + \opr{E}_2 + \cdots
+      \le \idopr$.
+  \end{enumerate}
+\end{post}
+
+\begin{post}\label{post:convex}
+  States form a convex set. If $\sum_i p_i = 1$, the convex sum of states
+  $\qty{P_i}$ is defined by
+  \begin{equation}
+    \qty(\sum_i p_i P_i)(\opr{E})
+    = \sum_i p_i P_i(\opr{E}).
+    \label{eq:convex}
+  \end{equation}
+  Such a combination is known as an \term{ensemble}.
+\end{post}
+
+It is simple to prove that any such probability measure $P$ on an effect
+$\opr{E}$ may be represented by the \term{Born rule}
+\begin{equation}
+  P(\opr{E})
+  = \tr(\dop\opr{E}),
+  \label{eq:effect_probability}
+\end{equation}
+where $\dop \ge \zopr$ is a self-adjoint operator known as a \term{density
+  operator}~\cite{buschQuantumStatesGeneralized2003}.\footnote{%
+  The more specific case where effects are restricted to be projections $\op{v}$
+  for $v \in \hilb$ is significantly harder, and is known as Gleason's
+  theorem~\cite{gleasonMeasuresClosedSubspaces1975}.
+}
+\Cref{eq:effect_probability} implies that $\tr\dop = 1$ and that a convex sum of
+states is represented by the same sum of density operators. The Born rule
+uniquely identifies density operators with states, so we will use the term state
+to refer to density operators from now on.
+
+An \term{observable} result of an operation is described by an assignment of
+each outcome $m$ to an effect $\opr{E}_m$, where $\sum_m \opr{E}_m = \idopr$.
+Since effects are positive operators that determine the probabilities of each
+outcome, such an observable is called a \term{positive operator valued measure}
+(\textsc{povm}). The special case where the effects are projectors is called a
+\term{projection valued measure} (\textsc{pvm}). We now describe how operations
+change states:
+
+\begin{post}\label{post:operation}
+  An \term{operation} with outcome $m$ is described by a map $\sopr{O}_m$. The
+  state $\dop$ after the operation becomes
+  \begin{equation}
+    \dop_m'
+    = P{(m)}^{-1} \sopr{O}_m \dop.
+    \label{eq:operation}
+  \end{equation}
+\end{post}
+Inherent in \cref{post:operation} is the normalization condition $\tr\dop' = 1$,
+which implies that $\tr\sopr{O}_m\dop = \tr(\dop \opr{E}_m)$, as well as the
+requirement that $\sopr{O}_m\dop \ge \zopr$. If an operation is performed but
+the outcome is unknown, we may assign the state
+\begin{equation}
+  \dop'
+  = \sum_m P(m) \dop_m'
+  = \sum_m \sopr{O}_m \dop,
+  \label{eq:non-selective}
+\end{equation}
+so that an effect $\opr{E}$ has the expected probability $\tr(\dop' \opr{E}) =
+\ev{\tr(\dop_m' \opr{E})}_m$.
+
+The state of the ensemble $\dop = \sum_i p_i \dop_i$ after an operation with
+outcome $m$ is
+\begin{equation}
+  \frac{\sopr{O}_m \dop}{\tr\sopr{O}_m \dop}
+  = \sum_i P(i \,|\, m) \frac{\sopr{O}_m \dop_i}{\tr\sopr{O}_m \dop_i}
+  \label{eq:ensemble-operation}
+\end{equation}
+By Bayes' theorem,
+\begin{equation}
+  P(i \,|\, m)
+  = \frac{P(i) P(m \,|\, i)}{P(m)}
+  = \frac{p_i \tr\sopr{O}_m \dop_i}{\tr\sopr{O}_m \dop}.
+\end{equation}
+Now \cref{eq:ensemble-operation} becomes
+\begin{equation}
+  \sopr{O}_m \qty(\sum_i p_i \dop_i)
+  = \sum_i p_i \sopr{O}_m \dop_i.
+\end{equation}
+Thus operations are convex linear.
+
+
+\subsection{Composite systems}
+
+TODO
+
+\subsection{Closed dynamics}
+
+TODO
+
+Only unitarys preserve the (relative) entropy~\cite{molnarMapsStatesPreserving2010}.
+
+\subsection{Open dynamics}
+
+Assume completely
+positive~\cite{cuffaroDebateConcerningProper2013,pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005}.
+
+\end{document}
+

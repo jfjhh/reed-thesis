@@ -162,7 +162,7 @@ Thus \cref{post:prob} allows one to encode this collection of states as the
 convex sum $\dop = \sum_i p_i \dop_i$. We have $\sum_i p_i = 1$ so that a
 combination of normalized states remains normalized.
 
-\begin{post}\label{post:operation}
+\begin{post}
   An \term{operation}\footnote{Quantum operations are also called generalized
     measurements. However, many operations are not thought of as measurements of
   physical quantities.} on a state with $M$ possible outcomes is described by a set of $M$
@@ -580,6 +580,10 @@ With this definition, we continue from \cref{eq:partialptrace} to find that
 \end{align}
 Thus the reduced density matrix for system $A$ is obtained from the full density
 matrix by taking the partial trace over system $B$.
+
+\section{Entropy}\label{sec:entropy}
+
+Unitarys cool by~\cite{molnarMapsStatesPreserving2010}.
 
 However, the reduction of the density operator by ``tracing out'' $B$ comes at
 the cost of losing information about the correlation between $A$ and $B$.
@@ -1822,6 +1826,56 @@ so the elements for the dissipator $\sopr{D} = \sum_i \gamma_i\qty(\opr{A}_L
   \mel{ab}{\sopr{D}}{cd}
   = \sum_i \gamma_i \qty(A_{ac}A_{bd}^* - \frac{1}{2}\sum_k\qty(\delta_{db} A_{ak}A_{ck}^* + \delta_{ac} A_{dk}A_{bk}^*))
 \end{equation}
+
+
+\section{Weak coupling separates unitary and dissipative evolution}
+
+\begin{align}
+  \comm{\qty[\opr{A}_i^\dag \opr{A}_i]}{%
+  \qty{\opr{A}_j^\dag \opr{A}_j}}
+  \dop
+  &= \zopr
+\end{align}
+
+\begin{align}
+  &\mel{a}{\comm{\opr{A}_\omega^\dag \opr{A}_\omega}{%
+  \opr{B}_\omega^\dag \opr{B}_\omega}}{e} \\
+  &= A_{ab} A_{bc} B_{cd} B_{de} \,
+  \omega_{ba} \omega_{bc} \omega_{dc} \omega_{de}
+  - B_{ab} B_{bc} A_{cd} A_{de} \,
+  \omega_{ba} \omega_{bc} \omega_{dc} \omega_{de} \\
+  &= \qty(A_{ab} A_{bc} B_{cd} B_{de}
+  - B_{ab} B_{bc} A_{cd} A_{de})
+  \omega_{ba} \omega_{bc} \omega_{dc} \omega_{de} \\
+  &= 0
+\end{align}
+
+\begin{align}
+  \comm{\qty[\opr{A}_i^\dag \opr{A}_i]}{%
+  {\qty(\opr{A}_j)}_L {\qty(\opr{A}_j^\dag)}_R}
+  \dop
+  &= \zopr
+\end{align}
+
+\begin{align}
+  &\mel{a}{%
+    \opr{A}^\dag \opr{A} \opr{B} \dop \opr{B}^\dag
+    - \opr{B} \dop \opr{B}^\dag \opr{A}^\dag \opr{A}
+    - \opr{B} \opr{A}^\dag \opr{A} \dop \opr{B}^\dag
+    + \opr{B} \dop \opr{A}^\dag \opr{A} \opr{B}^\dag
+  }{f} \\
+  &=
+  A_{ab} A_{bc} B_{cd} \rho_{de} B_{ef} \,
+  \omega_{ba} \omega_{bc} \omega_{cd} \omega_{fe}
+  - B_{ab} \rho_{bc} B_{cd} A_{de} A_{ef} \,
+  \omega_{ab} \omega_{dc} \omega_{ed} \omega_{ef} \\
+  &- B_{ab} A_{bc} A_{cd} \rho_{de} B_{ef} \,
+  \omega_{ab} \omega_{cb} \omega_{cd} \omega_{fe}
+  + B_{ab} \rho_{bc} A_{cd} A_{de} B_{ef} \,
+  \omega_{ab} \omega_{dc} \omega_{de} \omega_{fe}
+  \\
+  &= 0
+\end{align}
 
 
 % Notebooks
