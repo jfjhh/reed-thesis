@@ -1,0 +1,279 @@
+\documentclass[12pt,c]{beamer}
+
+\usepackage[normalem]{ulem}
+\usepackage{multicol}
+\usepackage{wasysym}
+
+\usepackage{mathtools} % Load before newtxmath
+\mathtoolsset{%
+  mathic,
+}
+\usepackage[%
+math-style=ISO,
+bold-style=ISO,
+sans-style=italic,
+nabla=upright,
+partial=upright,
+]{unicode-math}
+
+
+\definecolor{rubric}{rgb}{0.7,0.05,0.0}
+
+\usecolortheme[snowy]{owl}
+\setbeamercolor{title}{fg=rubric}
+\setbeamerfont{frametitle}{shape=\itshape}
+\setbeamercolor{frametitle}{bg=white}
+\setbeamertemplate{frametitle}[default]%[center]
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\setbeamercolor{section in toc}{fg=normal text.fg}
+\setbeamercolor{footnote}{fg=gray}
+\setbeamercolor{alerted text}{fg=rubric}
+\setbeamercolor*{bibliography item}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry author}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry title}{fg=rubric}
+\setbeamercolor*{bibliography entry location}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry note}{fg=normal text.fg}
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \color{normal text.fg}
+    \hspace{1em}%
+    \insertframenumber\,/\,\inserttotalframenumber%
+}
+
+\usepackage[sorting=none,doi=false,url=false,isbn=false]{biblatex}
+\addbibresource{references.bib}
+\renewcommand*{\bibfont}{\footnotesize}
+
+% Fonts
+\usefonttheme[stillsansserifsmall]{serif} % So beamer won't change fonts
+\usepackage[full]{textcomp} % to get the right copyright, etc.
+\usepackage{libertinus-otf}
+\usepackage[T1]{fontenc} % LY1 also works
+\setmainfont[Numbers={OldStyle,Proportional}]{fbb}
+\setsansfont[Scale=0.95]{Cabin}
+\usepackage[supstfm=fbb-Regular-sup-t1]{superiors}
+% \setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
+\setmonofont[Scale=MatchLowercase]{Iosevka} % We need unicode
+\usepackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
+
+\newcommand{\spacedsc}{\scshape\addfontfeatures{LetterSpace=5}}
+
+% Use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\hypersetup{%
+  pdfborder={0 0 0},
+  breaklinks=true,
+}
+\urlstyle{same} % don't use monospace font for urls
+
+% \setlength{\parindent}{0pt}
+% \setlength{\parskip}{6pt plus 2pt minus 1pt}
+% \setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\tikzset{% Animate with beamer overlays
+  invisible/.style={opacity=0},
+  visible on/.style={alt={#1{}{invisible}}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+
+\graphicspath{{./figs/}}
+
+\input{preamble/math-packages}
+\input{preamble/math-commands}
+
+\renewcommand\footnoterule{}
+\renewcommand\thefootnote{\textcolor{gray}{\arabic{footnote}}}
+% \setbeamertemplate{footnote}{%
+%   \scriptsize\noindent\raggedright$^*$\insertfootnotetext\par%
+% }
+
+\title{Decay the quantum way}
+\subtitle{Save an open system from guessing today}
+\author{Alex Striff \\ Advisor: Darrell Schroeter}
+\institute{\textit{Reed College \\ Thesis Seminar}}
+\date{March 24, 2021}
+
+\begin{document}
+
+{%
+  \beamertemplatenavigationsymbolsempty%
+  \begin{frame}
+    \begin{tikzpicture}[remember picture,overlay,opacity=0.125]
+      \node[at=(current page.center)] {%
+          \includegraphics[keepaspectratio,
+          width=\paperwidth,
+          height=\paperheight]{spins}
+        };
+    \end{tikzpicture}
+    \titlepage%
+  \end{frame}
+}
+
+\section{What decay?}
+
+\begin{frame}{What happens to the spins?}
+  \begin{tikzpicture}[remember picture,overlay,opacity=1]
+    \node[at=(current page.center)] {%
+        \includegraphics[keepaspectratio,
+        width=\paperwidth,
+        height=\paperheight]{spins}
+      };
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Example: The transverse-field Ising model}
+  \begin{center}
+    \alt<2->{\includegraphics[width=\textwidth]{open}}{%
+    \includegraphics[width=\textwidth]{closed}}
+  \end{center}
+\end{frame}
+
+\section{What is an open quantum system?}
+
+\begin{frame}{The quantum state}
+  A \alert{quantum state} assigns probabilities to outcomes.
+  \begin{center}
+    \includegraphics[width=0.3333\textwidth]{stern-gerlach}
+  \end{center}
+  $\ket{\psi} \in \hilb$ does not assign even odds for all orientations.
+  \frownie%
+  
+  How to represent half-$\ket{\uparrow}$ and half-$\ket{\downarrow}$?
+  \begin{align*}
+    \dop
+    &= \frac{1}{2}\op{\uparrow} + \frac{1}{2}\op{\downarrow} \\
+    &= \sum_i p_i \op{\psi_i}
+  \end{align*}
+  A \alert{density operator} $\dop$ represents a general quantum state.
+\end{frame}
+
+\begin{frame}{Open system with weak coupling to a thermal bath}
+  \begin{center}
+    $
+    \vcenter{\hbox{\includegraphics[width=0.3333\textwidth]{spins}}}
+    \overset{\ham_I}{\longleftrightarrow}
+    \quad
+    \vcenter{\hbox{\includegraphics[width=0.3333\textwidth]{thermal-bath}}}
+    $
+  \end{center}
+  \begin{itemize}
+    \item Start with $\dop(0) = \dop_S(0) \tp \dop_B$.
+
+    \item The combined system has unitary evolution from the Hamiltonian
+      \[
+        \ham
+        = \ham_S + \ham_B + \ham_I.
+      \]
+
+    \item Then throw away the bath: $\dop_S(t) = \tr_B\dop(t)$.
+
+    \item How to find $\dop_S(t)$ \alert{directly} from $\dop_S(0)$?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Time evolution}
+  Whatever it is, the result must also be a density operator.
+  \[
+    \ket{\Psi(t)} = \opr{U}(t) \ket{\Psi(0)}
+    \quad\mapsto\quad
+    \dop(t)
+    = \sopr{V}(t)\dop(0)
+  \]
+  \pause%
+  Usually $\dop(t + \dd{t})$ depends only on $\dop(t)$, not the past.
+  \[
+    \sopr{V}(t + \dd{t})\dop(0)
+    = \sopr{V}(\dd{t})\sopr{V}(t)\dop(0)
+  \]
+  Then there is a generator of time evolution.
+  \[
+    \ket{\dot{\Psi}} = -\im\ham\ket{\Psi}
+    \quad\mapsto\quad
+    \dot{\dop} = \sopr{L}\dop
+  \]
+  \pause%
+  Any \textcolor{gray}{\textsc{cptp}} $\sopr{L}$ may be put into
+  \alert{Lindblad form}.
+  \[
+    \sopr{L}\dop
+    = -\im\comm{\ham}{\dop}
+    + \sum_i \gamma_i \qty(%
+    \opr{J}_i\dop\opr{J}_i^\dag
+    - \frac{1}{2}\acomm{\opr{J}_i^\dag\opr{J}_i}{\dop}
+    )
+  \]
+\end{frame}
+
+\begin{frame}{Example: Atomic emission}
+  The eigenstates of hydrogen are \alert{not} stable.
+  \textcolor{gray}{(E\&M vacuum)}
+  \[
+    \vcenter{\hbox{\includegraphics[width=0.5\textwidth]{hydrogen}}}
+    \quad
+    \vcenter{\hbox{\includegraphics[width=0.125\textwidth]{two-level.png}}}
+    \quad
+    \ham = \frac{\omega}{2}\,\pauli_z
+  \]
+  \begin{center}
+    \includegraphics[width=0.75\textwidth]{populations}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Example: Two spins in a transverse magnetic field}
+  \begin{center}
+    \includegraphics[width=0.3333\textwidth]{spins}
+  \end{center}
+  \begin{itemize}
+    \item Multiple spins are typically assumed to decay independently.
+    \item But there are non-local effects from interactions between spins.
+  \end{itemize}
+  The simplest case is two spins.
+  \[
+    \ham
+    = \alpha \pauli_x^1 \pauli_x^2 + \qty(\pauli_z^1 + \pauli_z^2)
+  \]
+  Find dissipation rates by diagonalizing $\sopr{L}$.
+\end{frame}
+
+\begin{frame}{How to compare different systems?}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{relative}
+  \end{center}
+\end{frame}
+
+\begin{frame}{What happens to the spins?}
+  \vspace{-\baselineskip}
+  \[
+    \vcenter{\hbox{\includegraphics[width=0.3\textwidth]{spins}}}
+    \quad
+    \vcenter{\hbox{\includegraphics[width=0.6\textwidth]{open}}}
+  \]
+  \begin{itemize}
+    \item Interaction with the bath causes decay to equilibrium.
+    \item I wrote code that finds the equation for decay.
+    \item Contrary to practice, spin interactions change the decay.
+    \item Next: continue to quantify this effect.
+  \end{itemize}
+\end{frame}
+
+\section*{References}
+
+\begin{frame}{References}
+  \nocite{opensys,liebTwoSolubleModels1961,pfeutyOnedimensionalIsingModel1970}
+  \printbibliography%
+\end{frame}
+
+\end{document}
+
