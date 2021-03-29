@@ -100,6 +100,8 @@ which has probability spread out over more than one outcome.
 
 \subsection{Hardy's postulates}\label{sec:hardy}
 
+TODO: Rewrite as quantum logic.
+
 Now that we have the notion of a pure state, we may indicate postulates of
 quantum theory.
 
@@ -133,7 +135,14 @@ represent states and operations, but they agree on the assignment of
 probabilities to outcomes. Motivated by \cref{sec:hardy}, we now make the
 following postulates:
 \begin{post}\label{post:hilb}
-  A quantum system is described by a complex Hilbert space $\hilb$.
+  A quantum system is described by a separable complex Hilbert space
+  $\hilb$.\footnote{%
+    Since a quantum system is identified only by its dimension $d$, we may
+    wonder which $d$-dimensional Hilbert space to assign. However, all finite
+    $d$-dimensional (separable) complex Hilbert spaces are isometrically
+    isomorphic to $\CC^d$, and all infinite-dimensional separable Hilbert spaces
+    are isometrically isomorphic to $\ell^2$.
+  }
 \end{post}
 
 \begin{post}\label{post:effects}
@@ -233,19 +242,172 @@ Now \cref{eq:ensemble-operation} becomes
 \begin{equation}
   \sopr{O}_m \qty(\sum_i p_i \dop_i)
   = \sum_i p_i \sopr{O}_m \dop_i.
+  \label{eq:convex-operation}
 \end{equation}
 Thus operations are convex linear.
 
 
 \subsection{Composite systems}
 
-TODO
+The success of physics lies in the apparent lack of causal connections between
+phenomena separated in space and time. Different things are different, and the
+actions of someone on the other side of the world have no immediate effect on an
+experiment performed now. We then expect that some physical systems are composed
+of a number of subsystems. The whole system may be affected as different parts
+that each respond the same way as if nothing else was there.\footnote{%
+  For example, we will later consider each spin in a spin chain to be a
+  subsystem, since each spin may be separately affected. However, each of two
+  electrons would not be a subsystem, since removal of one electron changes
+  where the other electron is likely to be found.
+}
+
+Given a quantum system with Hilbert space $\hilb$, a decomposition into
+\termalt{subsystem}{subsystems} is described by Hilbert spaces $\hilb_i$ with
+$\prod_i\dim\hilb_i = \dim\hilb$ and maps $f_i$, $g_i$ such that
+\begin{equation}
+  \tr(\dop f_i(\opr{E}_i))
+  = \tr(g_i(\dop) \opr{E}_i)
+  \label{eq:trcompat}
+\end{equation}
+for any state $\dop$ on $\hilb$ and effect $\opr{E}_i$ on $\hilb_i$. The maps
+$f_i$ lift an effect from the subsystem to the composite system, while the $g_i$
+reduce a composite state to a subsystem state.
+
+What are $f_i$ and $g_i$? We will first consider their action on states of
+definite composition. Consider states $\dop_A$ and $\dop_B$ on $\hilb_A$ and
+$\hilb_B$ where $\dim\hilb_A \dim\hilb_B = \dim\hilb$. How do we represent the
+\term{product state} $\dop$, which satisfies $g_A(\dop) = \dop_A$ and $g_B(\dop)
+= \dop_B$? Perhaps $\dop$ is just the pair $(\dop_A,\, \dop_B)$. By
+\cref{post:convex}, a convex combination of such pairs is also a composite
+state. However, suppose that $\dop_A = \sum_i \alpha_i \dop_i^A$ and $\dop_B =
+\sum_j \beta_j \dop_j^B$. The ensemble of composites should be the same as the
+composite of ensembles, which is the equivalence
+\begin{equation}
+  \qty(\sum_i \alpha_i \dop_i^A,\, \sum_j \beta_j \dop_j^B)
+  \sim \sum_{ij} \alpha_i \beta_j \qty(\dop_i^A,\, \dop_j^B)
+  \label{eq:tensorequiv}
+\end{equation}
+on the composite states. Thus the product state is not a pair, but an
+equivalence class $[(\dop_A,\, \dop_B)]$ of $(\bdd(\hilb_A) \times
+\bdd(\hilb_B))/{\sim}$. These classes are called \termalt{tensor}{tensors}. The
+product state equivalence class is written with the \term{tensor product} as
+$\dop_A \tp \dop_B$, and the whole space is called $\bdd(\hilb_A) \tp
+\bdd(\hilb_B) \iso \bdd(\hilb)$.\footnote{%
+  Is this Hilbert space separable as required by \cref{post:hilb}? Yes, but
+  later we will consider a bath described by an infinite tensor product of
+  harmonic oscillators. Such a Hilbert space is not separable, but the subspace
+  that is physically relevant is separable. Since we will neglect high-frequency
+  modes anyway, it also suffices to truncate the product once the energies are
+  sufficiently high. For more discussion,
+  see~\cite[pp.~84--87]{streaterPCTSpinStatistics1989}.
+}
+The same argument gives the \term{product effect} $\opr{E}_A \tp \opr{E}_B$. Yet
+the same could be said for the operator $\dop_A\opr{E}_A$, which leads us to
+define $(\dop_A \tp \dop_B)(\opr{E}_A \tp \opr{E}_B) = \dop_A\opr{E}_A \tp
+\dop_B\opr{E}_B$.
+
+What is $\tr(\opr{A} \tp \opr{B})$? Product effects represent independent
+events. For the probabilities to multiply, we must have
+\begin{equation}
+  \tr(\opr{A} \tp \opr{B})
+  = \tr\opr{A} \tr\opr{B}.
+\end{equation}
+Thus an effect $\opr{E}_A$ is lifted as $f_A(\opr{E}_A) = \opr{E}_A \tp \idopr$.
+
+We now extend to non-product states, which are called \term{entangled} states.
+Consider a map $f$ of the $f_i$ and the countable sum of events $\opr{E} =
+\sum_a \opr{E}_a$. By \cref{eq:trcompat},
+\begin{align}
+  \tr\qty(\dop \sum_a f\qty(E_a))
+  &= \sum_a \tr\qty(\dop f\qty(E_a)) \\
+  &= \sum_a \tr\qty(g(\dop) E_a) \\
+  &= \tr\qty(g(\dop) \sum_a E_a) \\
+  &= \tr\qty(\dop f\qty(\sum_a E_a))
+\end{align}
+for all $\dop$. Thus $f$ is countably additive. If $\opr{E}_1 \le \opr{E}_2$,
+then $0 \le \tr(g(\dop) \qty(\opr{E}_2 - \opr{E}_1)) = \tr(\dop f\qty(\opr{E}_2
+- \opr{E}_1))$, so $f\qty(\opr{E}_1) \le f\qty(\opr{E}_2)$. It then follows that
+the $f_i$ are convex.\footnote{%
+  The argument is the same as that for the real linearity of a probability
+  measure on effects given in~\cite{buschQuantumStatesGeneralized2003}.
+}
+By symmetry, the same argument shows that the $g_i$ are convex.
+
+The map $g_A$ is known as a \term{partial trace}. The partial
+trace over $B$ of $\dop_A \tp \dop_B$ is
+\begin{equation}
+  g_A(\dop)
+  = \tr_B(\dop_A \tp \dop_B)
+  \defeq \dop_A \tr\dop_B
+  = \dop_A,
+\end{equation}
+and is extended linearly to combinations of product states.
+
 
 \subsection{Closed dynamics}
 
-TODO
+Now that we have described the composition of quantum systems, how do they
+change in time? We are often interested in the case where the information held
+by the quantum state does not change. This is called a \term{closed} quantum
+system. While all isolated physical systems are thought to correspond to closed
+quantum systems, the converse is not true. For example, atomic spins subject to
+external control from lasers are still closed systems.
 
-Only unitarys preserve the (relative) entropy~\cite{molnarMapsStatesPreserving2010}.
+The change in a closed system is the result of an operation $\sopr{O}$ with a
+single, definite outcome. The operation $\sopr{O}$ is convex by
+\cref{eq:convex-operation}. Since the information in the state $\dop$ cannot
+change, $\sopr{O}$ must be invertible. Kadison's theorem\footnote{%
+  Wigner's theorem on symmetries of pure states is a special
+  case~\cite[p.~77]{morettiMathematicalFoundationsQuantum2016}. Many similar
+  results hold, such as that only unitary transformations preserve the entropy
+  (relative or
+  not)~\cite{heEntropypreservingMapsQuantum2015,molnarMapsStatesPreserving2010}.
+}
+states that all such operations have the form
+\begin{equation}
+  \sopr{O}\dop
+  = \opr{U}\dop\opr{U}^\dag,
+  \label{eq:unitary-operation}
+\end{equation}
+where the operator $\opr{U}$ is either \term{unitary} ($\opr{U}^\dag\opr{U} =
+\idopr$) or \term{antiunitary} ($\opr{U}^\dag\opr{U} =
+\idopr$)~\cite{morettiMathematicalFoundationsQuantum2016,bengtssonGeometryQuantumStates2017}.
+
+In contexts like quantum computation or control, all that matters is the state
+before and after the operation. To consider the notion of an isolated physical
+system, we must relate the quantum state to the physical time. We then have an
+operator $\opr{U}(t)$ which gives the state
+\begin{equation}
+  \dop(t)
+  = \opr{U}(t)\dop(0)\opr{U}^\dag(t)
+  \label{eq:unitary-evolution}
+\end{equation}
+as a function of time. We expect that $\opr{U}(t)$ changes continuously and
+satisfies
+\begin{equation}
+  \opr{U}(t + t')
+  = \opr{U}(t) + \opr{U}(t')
+\end{equation}
+for real $t$, $t'$. Then since $\opr{U}(0) = \idopr$ is unitary, $\opr{U}(t)$ is
+unitary. We would like a representation of $\opr{U}(t)$ that does not depend on
+time. Stone's theorem~\cite{stoneOneParameterUnitaryGroups1932} is that there is
+a self-adjoint operator $\ham$ such that
+\begin{equation}
+  \opr{U}(t)
+  = e^{-\im\ham t}.
+\end{equation}
+This allows us to differentiate \cref{eq:unitary-evolution} to find
+\begin{align}
+  \dot{\dop}
+  &= \dot{\opr{U}}(t)\dop(0)\opr{U}^\dag(t)
+  + \opr{U}(t)\dop(0)\dot{\opr{U}}^\dag(t) \\
+  &= -\im\ham\qty(\opr{U}(t)\dop(0)\opr{U}^\dag(t))
+  + \qty(\opr{U}(t)\dop(0)\opr{U}^\dag(t))\im\ham \\
+  &= -\im\comm{\ham}{\dop},
+  \label{eq:liouville}
+\end{align}
+which is known as the \termalt{Liouville equation}{Liouville} or \term{von
+Neumann equation}.
 
 \subsection{Open dynamics}
 
