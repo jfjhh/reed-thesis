@@ -295,7 +295,7 @@ positive~\cite{weinbergQuantumMechanicsState2014}.
   \begin{equation}
     \dot{\dop}
     = \flatfrac{\comm{\ham}{\dop}}{\im\hbar}\!.
-    \label{eq:liouville}
+    \label{eq:liouville-si}
   \end{equation}
 \end{post}
 
@@ -673,7 +673,7 @@ $\sopr{V}(t) = e^{\liou t}$, analogously to how a time-independent Hamiltonian
 is a generator for the unitary time-evolution operator $e^{\ham t/\im\hbar}$.
 Following this analogy, the Schr\"odinger equation is replaced by the
 \term{Markovian quantum master equation} $\dot{\dop}_S = \liou\dop_S$, which
-generalizes \cref{eq:liouville} to typically non-unitary \textsc{ctcp} maps of
+generalizes \cref{eq:liouville} to typically non-unitary \textsc{cptp} maps of
 density operators, provided that they are Markovian.
 
 We will find that the most general form of $\liou$ is given by the
@@ -732,29 +732,25 @@ parts and included $\hbar$ so that $\ham$ will have dimensions of energy. Now we
 may write the master equation $\liou\dop = \dot{\dop}$ as
 \begin{align}
   \dot{\dop}
-  &= \lim_{\Delta t \to 0^+} \frac{\sopr{V}(\Delta t)\dop - \dop}{\Delta t}
-  \nonumber \\
+  &= \lim_{\Delta t \to 0^+} \frac{\sopr{V}(\Delta t)\dop - \dop}{\Delta t} \\
   %
   &= \lim_{\Delta t \to 0^+} \Bigg(
   \frac{c_{d^2 d^2} - d}{d\Delta t} \dop
   + \sum_{m,n=1}^{d^2 - 1}
   \frac{c_{mn}(\Delta t)}{\Delta t}\opr{F}_m \dop \opr{F}_n^\dag
-  \nonumber \\
-  &+ \frac{1}{\sqrt{d}} \sum_{n=1}^{d^2 - 1} \qty(%
+  + \frac{1}{\sqrt{d}} \sum_{n=1}^{d^2 - 1} \qty(%
   \frac{c_{nd^2}(\Delta t)}{\Delta t} \opr{F}_n \dop
   + \frac{c_{d^2 n}(\Delta t)}{\Delta t} \dop \opr{F}_n^\dag)
   \Bigg) \label{eq:Vderiv} \\
   %
   &= \frac{a_{d^2 d^2}}{d} \dop 
   + \opr{F}\dop + \dop\opr{F}^\dag
-  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag
-  \nonumber \\
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
   %
   &= \frac{a_{d^2 d^2}}{d} \dop 
   + \acomm{\opr{G}}{\dop}
   + \frac{\comm{\ham}{\dop}}{\im\hbar}
-  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag
-  \nonumber \\
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
   %
   &= \acomm{\opr{G}'}{\dop}
   + \frac{\comm{\ham}{\dop}}{\im\hbar}
@@ -778,15 +774,16 @@ allows us to write \cref{eq:GHform} as
   \frac{1}{2}\acomm{\opr{F}_n^\dag \opr{F}_m}{\dop}),
   \label{eq:markovian}
 \end{equation}
-which is the first form of the \emph{Lindblad equation}. This may be simplified
+which is the first form of the \term{Lindblad equation}. This may be simplified
 further if we diagonalize the coefficient matrix $\opr{a}$ by applying a unitary
 transformation $\opr{u}$ to give $\opr{a} = \opr{u}\opr{γ}\opr{u}^\dag$, where
 the $\qty{\gamma_k}_{k=1}^{d^2 - 1}$ are the non-negative eigenvalues of
 $\opr{a}$. This is possible since the coefficient matrix $\opr{c}$ is seen
 from \cref{eq:coeffs} to be Hermitian, and \cref{eq:limcoeffs} then gives that
 $\opr{a}$ is Hermitian. We may then express $\opr{F}_{n \neq d^2} =
-\sum_{k=1}^{d^2 - 1} \opr{L}_n u_{nk}$ in terms of the \term{Lindblad operators}
-$\opr{L}_n$ to find
+\sum_{k=1}^{d^2 - 1} \opr{L}_n u_{nk}$ in terms of the \termalt{Lindblad
+operators}{Lindblad} or \termalt{jump operator}{jump operators} $\opr{L}_n$ to
+find
 \begin{equation}
   \dot{\dop}
   = \frac{\comm{\ham}{\dop}}{\im\hbar}
@@ -804,7 +801,7 @@ into unitary and non-unitary parts.
 
 \section{The weak-coupling limit\label{sec:interaction}}
 
-Now that we have found the general form for a stochastic \textsc{ctcp}
+Now that we have found the general form for a stochastic \textsc{cptp}
 generator, we must now determine the conditions for interaction Hamiltonian
 in \cref{eq:fullham} to give rise to Markovian dynamics. While there are
 several different regimes where this is true, we will consider the
@@ -1050,7 +1047,7 @@ collisions~\cite{collisions1,collisions2}.
 
 \section{Conclusion}
 
-We have seen how the general consideration of Markovian \textsc{ctcp} maps on
+We have seen how the general consideration of Markovian \textsc{cptp} maps on
 density operators leads to the Lindblad equation, and considered the
 weak-coupling limit as an example of a physical regime where the assumption of
 stochastic dynamics is valid. However, we have only scratched the surface of

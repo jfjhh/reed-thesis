@@ -280,8 +280,8 @@ $\hilb_B$ where $\dim\hilb_A \dim\hilb_B = \dim\hilb$. How do we represent the
 = \dop_B$? Perhaps $\dop$ is just the pair $(\dop_A,\, \dop_B)$. By
 \cref{post:convex}, a convex combination of such pairs is also a composite
 state. However, suppose that $\dop_A = \sum_i \alpha_i \dop_i^A$ and $\dop_B =
-\sum_j \beta_j \dop_j^B$. The ensemble of composites should be the same as the
-composite of ensembles, which is the equivalence
+\sum_j \beta_j \dop_j^B$. We mean the same state when we consider either an
+ensemble of composites or a composite of ensembles, which is the equivalence
 \begin{equation}
   \qty(\sum_i \alpha_i \dop_i^A,\, \sum_j \beta_j \dop_j^B)
   \sim \sum_{ij} \alpha_i \beta_j \qty(\dop_i^A,\, \dop_j^B)
@@ -407,12 +407,55 @@ This allows us to differentiate \cref{eq:unitary-evolution} to find
   \label{eq:liouville}
 \end{align}
 which is known as the \termalt{Liouville equation}{Liouville} or \term{von
-Neumann equation}.
+  Neumann equation}.\footnote{%
+  \Cref{eq:liouville} is given in \term{Planck units} where $\hbar = c = G = k_B
+  = 1$. Otherwise $\dot{\dop} = -\im\comm{\ham}{\dop}/\hbar$.
+}
+
+TODO: Explain the link to classical phase space and canonical commutation. Why
+is $\ham$ the Hamiltonian?
+
+TODO: Dynamical pictures
 
 \subsection{Open dynamics}
 
+An \term{open system} is a quantum system where the information held by the
+quantum state may change. We will consider only open quantum systems that model
+interacting physical systems. First, a larger closed system $\hilb$ is
+identified and separated into two subsystems: the open system $\hilb_S$ of
+interest and the environment or bath $\hilb_B$ that the open system interacts
+with. We know that the initial state of the open system is $\dop_0$. The system
+is said to follow \term{open dynamics} if the state at time $t$ is determined by
+the following procedure.
+
+\begin{enumerate}
+  \item The state $\dop_0$ is promoted to a state of the composite system
+    according to an \term{assignment map} $\sopr{A}(\dop_0)$. A consistent
+    assignment map should have the following intuitive
+    properties:~\cite{alickiCommentReducedDynamics1995}
+    \begin{enumerate}
+      \item $\sopr{A}$ is convex,
+      \item $\tr_B \sopr{A}(\dop_0) = \dop_0$,
+      \item $\sopr{A}(\dop_0)$ is a density operator.
+    \end{enumerate}
+
+  \item The assigned composite state becomes $\dop(t) =
+    \opr{U}(t)\sopr{A}(\dop_0)\opr{U}^\dag(t)$ as usual for a closed system.
+
+  \item The state $\dop(t)$ is reduced to give the open system state $\dop_S(t)
+    = \tr_B \dop(t)$.
+\end{enumerate}
+In summary, the state at time $t$ is
+\begin{equation}
+  \dop_S(t)
+  = \tr_B(\opr{U}(t)\sopr{A}(\dop_0)\opr{U}^\dag(t)).
+  \label{eq:reduced-dynamics}
+\end{equation}
+Note that property (b) of $\sopr{A}$ ensures that $\dop_S(0) = \dop_0$, which is
+consistent.
+
 Assume completely
-positive~\cite{cuffaroDebateConcerningProper2013,pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005}.
+positive~\cite{pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005,cuffaroDebateConcerningProper2013}.
 
 \end{document}
 
