@@ -457,5 +457,315 @@ consistent.
 Assume completely
 positive~\cite{pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005,cuffaroDebateConcerningProper2013}.
 
+We will find that the most general form of $\liou$ is given by the
+\term{Lindblad equation} \cref{eq:lindblad}. To obtain this result, first
+consider diagonalizing $\dop_B$ as $\dop_B = \sum_j \lambda_j \op*{\phi_j}$ with
+orthonormal vectors $\phi_j \in \hilb_B$, where $\sum_j\lambda_j = 1$.
+Then \cref{eq:evolveddop} becomes (writing $\dop_S$ as $\dop$)
+\begin{align}
+  \dop(t)
+  &= \sum_{ij} \mel{\phi_i}{\opr{U}(t)\qty(\dop(0) \tp
+  \lambda_j\op*{\phi_j}{\phi_j})\opr{U}^\dag(t)}{\phi_i}
+  \label{eq:krauspre} \\
+  &= \sum_{ij} \lambda_j\mel{\phi_i}{\opr{U}(t)}{\phi_j}\dop(0)
+  \mel{\phi_j}{\opr{U}^\dag(t)}{\phi_i}
+  \label{eq:krauspost} \\
+  &= \sum_{ij} \opr{M}_{ij}(t)\dop(0)\opr{M}_{ij}^\dag(t),
+  \label{eq:krausrep}
+\end{align}
+where $\opr{M}_{ij}(t) \equiv \sqrt{\lambda_j} \mel*{\phi_i}{\opr{U}(t)}{\phi_j}$.
+This decomposition in terms of the $\opr{M}_{ij}$ is an instance of the
+Choi-Kraus representation theorem (\cref{thm:kraus}). We can express the
+$\opr{M}_{ij}$ in terms of an orthonormal complete basis $\{\opr{F}_n\}$ for
+$\liou(\hilb_S)$ as $\opr{M}_{ij} = \sum_k \opr{F}_k
+\ip*{\opr{F}_k}{\opr{M}_{ij}}$. Then \cref{eq:krausrep} becomes
+\begin{equation}
+  \dop(t)
+  = \sum_{mn} c_{mn}(t) \opr{F}_m\dop(0)\opr{F}_n^\dag,
+  \label{eq:Fintro}
+\end{equation}
+where
+\begin{equation}
+  c_{mn}(t)
+  \equiv \sum_{ij} \ip{\opr{F}_m}{\opr{M}_{ij}(t)}\ip{\opr{M}_{ij}(t)}{\opr{F}_n}.
+  \label{eq:coeffs}
+\end{equation}
+For convenience, we may choose $\opr{F}_{d^2} = \idopr / \sqrt{d}$, where $d =
+\dim(\hilb_S)$. With an eye towards simplifying \cref{eq:Vderiv}, we eliminate
+the explicit time dependence of \cref{eq:coeffs} by defining
+\begin{equation}
+  a_{mn}
+  \equiv \lim_{t \to 0^+} \frac{c_{mn}(t) - d\delta_{d^2 d^2}}{t}
+  \label{eq:limcoeffs}
+\end{equation}
+and introduce the sum of Kraus operators
+\begin{align}
+  \opr{F}
+  &= \frac{1}{\sqrt{d}}\sum_{n=1}^{d^2 - 1} a_{n d^2} \opr{F}_n
+  \label{eq:kraussum} \\
+  &= \frac{\opr{F} + \opr{F}^\dag}{2}
+  + \im \frac{\opr{F} - \opr{F}^\dag}{2\im}
+  \equiv \opr{G} + \flatfrac{\ham}{\im\hbar}\!,
+  \label{eq:kraussherm}
+\end{align}
+where we have decomposed the sum $\opr{F}$ into Hermitian and anti-Hermitian
+parts and included $\hbar$ so that $\ham$ will have dimensions of energy. Now we
+may write the master equation $\liou\dop = \dot{\dop}$ as
+\begin{align}
+  \dot{\dop}
+  &= \lim_{\Delta t \to 0^+} \frac{\sopr{V}(\Delta t)\dop - \dop}{\Delta t} \\
+  %
+  &= \lim_{\Delta t \to 0^+} \Bigg(
+  \frac{c_{d^2 d^2} - d}{d\Delta t} \dop
+  + \sum_{m,n=1}^{d^2 - 1}
+  \frac{c_{mn}(\Delta t)}{\Delta t}\opr{F}_m \dop \opr{F}_n^\dag
+  + \frac{1}{\sqrt{d}} \sum_{n=1}^{d^2 - 1} \qty(%
+  \frac{c_{nd^2}(\Delta t)}{\Delta t} \opr{F}_n \dop
+  + \frac{c_{d^2 n}(\Delta t)}{\Delta t} \dop \opr{F}_n^\dag)
+  \Bigg) \label{eq:Vderiv} \\
+  %
+  &= \frac{a_{d^2 d^2}}{d} \dop 
+  + \opr{F}\dop + \dop\opr{F}^\dag
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
+  %
+  &= \frac{a_{d^2 d^2}}{d} \dop 
+  + \acomm{\opr{G}}{\dop}
+  + \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
+  %
+  &= \acomm{\opr{G}'}{\dop}
+  + \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag,
+  \label{eq:GHform}
+\end{align}
+where $\opr{G}' = \opr{G} + \flatfrac{a_{d^2 d^2} \idopr}{d}$. Since
+$\sopr{V}(t)$ is trace-preserving, $\tr\dot{\dop} = 0$. Applying this
+condition to \cref{eq:GHform} and cycling the trace gives
+\[
+  0
+  = \tr\qty(2\opr{G}'\dop
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag \opr{F}_m \dop)\mkern1mu,
+\]
+so $\opr{G}' = -\sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag\opr{F}_m / 2$. This
+allows us to write \cref{eq:GHform} as
+\begin{equation}
+  \dot{\dop}
+  = \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn}\qty(\opr{F}_m\dop\opr{F}_n^\dag -
+  \frac{1}{2}\acomm{\opr{F}_n^\dag \opr{F}_m}{\dop}),
+  \label{eq:markovian}
+\end{equation}
+which is the first form of the \term{Lindblad equation}. This may be simplified
+further if we diagonalize the coefficient matrix $\opr{a}$ by applying a unitary
+transformation $\opr{u}$ to give $\opr{a} = \opr{u}\opr{γ}\opr{u}^\dag$, where
+the $\qty{\gamma_k}_{k=1}^{d^2 - 1}$ are the non-negative eigenvalues of
+$\opr{a}$. This is possible since the coefficient matrix $\opr{c}$ is seen
+from \cref{eq:coeffs} to be Hermitian, and \cref{eq:limcoeffs} then gives that
+$\opr{a}$ is Hermitian. We may then express $\opr{F}_{n \neq d^2} =
+\sum_{k=1}^{d^2 - 1} \opr{L}_n u_{nk}$ in terms of the \termalt{Lindblad
+operators}{Lindblad} or \termalt{jump operator}{jump operators} $\opr{L}_n$ to
+find
+\begin{equation}
+  \dot{\dop}
+  = \frac{\comm{\ham}{\dop}}{\im\hbar}
+  + \sum_{k=1}^{d^2 - 1} \gamma_k \qty(\opr{L}_k\dop\opr{L}_k^\dag -
+  \frac{1}{2}\acomm{\opr{L}_k^\dag \opr{L}_k}{\dop})
+  \equiv
+  \sopr{L}\dop,
+  \label{eq:lindblad}
+\end{equation}
+which is the \emph{diagonal form} of the Lindblad equation. The eigenvalues
+$\gamma_k$ have dimensions of inverse time and the Lindblad operators may be
+taken to be traceless. The second term is often called the \term{dissipator}
+$\sopr{D}$ (see \cref{sec:interaction}), so the Lindbladian may be separated
+into unitary and non-unitary parts.
+
+\section{The weak-coupling limit\label{sec:interaction}}
+
+Now that we have found the general form for a stochastic \textsc{cptp}
+generator, we must now determine the conditions for interaction Hamiltonian
+in \cref{eq:fullham} to give rise to Markovian dynamics. While there are
+several different regimes where this is true, we will consider the
+\term{weak-coupling} limit which we justify by supposing that the environment is
+similar to a \term{harmonic bath} of many harmonic oscillators.
+
+We start by expressing the interaction Hamiltonian in terms of Hermitian
+operators as
+\[
+  \ham_I
+  = \sum_\alpha \opr{A}_\alpha \tp \opr{B}_\alpha.
+\]
+We suppose that the system in isolation would have \emph{discrete} energy
+levels, so the eigenoperators of the superoperator $\sopr{S} = \comm{\ham_S}{-}$
+form a complete basis for $\liou(\hilb_S)$. We then may write $\opr{A}_\alpha =
+\sum_\omega \opr{A}_{\alpha\omega}$, where
+\begin{equation}
+  \comm{\ham_S}{\opr{A}_{\alpha\omega}}
+  = -\omega\opr{A}_{\alpha\omega}.
+  \label{eq:Aomega}
+\end{equation}
+Using \cref{eq:Aomega} to commute past the exponential in \cref{eq:intobs}
+gives $\opr{A}_{\alpha\omega}' = e^{-\im\omega t} \opr{A}_{\alpha\omega}$ in the
+interaction picture. Thus the interaction Hamiltonian in the interaction picture
+is
+\begin{equation}
+  \ham_I'
+  = \sum_{\alpha\omega} e^{-\im\omega t} \opr{A}_{\alpha\omega}
+  \tp \opr{B}_\alpha',
+  \label{eq:inthamdecomp}
+\end{equation}
+where $\opr{B}_\alpha'(t) = e^{-\ham_B t/\im\hbar} \opr{B}_\alpha e^{\ham_B t/
+\im\hbar}$ per \cref{eq:intobs}.
+
+Since we are interested in how fluctuations in different environment modes are
+related, we will consider the \term{reservoir correlation functions}
+\begin{equation}
+  \sensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \label{eq:corr}
+\end{equation}
+and their one-sided Fourier transform
+\begin{align}
+  \Gamma_{\alpha\beta}(\omega)
+  &\equiv \int_0^\infty \dd{s} e^{\im\omega s}
+  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \label{eq:onegammas} \\
+  &\equiv \im S_{\alpha\beta}(\omega) +
+  \flatfrac{\gamma_{\alpha\beta}(\omega)}{2}\!,
+  \label{eq:gammadecomp}
+\end{align}
+where the corresponding matrix $\opr{S} = (\opr{Γ} - \opr{Γ}^\dag) / 2\im$ is
+Hermitian and the matrix corresponding to the full Fourier transform
+\begin{equation}
+  \gamma_{\alpha\beta}(\omega)
+  \equiv \int_{-\infty}^\infty \dd{s} e^{\im\omega s}
+  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \label{eq:gammas}
+\end{equation}
+is positive.
+
+With this setup, we may now move to the main derivation. It is helpful to
+consider the interaction picture time evolution \cref{eq:intliou} in the
+integral form
+\[
+  \dop(t)
+  = \dop(0) - \im\int_0^t \dd{s} \comm{\ham_I(s)}{\dop(s)}.
+\]
+Applying \cref{eq:intliou} again and tracing out the environment gives the
+closed equation
+\[
+  \dot{\dop}_S(t)
+  = -\int_0^t \dd{s}
+  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(s)}{\dop_S(s) \tp \dop_B}}
+\]
+for the system density operator. In doing so we have made two assumptions: that
+\[
+  \tr_B\comm{\ham_I(t)}{\dop(0)}
+  = 0,
+\]
+which is the \term{weak-coupling approximation}, and that
+\[
+  \dop(t)
+  = \dop_S(t) \tp \dop_B,
+\]
+which is the \term{Born approximation}. It should be noted that weak-coupling
+follows if the reservoir averages of the interactions vanish:
+$\ensavg[\dop_B]{\opr{B}_\alpha(t)} = 0$.
+
+We now make the \term{Markov approximation} that $\dop_S(s) = \dop_S(t)$, so
+that the time-evolution only depends on the present time, to obtain the
+\term{Redfield equation}. To simplify further, we make the substitution $s
+\mapsto t - s$ and set the upper limit of the integral to infinity:
+\begin{equation}
+  \dot{\dop}_S
+  = -\int_0^\infty \dd{s}
+  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(t - s)}{\dop_S(t) \tp \dop_B}}.
+  \label{eq:infbornmarkov}
+\end{equation}
+This is justified when the reservoir correlation functions
+in \cref{eq:onegammas} vanish quickly over a time $\tau_B$ that is smaller than
+the relaxation time $\tau_R$ (see \cref{sec:limitations}).
+Substituting \cref{eq:inthamdecomp} into \cref{eq:infbornmarkov} and
+using \cref{eq:onegammas} gives
+\begin{equation}
+  \dot{\dop}_S
+  = 2\herm \sum_{\alpha\beta\omega\omega'}
+  e^{\im(\omega' - \omega)t}
+  \Gamma_{\alpha\beta}(\omega) \qty(%
+  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega'}^\dag
+  - \opr{A}_{\alpha\omega'}^\dag \opr{A}_{\beta\omega} \dop_S),
+  \label{eq:decompsub}
+\end{equation}
+where $\herm\opr{Γ} \equiv (\opr{Γ} + \opr{Γ}^\dag) / 2$. If the typical times
+\[
+  \tau_S = \abs{\omega' - \omega}^{-1}
+  \qfor \omega' \ne \omega
+\]
+for system evolution are large compared to the relaxation time $\tau_R$, then
+the contribution from the fast-oscillating terms of \cref{eq:decompsub} where
+$\omega' \ne \omega$ may be neglected. This \term{rotating wave} or
+\term{secular approximation} is analogous to how we consider the high-energy
+position distribution in the infinite square well to be uniform, even though it
+is actually a fast-oscillating function. By coarse-graining in this sense, we
+obtain
+\begin{equation}
+  \dot{\dop}_S
+  = 2\herm \sum_{\alpha\beta\omega}
+  \Gamma_{\alpha\beta}(\omega) \qty(%
+  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega}^\dag
+  - \opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega} \dop_S).
+  \label{eq:rotwave}
+\end{equation}
+Now applying the decomposition \cref{eq:gammadecomp} gives the interaction
+picture Lindblad equation
+\begin{equation}
+  \dot{\dop}_S
+  = \im\comm{\ham_{LS}}{\dop_S} + \sopr{D}\dop_S,
+  \label{eq:microlindblad}
+\end{equation}
+where the \term{Lamb shift Hamiltonian} is
+\begin{equation}
+  \ham_{LS}
+  = \sum_{\alpha\beta\omega}
+  S_{\alpha\beta}(\omega) \opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega},
+  \label{eq:lambham}
+\end{equation}
+and the \emph{dissipator} is
+\begin{equation}
+  \sopr{D}\dop_S
+  = \sum_{\alpha\beta\omega} \gamma_{\alpha\beta} \qty(%
+  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega}^\dag
+  - \frac{1}{2} \acomm{\opr{A}_{\alpha\omega}^\dag
+  \opr{A}_{\beta\omega}}{\dop_S}).
+  \label{eq:dissipator}
+\end{equation}
+The Lamb shift (or environment renormalization) Hamiltonian commutes with the
+system Hamiltonian since \cref{eq:Aomega} implies that
+$\comm*{\ham_S}{\opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega}} = 0$. Adding
+the system's Hamiltonian $\ham_S$ to $\ham_{LS}$ and diagonalizing gives the
+Schr\"odinger picture Lindblad equation \cref{eq:lindblad}.
+
+\section{Relaxation to thermal equilibrium\label{sec:thermo}}
+
+The system will generally relax from its initial configuration to a stationary
+solution of \cref{eq:lindblad} (see \cref{sec:limitations}). We expect that
+the thermal state
+\[
+  \dop_S
+  = \frac{e^{-\beta\ham_S}}{Z}
+  \qq{where}
+  Z
+  = \tr(e^{-\beta\ham_S})
+\]
+would be the equilibrium state. This is true when the reservoir correlation
+functions obey the \textsc{kms} condition~\cite{kubo,martinschwinger}
+\begin{equation}
+  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t) \opr{B}_\beta(0)}
+  = \ensavg[\dop_B]{\opr{B}_\beta(0) \opr{B}_\alpha^\dag(t + \im\beta)},
+  \label{eq:kms}
+\end{equation}
+which is true when the environment is in the thermal state $\dop_B =
+{e^{-\beta\ham_B}} / {\tr(e^{-\beta\ham_B})}$.
+
+
 \end{document}
 
