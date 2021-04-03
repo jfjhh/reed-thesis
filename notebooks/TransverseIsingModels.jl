@@ -1,6 +1,7 @@
 module TransverseIsingModels
 
-using LinearAlgebra, Arpack, QuantumOptics
+using LinearAlgebra, QuantumOptics
+import QuantumOpticsBase: Operator
 
 export TransverseIsingModel, TranslationInvariantTransverseIsingModel
 export hamiltonian, basis, eigenbasis

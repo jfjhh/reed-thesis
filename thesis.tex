@@ -5,7 +5,6 @@
 \mathtoolsset{%
   mathic,
 }
-% \setlength{\mathindent}{0pt}
 \allowdisplaybreaks%
 
 \usepackage[%
@@ -15,9 +14,6 @@ sans-style=italic,
 nabla=upright,
 partial=upright,
 ]{unicode-math}
-% \let\symsf\mathsf%
-% \let\symbf\mathbf%
-% \let\symsfup\mathbf%
 
 \usepackage[numbers]{natbib}
 
@@ -35,9 +31,8 @@ partial=upright,
 
 % Layout and styling
 \usepackage{etoolbox}
+\usepackage{multicol}
 \usepackage[final]{microtype}
-% \usepackage{setspace} 
-% \onehalfspacing%
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{rotating}
@@ -83,12 +78,9 @@ partial=upright,
 \usepackage[full]{textcomp} % to get the right copyright, etc.
 \usepackage{libertinus-otf}
 \usepackage[scaled=.95,type1]{cabin} % sans serif in style of Gill Sans
-% \usepackage[varqu,varl]{zi4}% inconsolata typewriter
 \usepackage[T1]{fontenc} % LY1 also works
 \setmainfont[Numbers={OldStyle,Proportional}]{fbb}
 \usepackage[supstfm=fbb-Regular-sup-t1]{superiors}
-% \setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
-% \setmonofont[Scale=MatchLowercase]{Iosevka} % We need unicode
 \setmonofont[Scale=MatchLowercase]{JuliaMono} % We need unicode
 \usepackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
 
@@ -97,18 +89,12 @@ partial=upright,
 % https://www.tug.org/svn/texlive/trunk/Master/texmf-dist/tex/latex/base/size12.clo?view=co
 \linespread{1.24137}
 
-% \restoresymbol{TXV}{arrowvert}
-
 \usepackage{lettrine}
-% \usepackage{Zallman} % Even fancier
-% \renewcommand\LettrineFontHook{\Zallmanfamily}
-% \newcommand{\dropcap}[2]{\lettrine{#1}{#2}}
 \newcommand{\dropcap}[2]{\textsc{#1#2}}
 
 \ifdraft{\overfullrule=1mm}{}
 
 \usepackage{parskip}
-% \setlength{\parskip}{0pt}
 
 \usepackage{imakeidx}
 \makeindex
@@ -116,53 +102,29 @@ partial=upright,
 \newcommand{\termalt}[2]{\index{#1}\textbf{#2}}
 
 
-\usepackage[switch*,pagewise]{lineno} % Before minted
-% \ifdraft{\linenumbers}{}
-
-% Patch amsmath environments to work with lineno
-\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
-  \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
-  \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
-  \renewenvironment{#1}%
-  {\linenomath\csname old#1\endcsname}%
-{\csname oldend#1\endcsname\endlinenomath}}%
-\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
-  \patchAmsMathEnvironmentForLineno{#1}%
-\patchAmsMathEnvironmentForLineno{#1*}}%
-\AtBeginDocument{%
-  \patchBothAmsMathEnvironmentsForLineno{equation}%
-  \patchBothAmsMathEnvironmentsForLineno{align}%
-  \patchBothAmsMathEnvironmentsForLineno{flalign}%
-  \patchBothAmsMathEnvironmentsForLineno{alignat}%
-  \patchBothAmsMathEnvironmentsForLineno{gather}%
-  \patchBothAmsMathEnvironmentsForLineno{multline}%
-}
-
 % Code highlighting
 \usepackage{textcomp}
-% \usepackage{upquote}
+\usepackage{tcolorbox}
 \usepackage[final]{minted}
 \setminted{%
-  % mathescape,
   breaklines,
-  fontsize=\small,
+  fontsize=\footnotesize,
+  baselinestretch=1,
 }
-\setminted[wolfram]{style=mathematica}
-\ifoptionfinal{\setminted{style=bw}}{\setminted{style=friendly}}
+\ifoptionfinal{%
+  \setminted{style=bw}
+  }{%
+  \setminted{style=friendly}
+  \setminted[wolfram]{style=mathematica}
+}
 
 % Graphics
 \PassOptionsToPackage{final}{graphicx}
 \def\figwidth{\linewidth}
 \usepackage{graphicx}
 \setkeys{Gin}{draft=false}
-% \usepackage{float}
-% \usepackage{tikz}
 
 \graphicspath{{figs/}{notebooks/tex/}}
-
-% Other
-% \usepackage{kantlipsum}
-% \ifdraft{\usepackage{draftwatermark}\SetWatermarkColor[gray]{0.975}}{}
 
 % More preamble commands, separated for reuse by notebooks
 \input{preamble/math-packages}
@@ -174,17 +136,6 @@ partial=upright,
 \usepackage[pdfusetitle,final,backref]{hyperref}
 \usepackage[all]{hypcap}
 \usepackage{cleveref}
-
-% \usepackage[nameinlink]{cleveref}
-
-% \newcommand{\rubricmark}[1]{\hspace*{-0.1em}\textsuperscript{\textcolor{rubric}{#1}}}
-% \AdaptNoteNoOptNoMult{\rubricmark}
-
-% \usepackage{letltxmacro}
-% \LetLtxMacro\oldcref\cref%
-% \RenewDocumentCommand{\cref}{m}{{\oldcref{#1}}\rubricmark{$\circ$}}
-% \LetLtxMacro\oldCref\Cref%
-% \RenewDocumentCommand{\Cref}{m}{{\oldCref{#1}}\rubricmark{$\circ$}}
 
 \IfEq{\jobname}{\detokenize{thesis}}{% Full document
   % Nothing different
@@ -226,7 +177,7 @@ partial=upright,
 
 \definecolor{linkcolor}{rgb}{0.0,0.25,0.5}
 \definecolor{rubric}{rgb}{0.7,0.05,0.0}
-% \definecolor{screentext}{rgb}{0.075,0.075,0.075} % For easier reading on a backlit screen.
+\definecolor{resultbg}{rgb}{0.95,0.95,0.95}
 \hypersetup{%
   allcolors=rubric,
 }
@@ -261,13 +212,10 @@ partial=upright,
 \mainmatter%
 \pagestyle{fancyplain}
 {%
-  \hypersetup{linkcolor=black}
+  \hypersetup{linkcolor=black} % For table of contents
   \tableofcontents
   \listoffigures
-  \listoftables
 }
-
-% \ifdraft{\setstretch{1.5}}{}
 
 \include{introduction}
 \input{chapters/subfiles.txt}

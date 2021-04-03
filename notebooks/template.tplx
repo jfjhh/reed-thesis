@@ -109,13 +109,26 @@
 ((*- endblock figure_wide -*))
 ((*- endmacro *))
 
-((* block input scoped *)) \begin{minted}{julia}
+((* block input scoped *))
+\begin{minted}{julia}
 ((( cell.source )))
 \end{minted}
 ((* endblock input *))
 
 ((* block execute_result scoped *))
-((* block display_data scoped *)) ((( super() ))) ((* endblock display_data *))
+((* block display_data scoped *))
+    ((*- for type in output.data | filter_data_type -*))
+        ((*- if type in ['text/plain']*))
+\begin{tcolorbox}[width=\linewidth,colback=resultbg,frame empty]
+\begin{minted}{julia}
+((( output.data['text/plain'] )))
+\end{minted}
+\end{tcolorbox}
+        ((* else -*))
+((( super() )))
+        ((*- endif -*))
+    ((*- endfor -*))
+((* endblock display_data *))
 ((* endblock execute_result *))
 
 ((* block markdowncell scoped *)) \noindent ((( super() ))) ((* endblock markdowncell *))

@@ -4,3 +4,55 @@
 \markboth{Introduction}{Introduction}
 
 Introductory content.
+
+\chapter*{Note on Notation}
+\addcontentsline{toc}{chapter}{Note on Notation}
+\chaptermark{Note on Notation}
+\markboth{Note on Notation}{Note on Notation}
+
+The mathematical formalism for quantum mechanics requires three levels of linear
+algebra: vectors, operators (maps between vectors), and superoperators (maps
+between operators). We will write each object with slightly differerent notation
+so that the type of an expression may be inferred if the reader is confused.
+
+\begin{multicols}{2}
+  \begin{tabular}{rl}
+    Vector & $\ket{v}$ \\
+    $\ket{v}$ in coordinates & $\vq{v}$ \\
+    Tuple & $\tq{n}$ \\
+    Operator & $\opr{A}$ \\
+    Vector operator & $\vecopr{B}$ \\
+    $\opr{A}$ in coordinates & $\mq{A}$ \\
+    Superoperator & $\sopr{A}$ \\
+    One & $1$ \\
+    Identity operator & $\idopr$ \\
+    Identity superoperator & $\idsopr$ \\
+    Zero & $0$ \\
+    Zero operator & $\zopr$ \\
+    Zero superoperator & $\zsopr$ \\
+    \\
+    Sign of $x$ & $\sgn x$ \\
+    Sinc function & $\sinc x = \dfrac{\sin x}{x}$
+  \end{tabular}
+  \vfill\null\newcolumn%
+  \begin{tabular}{rl}
+    Real numbers & $\RR$ \\
+    Complex numbers & $\CC$ \\
+    Integers modulo $n$ & $\ZZ_n$ \\
+    Hilbert space & $\hilb$ \\
+    Bounded operators & $\bdd(\hilb)$ \\
+    Liouville space & $\liou(\hilb)$ \\
+    Hamiltonian operator & $\ham$ \\
+    Density operator & $\dop$ \\
+    Pauli operators & $\pauli_i$ \\
+    Spin operators & $\spin_i = \hbar\pauli_i / 2$ \\
+    Inner product on $\liou$ & $\lprod{\opr{A}}{\opr{B}}$ \\
+    Transpose of $\mq{A}$ & $\mq{A}^\trans$ \\
+    Adjoint of $\opr{A}$ & $\opr{A}^\dag$ \\
+    Trace of $\opr{A}$ & $\tr A$ \\
+    Partial trace over $S$ & $\tr_S$ \\
+    Expected value of $\opr{A}$ & $\ev{A} = \tr(\dop\opr{A})$ \\
+    Hermitian part of $\opr{A}$ & $\herm\opr{A} = \dfrac{\opr{A} + \opr{A}^\dag}{2}$
+  \end{tabular}
+\end{multicols}
+
