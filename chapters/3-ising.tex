@@ -8,14 +8,17 @@
 We consider the Hamiltonian
 \begin{equation}
   \ham
-  = -J\sum_{i \in \ZZ_N} \opr{S}_i^x\opr{S}_{i+1}^x
-  - \Gamma\sum_{i \in \ZZ_N} \opr{S}_i^z,
+  = -J\sum_{i \in \ZZ_N} \qty(%
+  \opr{S}_i^x\opr{S}_{i+1}^x
+  + g \opr{S}_i^z
+  )
 \end{equation}
 which we nondimensionalize as
 \begin{equation}
   \frac{4}{J}\ham
-  = -\sum_{i \in \ZZ_N} \pauli_i^x\pauli_{i+1}^x
-  + \lambda\sum_{i \in \ZZ_N} \pauli_i^z
+  = -\sum_{i \in \ZZ_N} \qty(%
+  \pauli_i^x\pauli_{i+1}^x + g \pauli_i^z
+  )
   \label{eq:transham}
 \end{equation}
 \todo[inline]{Note that $\ham$ does not have $4/J$ below. Fix this and change

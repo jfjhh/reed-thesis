@@ -601,8 +601,14 @@ form a complete basis for $\liou(\hilb_S)$. We then may write $\opr{A}_\alpha =
 \sum_\omega \opr{A}_{\alpha\omega}$, where
 \begin{equation}
   \comm{\ham_S}{\opr{A}_{\alpha\omega}}
-  = -\omega\opr{A}_{\alpha\omega}.
+  = -\omega\opr{A}_{\alpha\omega}
   \label{eq:Aomega}
+\end{equation}
+and
+\begin{equation}
+  \opr{A}_{\alpha\omega}
+  = \sum_{E' - E = \omega} \opr{\Pi}(E)\opr{A}_\alpha\opr{\Pi}(E').
+  \label{eq:Aprojectors}
 \end{equation}
 Using \cref{eq:Aomega} to commute past the exponential in \cref{eq:intobs}
 gives $\opr{A}_{\alpha\omega}' = e^{-\im\omega t} \opr{A}_{\alpha\omega}$ in the
@@ -719,7 +725,7 @@ Now applying the decomposition \cref{eq:gammadecomp} gives the interaction
 picture Lindblad equation
 \begin{equation}
   \dot{\dop}_S
-  = \im\comm{\ham_{LS}}{\dop_S} + \sopr{D}\dop_S,
+  = -\im\comm{\ham_{LS}}{\dop_S} + \sopr{D}\dop_S,
   \label{eq:microlindblad}
 \end{equation}
 where the \term{Lamb shift Hamiltonian} is
@@ -727,7 +733,7 @@ where the \term{Lamb shift Hamiltonian} is
   \ham_{LS}
   = \sum_{\alpha\beta\omega}
   S_{\alpha\beta}(\omega) \opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega},
-  \label{eq:lambham}
+  \label{eq:lamb-shift}
 \end{equation}
 and the \emph{dissipator} is
 \begin{equation}
