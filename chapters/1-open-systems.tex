@@ -39,15 +39,11 @@ We may then characterize a quantum system by its \term{dimension} $N$, which is
 the maximum number of outcomes distinguishable by a measurement.\footnote{%
   This supposes that such systems exist, which requires experimental
   verification. For example, Stern-Gerlach type experiments demonstrate the
-  existence of a two-dimensional quantum system. Given what we know about
-  systems like atoms in quantum physics, it is justified to assert the existence
-  of quantum systems with any finite dimension. Infinite dimensional systems
-  present some issues, but they may be regarded as being purely mathematical,
-  since they can be well-approximated by finite dimensional systems as far as
-  measurement outcomes are concerned. We usually consider only
-  finite-dimensional systems in what follows.
+  existence of a two-dimensional quantum system. As far as we are concerned, we
+  have examples of quantum systems for all dimensions.
 }
-Conversely, an operation with more than $N$ outcomes cannot result in a single
+This means that a $(N+1)$-outcome operation cannot be a measurement on a
+$N$-dimensional system. Repeating such an operation cannot produce the same
 outcome with certainty.
 
 \subsection{Entropy}
@@ -57,27 +53,26 @@ have a measure for how uncertain we are about which outcome will happen.
 
 To do so, we must quantify the uncertainty expressed by a probability
 distribution of outcomes. The most successful definition of this uncertainty due
-to Shannon considers the \term{self-information} or \term{surprisal} $I$ of an
-event with probability $p$~\cite{shannonMathematicalTheoryCommunication1948}.
-This is a function $I$ that has the following intuitive properties:\footnote{%
+to Shannon considers the \term{surprisal} $I$ of an event with probability
+$p$~\cite{shannonMathematicalTheoryCommunication1948}. This is a function $I$
+that has the following intuitive properties:\footnote{%
   Technically, $I$ is defined for a random variable $X$ with support
   $\mathcal{X}$, so that $I:\mathcal{X} \to \RR$ is a function of the
   probability of an event: $I(x) = f(P(x))$.
 }
 \begin{enumerate}
-  \item $I(1) = 0$: Certain events are uninformative or unsurprising.
+  \item $I(1) = 0$: Certain events are unsurprising.
   \item $I(p) < I(p')$ if $p' < p$: Less probable events are more surprising.
-  \item $I(p) \ge 0$: The information learned from an event is nonnegative.
-  \item $I(p,\, p') = I(p) + I(p')$: The information learned from independent
-    events is the sum of the information learned from each event.
+  \item $I(p) \ge 0$: Surprisal cannot be negative.
+  \item $I(p,\, p') = I(p) + I(p')$: The surprisal of independent events is the
+    sum of the surprisals for each event.
 \end{enumerate}
-The only functions with these properties are $I(p) = b\log p$ for $b < 0$.
-Choosing $b$ amounts to choosing the base of the logarithm and the unit of
-information. It is standard to use base two for which the unit of the
-self-information
+The only functions with these properties are of the form $I(p) = b\log p$ for $b
+< 0$. Choosing $b$ amounts to choosing the base of the logarithm and the unit of
+information. It is standard to use base two for which the unit of the surprisal
 \begin{equation}
   I(p) = -\log p
-  \label{eq:self-information}
+  \label{eq:surprisal}
 \end{equation}
 is the \term{bit}. The uncertainty expressed by a probability distribution of
 outcomes is called the \term{Shannon entropy}, and is defined as the expected
