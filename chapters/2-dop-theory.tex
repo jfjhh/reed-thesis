@@ -306,12 +306,6 @@ Then for a thermal bath, the spectral correlation tensor becomes
     n_B(\omega_{\vq{k}}).
 \end{split}\label{eq:Gamma-precontinuum}
 \end{align}
-\todo[inline]{%
-  $\vq{k}$ in exponent of original integral. Is there a reason why the
-  external field $\vq{k}$ would be the same as a reciprocal lattice vector? Like
-  optical phonon branch. Magnons? Just no absorption for off frequencies? Or do
-  typical scales enforce limits?
-}
 
 To evaluate \cref{eq:Gamma-precontinuum}, we now consider a chain of $N$ spins
 along the $z$-axis, so that $\vq{r}_i = r_i \vu{z}$.\footnote{We could consider
@@ -420,18 +414,20 @@ where $\pv$ denotes the Cauchy principal value, to find
 The principal value integral in \cref{eq:S-full} diverges to $-\infty$ when $i =
 j$ but vanishes otherwise. The net contribution to the Lamb shift Hamiltonian
 (\cref{eq:lamb-shift}) is effectively an infinite negative offset that may be
-neglected just like we neglect the zero-point energy of the bath. Thus the
-unitary part of the reduced dynamics exactly matches that of the closed system,
-and $\sopr{L} = \sopr{D}$ in the interaction picture. The dipole approximation
-then leaves
+neglected just like we neglect the zero-point energy of the bath. The unitary
+part of the reduced dynamics exactly matches that of the closed system, and
+$\sopr{L} = \sopr{D}$ in the interaction picture.
+
+The dipole approximation then leaves
 \begin{equation}
   \gamma(\omega)
   = \frac{\mu_e^2\mu_0 \omega^3}{9\pi \hbar c^3}
   (1 + n_B(\omega))
   \label{eq:gamma-dipole}
 \end{equation}
-for all spins and polarizations. Nondimensionalizing to $\tilde{\gamma} = \gamma
-\tau_S$ gives
+for all spins and polarizations. We will now nondimensionalize $\gamma$ and $S$.
+Letting $\tilde{\gamma} = \gamma \tau_S$ and $\tilde{\omega} = \omega\tau_S$
+gives
 \begin{equation}
   \tilde{\gamma}(\tilde{\omega})
   = {\qty(\frac{\tau_0}{\tau_S})}^2 \tilde{\omega}^3
@@ -446,11 +442,51 @@ in terms of the thermal correlation time $\tau_B = \beta\hbar$ and the
   = \SI{3.67e-23}{\s}
   \cong \SI{56}{\per\GeV}.
 \end{equation}
-If $\tau_B/\tau_S \ll \tilde{\omega}$, then
+If $\tau_B\tilde{\omega}/\tau_S \ll 1$, then
 \begin{equation}
   \tilde{\gamma}(\tilde{\omega})
   \approx \frac{\tau_0^2}{\tau_B \tau_S} \tilde{\omega}^2.
 \end{equation}
+What about $\tilde{S} = S\tau_S$? Applying the dipole approximation and letting
+$\tilde{\omega} = \omega\tau_S$ gives 
+\begin{equation}
+  \tilde{S}(\tilde{\omega})
+  = \frac{1}{2\pi} {\qty(\frac{\tau_0}{\tau_S})}^2
+  \pv\int_0^\infty \dd{\tilde{\omega}_k} \tilde{\omega}_k^3
+  \qty(\frac{1 + \tilde{n}_B(\tilde{\omega}_k)}{\tilde{\omega} - \tilde{\omega}_k}
+  + \frac{\tilde{n}_B(\tilde{\omega}_k)}{\tilde{\omega} + \tilde{\omega}_k}),
+  \label{eq:Snondim}
+\end{equation}
+where
+\begin{equation}
+  \tilde{n}_B(\tilde{\omega})
+  = \frac{1}{e^{\tau_B \tilde{\omega} / \tau_S} - 1}.
+\end{equation}
+To avoid the divergence of \cref{eq:Snondim}, we introduce an upper frequency
+cutoff $\tilde{\Omega}$. Physically, one expects the coupling to high-frequcency
+modes of the bath to weaken.\footnote{%
+  This is not the case for the electromagnetic field, but in other contexts, one
+  may view the bath as merely an effective model, and this cutoff is used to
+  describe the effective interaction.
+}
+For simplicity, we just set the upper limit of the
+integral to $\tilde{\Omega}$, though other cutoffs like $e^{-\tilde{\omega}_k /
+\tilde{\Omega}}$ are common. As we will see, the exact functional form does not
+matter. In the limit where $\tau_B\tilde{\Omega} / \tau_S \ll 1$, $\tilde{S}$ now
+simplifies to
+\begin{align}
+  \tilde{S}(\tilde{\omega})
+  &\approx \frac{1}{2\pi} \frac{\tau_0^2}{\tau_B\tau_S}
+  \pv\int_0^{\tilde{\Omega}} \dd{\tilde{\omega}_k} \tilde{\omega}_k^2
+  \qty(\frac{1}{\tilde{\omega} - \tilde{\omega}_k}
+  + \frac{1}{\tilde{\omega} + \tilde{\omega}_k}) \\
+  &= \frac{\tau_0^2}{\tau_B\tau_S} \frac{\tilde{\omega}}{\pi}
+  \qty(\tilde{\omega}\atanh\qty(\frac{\tilde{\omega}}{\tilde{\Omega}})
+  - \tilde{\Omega}) \\
+  &\approx -\frac{\tau_0^2}{\tau_B\tau_S} \frac{\tilde{\Omega}}{\pi}\tilde{\omega},
+\end{align}
+where we have set the frequency cutoff $\tilde{\Omega} \gg \tilde{\omega}$ to be
+far above any system frequency.
 
 
 \section{Superoperators in coordinates}

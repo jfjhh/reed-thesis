@@ -219,7 +219,7 @@
       \fontsize{12}{14}\selectfont
       \begin{titlepage}
         \newpage
-        \sc%
+        % \sc%
         \let\footnotesize\small
         \let\footnoterule\relax
         \let \footnote \thanks
@@ -260,7 +260,8 @@
 
       %% Approved for the division page
       \cleardoublepage
-      {\fontsize{12}{14}\sc
+      {\fontsize{12}{14}
+        % \sc%
         \setbox0=\hbox{Approved for the \@approvedforthe}
         \thispagestyle{empty}
         \null\vfil    % just below center of page

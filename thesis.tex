@@ -5,7 +5,7 @@
 \mathtoolsset{%
   mathic,
 }
-\allowdisplaybreaks%
+% \allowdisplaybreaks%
 
 \usepackage[%
 math-style=ISO,
@@ -40,20 +40,9 @@ partial=upright,
 \setlist[enumerate,1]{label=\textbf{\arabic*.}}
 
 \usepackage[labelfont=bf]{caption}
-
 \usepackage{sectsty}
-\allsectionsfont{%
-  \normalfont\liningnums%
-}
-\sectionfont{%
-  \normalfont\itshape\liningnums%
-}
-\subsectionfont{%
-  \normalfont\itshape\liningnums%
-}
-\subsubsectionfont{%
-  \normalfont\itshape\liningnums%
-}
+\allsectionsfont{\normalfont\scshape}
+\chapterfont{\normalfont\scshape\liningnums}
 
 \usepackage{todonotes}
 
@@ -76,13 +65,12 @@ partial=upright,
 
 % Fonts
 \usepackage[full]{textcomp} % to get the right copyright, etc.
-\usepackage{libertinus-otf}
-\usepackage[scaled=.95,type1]{cabin} % sans serif in style of Gill Sans
+\usepackage[semibold]{libertinus-otf}
 \usepackage[T1]{fontenc} % LY1 also works
-\setmainfont[Numbers={OldStyle,Proportional}]{fbb}
-\usepackage[supstfm=fbb-Regular-sup-t1]{superiors}
-\setmonofont[Scale=MatchLowercase]{JuliaMono} % We need unicode
-\usepackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
+\setmainfont[Numbers={OldStyle,Proportional}]{Libertinus Serif} % We need lots of unicode, like ⊗
+\usepackage[supstfm=libertinesups,supscaled=1.2,raised=-.13em]{superiors}
+\setmonofont[Scale=MatchLowercase]{JuliaMono} % We need lots of unicode, like ⊗
+\usepackage[cal=cm,bb=boondox,frak=boondox]{mathalfa}
 
 % 1.5 / 1.208, where 1.208 is the default baseline skip to font size ratio.
 % That is, for 12pt font, the default baseline skip is 14.5pt
@@ -185,9 +173,8 @@ partial=upright,
 \ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
 
 \title{\textbf{\large
-    Toy Systems and Quantum Master Equations
-  }\ifdraft{\\\textsc{(Provisional Title) \\ \textbf{Draft}}}{}
-  }
+    Interacting Spins Decay as Open Quantum Systems
+}\ifdraft{\\\textbf{Draft}}{}}
 \author{Alex Striff}
 % The month and year that you submit your final draft to the library
 % (May or December)
@@ -222,6 +209,7 @@ partial=upright,
 \include{conclusion}
 
 \appendix
+\subfile{appendices/transverse-ising-model}
 \subfile{appendices/computer-details}
 
 \backmatter% Adds index and bibliography to TOC

@@ -366,7 +366,7 @@ states that all such operations have the form
 \end{equation}
 where the operator $\opr{U}$ is either \term{unitary} ($\opr{U}^\dag\opr{U} =
 \idopr$) or \term{antiunitary} ($\opr{U}^\dag\opr{U} =
-\idopr$)~\cite{morettiMathematicalFoundationsQuantum2016,bengtssonGeometryQuantumStates2017}.
+-\idopr$)~\cite{morettiMathematicalFoundationsQuantum2016,bengtssonGeometryQuantumStates2017}.
 
 In contexts like quantum computation or control, all that matters is the state
 before and after the operation. To consider the notion of an isolated physical
@@ -377,16 +377,26 @@ operator $\opr{U}(t)$ which gives the state
   = \opr{U}(t)\dop(0)\opr{U}^\dag(t)
   \label{eq:unitary-evolution}
 \end{equation}
-as a function of time. We expect that $\opr{U}(t)$ changes continuously and
-satisfies
+as a function of time. We expect that $\opr{U}(t)$ changes
+continuously\footnote{%
+  More precisely, $\opr{U}(t)$ is \term{strongly continuous} if $\lim_{t \to
+  t_0} \opr{U}(t)\ket{v} = \opr{U}(t_0)\ket{v}$ for all real $t_0$ and $\ket{v}
+  \in \hilb$. Stone's theorem is novel since it allows us to consider the time
+  derivative of $\opr{U}(t)$, even though we only assume that the map $t \mapsto
+  \opr{U}(t)$ is strongly continuous. Von Neumann showed that the strong
+  continuity requirement may be relaxed to only being weakly
+  measurable~\cite{neumannUberSatzHerrn1932}.
+}
+and satisfies
 \begin{equation}
   \opr{U}(t + t')
-  = \opr{U}(t) + \opr{U}(t')
+  = \opr{U}(t) \opr{U}(t')
 \end{equation}
 for real $t$, $t'$. Then since $\opr{U}(0) = \idopr$ is unitary, $\opr{U}(t)$ is
-unitary. We would like a representation of $\opr{U}(t)$ that does not depend on
-time. Stone's theorem~\cite{stoneOneParameterUnitaryGroups1932} is that there is
-a self-adjoint operator $\ham$ such that
+unitary. We would like a description of $\opr{U}(t)$ that does not depend on
+time. This is provided by Stone's
+theorem~\cite{stoneOneParameterUnitaryGroups1932}, which states that there is a
+self-adjoint operator $\ham$ such that
 \begin{equation}
   \opr{U}(t)
   = e^{-\im\ham t}.
@@ -449,6 +459,30 @@ In summary, the state at time $t$ is
 Note that property (b) of $\sopr{A}$ ensures that $\dop_S(0) = \dop_0$, which is
 consistent.
 
+One can show that the only consistent assignment maps for a two-dimensional
+system are of the form $\sopr{A}(\dop_0) = \dop_0 \tp \dop_B$, where $\dop_B$ is
+a constant density operator on $\hilb_B$~\cite{pechukasReducedDynamicsNeed1994}.
+We will consider $\dop_B$ to be a stationary state of the bath, such as a
+thermal state at some temperature. Why do we not require that the composite
+state $\dop(t)$ is always assignable, remaining within the image of $\sopr{A}$?
+Since $\dop_B$ does not change in time, this would require that the system does
+not interact with the bath. The only allowed open systems would be closed
+systems! What is wrong with requiring the composite state to be assignable? The
+issue is that interactions will inevitably entangle the system with the bath,
+causing one to be unable to consider the composite as the two subsystems in the
+product assignment.
+
+However, we are interested in the reduced dynamics of the system, and what
+happens on the timescale $\tau_S$ where the system changes appreciably. If the
+timescale of the excitations in the bath is $\tau_B$, then from the perspective
+of a system with $\tau_B \ll \tau_S$, the bath is effectively stationary. Thus
+$\dop(t)$ is approximately assignable if we only aim to consider the
+coarse-grained system dynamics. The notion of reduced dynamics only makes sense
+on system timescales, and requires several conditions on
+\cref{eq:reduced-dynamics} for the coarse-graining to be possible. Since the
+system must be weakly coupled to the bath for the bath to remain stationary,
+these simplifications are collectively called the \term{weak-coupling limit}.
+
 Assume completely
 positive~\cite{pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005,cuffaroDebateConcerningProper2013}.
 
@@ -456,7 +490,7 @@ We will find that the most general form of $\liou$ is given by the
 \term{Lindblad equation} \cref{eq:lindblad}. To obtain this result, first
 consider diagonalizing $\dop_B$ as $\dop_B = \sum_j \lambda_j \op*{\phi_j}$ with
 orthonormal vectors $\phi_j \in \hilb_B$, where $\sum_j\lambda_j = 1$.
-Then \cref{eq:evolveddop} becomes (writing $\dop_S$ as $\dop$)
+Then \cref{eq:reduced-dynamics} becomes (writing $\dop_S$ as $\dop$)
 \begin{align}
   \dop(t)
   &= \sum_{ij} \mel{\phi_i}{\opr{U}(t)\qty(\dop(0) \tp

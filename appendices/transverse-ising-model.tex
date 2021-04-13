@@ -1,0 +1,453 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+
+\chapter{The transverse-field Ising model}
+
+We would like to solve the Hamiltonian
+\begin{equation}
+  \ham
+  = -J\sum_{i \in \ZZ_N} \qty(%
+  \opr{S}_i^x\opr{S}_{i+1}^x
+  + g \opr{S}_i^z
+  )
+\end{equation}
+which we nondimensionalize as
+\begin{equation}
+  \frac{4}{J}\ham
+  = -\sum_{i \in \ZZ_N} \qty(%
+  \pauli_i^x\pauli_{i+1}^x + g \pauli_i^z
+  )
+  \label{eq:transham}
+\end{equation}
+for the periodic transverse-field Ising chain with $N$ spins. We will drop the
+$4/J$ in what follows. We notice that the operators
+\begin{equation}
+  \pauli_i^\pm
+  = \frac{\pauli_i^x \pm \im\pauli_i^y}{2}
+  \label{eq:paulipm}
+\end{equation}
+satisfy
+\begin{equation}
+  \pauli_i^z
+  = 2\pauli_i^+\pauli_i^- - \idopr
+\end{equation}
+and have commutators
+\begin{align}
+  \comm{\pauli_i^+}{\pauli_j^-}
+  &= \frac{1}{4}\comm{\pauli_i^x + \im\pauli_i^y}{\pauli_j^x - \im\pauli_j^y} \\
+  &= \frac{1}{4} \qty(%
+  \comm{\pauli_i^x}{\pauli_j^x} + \comm{\pauli_i^y}{\pauli_j^y}
+  + \im\comm{\pauli_i^y}{\pauli_j^x}
+  - \im\comm{\pauli_i^x}{\pauli_j^y}
+  ) \\
+  &= \delta_{ij}\pauli_i^z.
+\end{align}
+Thus their anticommutators are
+\begin{align}
+  \acomm{\pauli_i^+}{\pauli_j^-}
+  &= 2\pauli_i^+\pauli_j^- - \comm{\pauli_i^+}{\pauli_j^-} \\
+  &= 2\pauli_i^+\pauli_j^- - \delta_{ij}\pauli_i^z \\
+  &= \delta_{ij}\idopr + 2\pauli_i^+\pauli_j^- (1 - \delta_{ij}).
+\end{align}
+It could be helpful to think of the $\pauli_i^\pm$ as fermion creation and
+annihilation operators, but they do not anticommute at different sites.
+
+How might we construct operators that satisfy the fermionic canonical
+anticommutation relations (CARs) from the Pauli operators? Suppose we have such
+operators $\opr{c}_i$. Given a tuple $\tq{n} = {\qty(n_i)}_{i\in\ZZ_N}$, we have the
+corresponding states
+\begin{equation}
+  \ket{\tq{n}}
+  = \prod_{i\in\ZZ_N} {\qty(\opr{c}_i^\dag)}^{n_i} \ket{\tq{0}},
+\end{equation}
+where $\ket{\tq{0}}$ denotes the vacuum state. It then follows that
+\begin{align}
+  \opr{c}_i\ket{\tq{n}}
+  &= -n_i {(-1)}^{n_{<i}}\ket{\tq{n}_{i \leftarrow 0}}
+  \label{eq:car-action} \\
+  \opr{c}_i^\dag\ket{\tq{n}}
+  &= -(1 - n_i){(-1)}^{n_{<i}}\ket{\tq{n}_{i \leftarrow 1}},
+\end{align}
+where $\tq{n}_{i \leftarrow m} = \tq{n}$ with $n_i = m$ and $n_{<i} = \sum_{j <
+i} n_j$.
+
+Thus the number operator is
+\begin{align}
+  \opr{c}_i^\dag \opr{c}_i \ket{\tq{n}}
+  &= (1-0){(-1)}^{n_{<i}} n_i{(-1)}^{n_{<i}} \ket{\tq{n}_{i \leftarrow 1}} \\
+  &= n_i\ket{\tq{n}}.
+\end{align}
+
+This leads us to consider
+\begin{align}
+  \opr{c}_i
+  = -\qty(\prod_{j<i} -\pauli_j^z) \pauli_i^-
+\end{align}
+acting on the states
+\begin{equation}
+  \ket{\tq{n}}
+  = \prod_{i \in \ZZ_N} {\qty(\pauli_i^+)}^{n_i} \ket{\tq{0}},
+\end{equation}
+where $\ket{\tq{0}} = \ket{\uparrow}^{\tp N}$ is the state with all $z$-spins
+up, or all zero qubits. This gives the same result as \cref{eq:car-action}, so
+the $\opr{c}_i$ satisfy the CARs. This process of mapping spin-1/2 sites to
+non-local fermions is known as the \term{Jordan-Wigner transformation}. We may
+then compute that the inverse transformations are
+\begin{align}
+  \pauli_i^+\pauli_i^-
+  &= \opr{c}_i^\dag\opr{c}_i
+  \label{eq:paulipm} \\
+  \pauli_i^z
+  &= 2\opr{c}_i^\dag\opr{c}_i - \idopr
+  \label{eq:pauliz} \\
+  \pauli_i^x
+  &= -\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  \qty(\opr{c}_i^\dag + \opr{c}_i)
+  \label{eq:paulix} \\
+  \pauli_i^y
+  &= \im\qty(\prod_{j<i} \qty(\idopr - 2\opr{c}_j^\dag\opr{c}_j))
+  \qty(\opr{c}_i^\dag - \opr{c}_i).
+  \label{eq:pauliy}
+\end{align}
+While $\pauli_i^x$ remains complicated, the product $\pauli_i^x\pauli_{i+1}^x$
+does not. For $i < N-1$,
+\begin{align}
+  \pauli_i^x \pauli_{i+1}^x
+  &= \qty(\prod_{j<i} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
+  \qty(\opr{c}_i^\dag + \opr{c}_i)
+  \qty(\prod_{j<i+1} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
+  \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}) \\
+  &= \qty(\opr{c}_i^\dag + \opr{c}_i)
+  \qty(\idopr - 2\opr{c}_i^\dag\opr{c}_i)
+  \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}) \\
+  &= \qty(\opr{c}_i^\dag - \opr{c}_i) \qty(\opr{c}_{i+1}^\dag + \opr{c}_{i+1}),
+  \label{eq:paulixx}
+\end{align}
+and for $i = N-1$,
+\begin{equation}
+  \pauli_{N-1}^x \pauli_0^x
+  = \qty(\prod_{j < N-1} \qty(2\opr{c}_j^\dag\opr{c}_j - \idopr))
+  \qty(\opr{c}_{N-1}^\dag + \opr{c}_{N-1})
+  \qty(\opr{c}_0^\dag + \opr{c}_0).
+\end{equation}
+
+We may now perform the Jordan-Wigner transformation of \cref{eq:transham} to
+obtain
+\begin{equation}
+  \begin{aligned}
+    \ham
+    &= \sum_i \qty(\opr{c}_i - \opr{c}_i^\dag) \qty(\opr{c}_{i+1}^\dag +
+    \opr{c}_{i+1})
+    - g\sum_i 2\opr{c}_i^\dag\opr{c}_i
+    + g N \idopr \\
+    &- \qty(\idopr - \prod_{j < N-1}\qty(2\opr{c}_j^\dag \opr{c}_j - \idopr))
+    \qty(\opr{c}_{N-1} - \opr{c}_{N-1}^\dag) \qty(\opr{c}_0^\dag + \opr{c}_0).
+  \end{aligned}
+  \label{eq:cham}
+\end{equation}
+We now Fourier transform with
+\begin{subequations}
+\begin{align}
+  \opr{c}_i
+  &= \frac{1}{\sqrt{N}}\sum_k e^{\im ki} \opr{C}_k
+  \label{eq:fourierc} \\
+  \opr{C}_k
+  &= \frac{1}{\sqrt{N}}\sum_i e^{-\im ki} \opr{c}_i
+  \label{eq:fourierC} \\
+  \shortintertext{and}
+  \opr{c}_i^\dag
+  &= \frac{1}{\sqrt{N}}\sum_k e^{-\im ki} \opr{C}_k^\dag
+  \label{eq:fourierct} \\
+  \opr{C}_k^\dag
+  &= \frac{1}{\sqrt{N}}\sum_i e^{\im ki} \opr{c}_i^\dag
+  \label{eq:fourierCt}.
+\end{align}\label{eq:fourier}
+\end{subequations}
+
+We now propagate the periodic boundary conditions to the Fourier-transformed
+operators.
+\begin{align}
+  \opr{c}_0
+  &= \frac{1}{\sqrt{N}}\sum_k \opr{C}_k \\
+  \opr{c}_N
+  &= \frac{1}{\sqrt{N}}\sum_k e^{\im kN} \opr{C}_k.
+\end{align}
+We then must require that
+\begin{equation}
+  kN
+  \equiv 0 \pmod{2\pi}
+\end{equation}
+\begin{equation}
+  k
+  = \frac{2\pi n}{N} - \frac{N - [\text{$N$ odd}]}{N}\pi \qc
+  n \in \ZZ_N.
+  \label{eq:fourierk}
+\end{equation}
+For $N$ odd, what is $C_{\pi}$?
+\begin{align}
+  \opr{C}_{\pi}
+  &= \frac{1}{\sqrt{N}} \sum_i e^{-\im \pi i} \opr{c}_i.
+\end{align}
+Since $e^{-\im\pi i} = e^{\im\pi i}$, $\opr{C}_\pi = \opr{C}_{-\pi}$.
+
+We now verify that this operator Fourier transformation is a unitary operation.
+That is, it preserves the fermionic CARs.
+\begin{proof}
+  Consider $N$ fermionic operators $\opr{c}_i$ and a $N \times N$ unitary matrix
+  $\mq{U}$. We may change bases with
+  \begin{equation}
+    \opr{C}_k^\dag
+    = \sum_i U_{ik} \opr{c}_i^\dag.
+  \end{equation}
+  Then
+  \begin{align}
+    \acomm{\opr{C}_k}{\opr{C}_{k'}^\dag}
+    &= \sum_{ij} U_{ik}^*U_{jk'} \acomm{\opr{c}_i}{\opr{c}_j^\dag} \\
+    &= \sum_i U_{ik}^*U_{ik'} \\
+    &= {\qty(\mq{U}^\dag\mq{U})}_{kk'} \\
+    &= \delta_{kk'},
+  \end{align}
+  and similar for the other fermionic (anti)-commutation relations.
+
+  For the Fourier transform,
+  \begin{equation}
+    F_{ik}
+    = \frac{1}{\sqrt{N}} e^{\im ki}.
+  \end{equation}
+  We may then confirm that
+  \begin{align}
+    {\qty(\mq{F}^\dag\mq{F})}_{kk'}
+    &= \sum_i \frac{1}{N} e^{\im (k' - k)i} \\
+    &= \delta_{kk'}.
+  \end{align}
+  Thus the Fourier transform is unitary.
+\end{proof}
+
+We are now equipped to Fourier transform \cref{eq:cham} as follows. Since
+\begin{equation}
+  \frac{1}{N}\sum_{i\in\ZZ_N} e^{\im(k' - k) i}
+  = \delta_{kk'},
+\end{equation}
+and also
+\begin{align}
+  \opr{C}_{-k}
+  &= \opr{C}_k^* \\
+  &= \frac{1}{\sqrt{N}} \sum_i e^{-\im (-k)i} \opr{c}_i \\
+  &= \frac{1}{N}\sum_{ik'} e^{\im (k' + k)i} \opr{C}_{k'},
+\end{align}
+we have that
+\begin{align}
+  \sum_i \opr{c}_i^\dag\opr{c}_i
+  &= \frac{1}{N}\sum_{ikk'} e^{\im (k' - k)i}
+  \opr{C}_k^\dag \opr{C}_{k'} \\
+  &= \sum_k \opr{C}_k^\dag \opr{C}_k,
+  \\
+  \sum_i \qty(\opr{c}_i^\dag\opr{c}_{i+1} + \opr{c}_{i+1}^\dag\opr{c}_i)
+  &= \frac{1}{N}\sum_{ikk'} e^{\im (k' - k)i} \qty(%
+  e^{\im k'} + e^{-\im k} 
+  ) \opr{C}_k^\dag \opr{C}_{k'} \\
+  &= \sum_k 2 \cos k\; \opr{C}_k^\dag \opr{C}_k,
+  \\
+  \sum_i \qty(\opr{c}_{i+1}\opr{c}_i + \opr{c}_i^\dag\opr{c}_{i+1}^\dag)
+  &= \frac{1}{N}\sum_{ikk'} \qty(%
+  e^{\im (k' + k)i} e^{\im k} \opr{C}_{k}\opr{C}_{k'}
+  + e^{-\im (k' + k)i} e^{-\im k'} \opr{C}_{k}^\dag\opr{C}_{k'}^\dag
+  ) \\
+  &= \sum_k \qty(%
+  e^{-\im k} \opr{C}_{-k} \opr{C}_k
+  + e^{\im k} \opr{C}_k^\dag \opr{C}_{-k}^\dag
+  ).
+\end{align}
+Thus \cref{eq:cham} is now
+\begin{align}
+  \ham
+  &= -\sum_k 2 \cos k\; \opr{C}_k^\dag \opr{C}_k
+  + \sum_k \qty(%
+  e^{-\im k} \opr{C}_{-k} \opr{C}_k
+  + e^{\im k} \opr{C}_k^\dag \opr{C}_{-k}^\dag
+  )
+  - \sum_k 2g\opr{C}_k^\dag\opr{C}_k
+  + g N \idopr
+  \\
+  &= -\sum_k \qty(g + \cos k)
+  \qty(%
+  \opr{C}_k^\dag \opr{C}_k
+  + \opr{C}_{-k}^\dag \opr{C}_{-k}
+  )
+  + \sum_k \im\sin k
+  \qty(%
+  \opr{C}_{-k}\opr{C}_k
+  - \opr{C}_k^\dag\opr{C}_{-k}^\dag
+  )
+  + g N \idopr
+  \\
+  &= -\sum_k \qty(g + \cos k)
+  \qty(%
+  \opr{C}_k^\dag \opr{C}_k
+  - \opr{C}_{-k} \opr{C}_{-k}^\dag
+  )
+  + \sum_k \im\sin k
+  \qty(%
+  \opr{C}_{-k}\opr{C}_k
+  - \opr{C}_k^\dag\opr{C}_{-k}^\dag
+  ) \\
+  &= \sum_k \vq{v}_k^\dag \mq{H}_k \vq{v}_k,
+  \label{eq:Cham} \\
+  \shortintertext{where}
+  \mq{H}_k
+  &= \bmqty{%
+  -(g + \cos k) & -\im\sin k \\
+  \im\sin k & g + \cos k
+  }, \\
+  \vq{v}_k
+  &= \bmqty{\opr{C}_k \\ \opr{C}_{-k}^\dag},
+\end{align}
+and we have used that
+\begin{equation}
+  \sum_k \cos k = 0.
+\end{equation}
+Since the $\mq{H}_k$ are Hermitian, they may be diagonalized by a unitary
+transformation of the $\vq{v}_k$.\footnote{%
+  The unitary transformation of the $\opr{C}_{\pm k}$ to obtain
+  $\opr{\eta}_k^\pm$ is an instance of a fermionic \term{Bogoliubov
+  transformation}:
+  \begin{subequations}
+    \begin{align}
+      \opr{C}_k
+    &= u\opr{f}_k + v\opr{g}_k^\dag \\
+    \shortintertext{and}
+    \opr{C}_{-k}
+    &= -v\opr{f}_k^\dag + u\opr{g}_k.
+    \end{align}\label{eq:bogoliubov}
+  \end{subequations}
+  For these transformations to preserve the CARs,
+  \begin{align}
+    \acomm{\opr{C}_k^\dag}{\opr{C}_k}
+    &= \abs{u}^2 \acomm{\opr{f}_k^\dag}{\opr{f}_k}
+    + \abs{v}^2 \acomm{\opr{g}_k}{\opr{g}_k^\dag}
+    + u^* v \acomm{\opr{f}_k^\dag}{\opr{g}_k^\dag}
+    + v^* u \acomm{\opr{g}_k}{\opr{f}_k} \\
+    &= \qty(\abs{u}^2 + \abs{v}^2) \idopr,
+  \end{align}
+  so we must have
+  \begin{equation}
+    \abs{u}^2 + \abs{v}^2 = 1.
+  \end{equation}
+  We may choose
+  \begin{subequations}
+    \begin{align}
+      u &= e^{\im\phi_1}\cos\theta \\
+      v &= e^{\im\phi_2}\sin\theta
+    \end{align}\label{eq:uv-param}
+  \end{subequations}
+  for real angles $\phi_1$, $\phi_2$, and $\theta$.
+}
+The $\mq{H}_k$ are traceless, so they have the eigenvalues
+\begin{align}
+  E_k^\pm
+  &= \pm\sqrt{-\det\mq{H}_k} \\
+  &= \pm\sqrt{g^2 + 2g\cos k + \cos^2 k + \sin^2 k} \\
+  &= \pm\sqrt{g^2 + 2g\cos k + 1}.
+\end{align}
+The eigenvectors are then
+\begin{equation}
+  \vq{q}_k^\pm
+  = \bmqty{%
+    -\im\sin k \\
+    E_k^\pm + g + \cos k
+  },
+\end{equation}
+except if $k = 0$ or $-\pi$, in which case
+\begin{align}
+  \vq{q}_k^-
+  &= \bmqty{1 \\ 0}
+  \qand
+  \vq{q}_k^+
+  = \bmqty{0 \\ 1}.
+\end{align}
+The $k = -\pi$ case does not appear if $N$ is odd. If also $g =
+1$, then $\mq{H}_{-\pi} = \mq{0}$.
+To construct the unitary
+transformation, we must normalize the $\vq{q}_k^\pm$. We find that
+\begin{align}
+  \norm{\vq{q}_k^\pm}^2
+  &= {\qty(E_k^\pm + g + \cos k)}^2 + \sin^2 k \\
+  &= {\qty(E_k^\pm)}^2 + g^2 + \cos^2 k + 2g\cos k + 2E_k^\pm(g + \cos k) + 1 - \cos^2 k \\
+  &= 2E_k^\pm \qty(E_k^\pm + g + \cos k).
+\end{align}
+Now
+\begin{align}
+  \frac{{\qty(\vq{q}_k^\pm)}_1}{\norm{\vq{q}_k^\pm}}
+  &= \frac{-\im\sin k}{\sqrt{2E_k^\pm \qty(E_k^\pm + g + \cos k)}} \\
+  &= \frac{-\im\sin k}{\sqrt{2\abs{E_k^\pm} \qty(\abs{E_k^\pm} \pm (g + \cos k))}}
+  \\
+  \shortintertext{and}
+  %
+  \frac{{\qty(\vq{q}_k^\pm)}_2}{\norm{\vq{q}_k^\pm}}
+  &= \pm\sqrt{\frac{E_k^\pm + (g + \cos k)}{2E_k^\pm}} \\
+  &= \pm\sqrt{\frac{\abs{E_k^\pm} \pm (g + \cos k)}{2\abs{E_k^\pm}}}
+\end{align}
+\begin{equation}
+  \mq{U}_k^\dag
+  = \bmqty{%
+    {\qty(\hat{\vq{q}}_k^-)}^\dag \\
+    {\qty(\hat{\vq{q}}_k^+)}^\dag
+  }.
+\end{equation}
+Then with $E_k = \abs{E_k^\pm}$,
+\begin{equation}
+  \opr{\eta}_k^\pm
+  = \frac{\im\sin k}{\sqrt{2E_k\qty(E_k \pm (g + \cos k))}}
+  \opr{C}_k
+  \pm \sqrt{\frac{E_k \pm (g + \cos k)}{2E_k}}
+  \opr{C}^\dag_{-k}
+  \label{eq:etas}
+\end{equation}
+so that
+\begin{align}
+  \acomm{{\qty(\opr{\eta}_k^\pm)}^\dag}{\opr{\eta}_k^\pm}
+  &= \frac{\sin^2 k}{2E_k\qty(E_k \pm (g + \cos k))} \idopr
+  + \frac{E_k \pm (g + \cos k)}{2E_k} \idopr \\
+  &= \idopr
+  \\
+  \begin{split}
+  \acomm{{\qty(\opr{\eta}_k^\pm)}^\dag}{\opr{\eta}_k^\mp}
+  &= \frac{\sin^2 k}{2E_k
+    \sqrt{E_k \pm (g + \cos k)}
+  \sqrt{E_k \mp (g + \cos k)}} \idopr \\
+  &- \frac{\sqrt{E_k \pm (g + \cos k)}\sqrt{E_k \mp (g + \cos k)}}{%
+  2 E_k} \idopr
+  \end{split}
+  \\
+  &= \zopr.
+\end{align}
+Note that \cref{eq:etas} is consistent with the edge cases in the limits $k \to
+-\pi$ and $k \to 0$. If also $g = 1$, then we impose that $\opr{\eta}_{-\pi} =
+\opr{C}_\pi^\dag$, which is the same as if $g \ne 1$.
+
+\Cref{eq:Cham} becomes
+\begin{equation}
+  \ham
+  = \sum_k E_k^+{\qty(\opr{\eta}_k^+)}^\dag\opr{\eta}_k^+
+  + \sum_k E_k^-{\qty(\opr{\eta}_k^-)}^\dag\opr{\eta}_k^-.
+  \label{eq:etasham}
+\end{equation}
+Since
+\begin{equation}
+  {\qty(\opr{\eta}_{-k}^-)}^\dag
+  = \opr{\eta}_k^+
+  \eqqcolon \opr{\eta}_k
+\end{equation}
+and $E_{-k}^\pm = E_k^\pm$, we may reduce \cref{eq:etasham} to
+\begin{align}
+  \ham
+  &= \sum_k E_k\opr{\eta}_k^\dag \opr{\eta}_k
+  - \sum_k E_k\qty(\idopr - \opr{\eta}_k^\dag \opr{\eta}_k)
+  \\
+  &= \sum_k 2E_k\opr{\eta}_k^\dag\opr{\eta}_k
+  - \idopr\sum_k E_k.
+  \label{eq:etaham}
+\end{align}
+
+\end{document}
+
