@@ -15,19 +15,66 @@ nabla=upright,
 partial=upright,
 ]{unicode-math}
 
-\usepackage[numbers]{natbib}
+\usepackage[%
+backend=biber,
+backref=true,
+sorting=none,
+style=phys,
+biblabel=brackets,
+citestyle=numeric-comp,
+doi=false,
+url=false,
+isbn=false,
+]{biblatex}
+
+\AtEveryBibitem{\clearlist{language}\clearfield{note}}
+\AtEveryCitekey{\clearlist{language}\clearfield{note}}
+
+\DefineBibliographyStrings{english}{%
+  backrefpage = {page},% originally "cited on page"
+  backrefpages = {pages},% originally "cited on pages"
+}
+
+\newbibmacro{string+doiurlisbn}[1]{%
+  \iffieldundef{doi}{%
+    \iffieldundef{url}{%
+      \iffieldundef{isbn}{%
+        \iffieldundef{issn}{%
+          #1%
+          }{%
+          \href{http://books.google.com/books?vid=ISSN\thefield{issn}}{#1}%
+        }%
+        }{%
+        \href{http://books.google.com/books?vid=ISBN\thefield{isbn}}{#1}%
+      }%
+      }{%
+      \href{\thefield{url}}{#1}%
+    }%
+    }{%
+    \href{http://dx.doi.org/\thefield{doi}}{#1}%
+  }%
+}
+
+\DeclareFieldFormat{title}{\usebibmacro{string+doiurlisbn}{\mkbibemph{#1}}}
+% \DeclareFieldFormat[article,incollection]{title}%
+% \DeclareFieldFormat[article]{title}%
+% {\usebibmacro{string+doiurlisbn}{\mkbibquote{#1}}}
+
+\addbibresource{\jobname.bib}
+\AtEndDocument{%
+  % \bibliographystyle{unsrtnat}
+  % \bibliography{thesis}
+
+  \printbibliography%
+
+  \printindex%
+}
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
 \usepackage{xstring}
 \usepackage{subfiles}
 \newcommand{\notebook}[1]{\subfile{../notebooks/tex/#1}}
 
-
-\AtEndDocument{%
-  \bibliographystyle{unsrtnat}
-  \bibliography{thesis}
-  \printindex
-}
 
 % Layout and styling
 \usepackage{etoolbox}
@@ -121,7 +168,8 @@ partial=upright,
 
 % Reference management (order-sensitive)
 \usepackage{xparse}
-\usepackage[pdfusetitle,final,backref]{hyperref}
+% \usepackage[pdfusetitle,final,backref,breaklinks]{hyperref}
+\usepackage[pdfusetitle,final,breaklinks]{hyperref}
 \usepackage[all]{hypcap}
 \usepackage{cleveref}
 
@@ -211,6 +259,8 @@ partial=upright,
 \appendix
 \subfile{appendices/transverse-ising-model}
 \subfile{appendices/computer-details}
+
+{\nocite{*}}
 
 \backmatter% Adds index and bibliography to TOC
 
