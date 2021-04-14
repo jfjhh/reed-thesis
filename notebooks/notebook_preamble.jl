@@ -45,3 +45,6 @@ theme(:vibrant,
     tickfontsize=11,
     legendfontsize=11,
 )
+
+rubric = RGB(0.7, 0.05, 0.0); # The red color used in the thesis document.
+

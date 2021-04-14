@@ -29,7 +29,7 @@ gentex: $(NOTEBOOKS:%=tex/%.tex)
 # --TagRemovePreprocessor.remove_cell_tags='{"hide"}' \
 
 tex/%.tex: %.ipynb $(NBTEMPLATE)
-	# Implicity uses config file and template
+	# Implicitly uses config file and template
 	$(NBC) \
 		--to latex \
 		--output-dir=$(TEXDIR) \
