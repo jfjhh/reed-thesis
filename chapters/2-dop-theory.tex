@@ -197,7 +197,7 @@ In the interaction picture:
 The spectral correlation tensor is then
 \begin{align}
   \Gamma_{i\mu,j\nu}(\omega)
-  &= \frac{\mu_e^2}{\hbar^2} \int_0^\infty \dd{s} e^{\im\omega s}
+  &= \frac{1}{\hbar^2} \int_0^\infty \dd{s} e^{\im\omega s}
   \ev{\opr{B}_i^\mu{(t)}^\dag \opr{B}_j^\nu(t - s)}
   \\
   \begin{split}
@@ -472,21 +472,87 @@ modes of the bath to weaken.\footnote{%
 For simplicity, we just set the upper limit of the
 integral to $\tilde{\Omega}$, though other cutoffs like $e^{-\tilde{\omega}_k /
 \tilde{\Omega}}$ are common. As we will see, the exact functional form does not
-matter. In the limit where $\tau_B\tilde{\Omega} / \tau_S \ll 1$, $\tilde{S}$ now
-simplifies to
+matter. If we set the frequency cutoff $\tilde{\Omega} \gg \tilde{\omega}$ to be
+far above any system frequency, we have the following limits.
+\begin{itemize}
+  \item In the high-temperature limit where $\tau_B\tilde{\Omega} / \tau_S \ll
+    1$, $\tilde{S}$ simplifies to
+    \begin{align}
+      \tilde{S}(\tilde{\omega})
+      &\approx \frac{1}{2\pi} \frac{\tau_0^2}{\tau_B\tau_S}
+      \pv\int_0^{\tilde{\Omega}} \dd{\tilde{\omega}_k} \tilde{\omega}_k^2
+      \qty(\frac{1}{\tilde{\omega} - \tilde{\omega}_k}
+      + \frac{1}{\tilde{\omega} + \tilde{\omega}_k}) \\
+      &= \frac{\tau_0^2}{\tau_B\tau_S} \frac{\tilde{\omega}}{\pi}
+      \qty(\tilde{\omega}\atanh\qty(\frac{\tilde{\omega}}{\tilde{\Omega}})
+      - \tilde{\Omega}) \\
+      &\approx -\frac{\tau_0^2}{\tau_B\tau_S}
+      \frac{\tilde{\Omega}}{\pi}\tilde{\omega}.
+    \end{align}
+
+  \item In the low-temperature limit where $\tau_B\tilde{\Omega} / \tau_S \gg
+    1$, $\tilde{S}$ simplifies to
+    \begin{align}
+      \tilde{S}(\tilde{\omega})
+      &\approx \frac{1}{2\pi} {\qty(\frac{\tau_0}{\tau_S})}^2
+      \pv\int_0^{\tilde{\Omega}} \dd{\tilde{\omega}_k}
+      \frac{\tilde{\omega}_k^2}{\tilde{\omega} - \tilde{\omega}_k} \\
+      &= -\frac{1}{2\pi} {\qty(\frac{\tau_0}{\tau_S})}^2 \qty(%
+      \frac{\tilde{\Omega}^2}{2} + \tilde{\Omega}\tilde{\omega} -
+      \tilde{\omega}^2
+      \log\qty(\frac{\tilde{\omega}}{\tilde{\Omega} - \tilde{\omega}})
+      ) \\
+      &\approx -\frac{1}{2\pi} {\qty(\frac{\tau_0}{\tau_S})}^2 \qty(%
+      \frac{\tilde{\Omega}^2}{2} + \tilde{\Omega}\tilde{\omega}
+      ).
+    \end{align}
+\end{itemize}
+In either case, the Lamb-shift Hamiltonian may be neglected since
+$\tilde{\Omega} \tau_0 \ll \tau_S$.
+
+We may verify that the reservoir correlation functions do decay over a time
+scale that is much less than the relaxation time $\tau_R$.\footnote{%
+  Analogous results for the electric field are given in~\cite[p.~574]{opensys}.
+}
+Recall that the rate $\gamma(\omega)$ is given by the Fourier transform of the
+reservoir correlation functions
+$\ev{\opr{B}_i^\mu{(t)}^\dag\opr{B}_j^\nu(t-s)}$, which are constant in $t$ and
+the same for all sites and polarizations. The correlation functions are then the
+inverse Fourier transform of $\gamma$:
+\begin{equation}
+  \frac{1}{\hbar^2}\ev{\opr{B}_i^\mu{(t)}^\dag\opr{B}_j^\nu(t-s)}
+  = \frac{1}{2\pi}\int_{-\infty}^\infty \dd{\omega} e^{-\im\omega s}
+  \gamma(\omega).
+\end{equation}
+Using the dimensionless time $\tilde{s} = s / \tau_S$ and introducing the
+parameter $\eta = \tau_B / \tau_S$, we find that
 \begin{align}
-  \tilde{S}(\tilde{\omega})
-  &\approx \frac{1}{2\pi} \frac{\tau_0^2}{\tau_B\tau_S}
-  \pv\int_0^{\tilde{\Omega}} \dd{\tilde{\omega}_k} \tilde{\omega}_k^2
-  \qty(\frac{1}{\tilde{\omega} - \tilde{\omega}_k}
-  + \frac{1}{\tilde{\omega} + \tilde{\omega}_k}) \\
-  &= \frac{\tau_0^2}{\tau_B\tau_S} \frac{\tilde{\omega}}{\pi}
-  \qty(\tilde{\omega}\atanh\qty(\frac{\tilde{\omega}}{\tilde{\Omega}})
-  - \tilde{\Omega}) \\
-  &\approx -\frac{\tau_0^2}{\tau_B\tau_S} \frac{\tilde{\Omega}}{\pi}\tilde{\omega},
+  \frac{1}{\hbar^2 \tau_S^2}\ev{\opr{B}_i^\mu{(\tilde{s})}^\dag\opr{B}_j^\nu(0)}
+  &= \frac{1}{2\pi}\int_{-\infty}^\infty \dd{\tilde{\omega}}
+  e^{-\im\tilde{\omega} \tilde{s}}
+  \tilde{\gamma}(\tilde{\omega}) \\
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 \frac{\pi^3}{\eta^4}
+  \sinh{\qty(\frac{\pi \tilde{s}}{\eta})}^{-4} \qty(%
+  1 + 2\cosh{\qty(\frac{\pi\tilde{s}}{\eta})}^2
+  ).
 \end{align}
-where we have set the frequency cutoff $\tilde{\Omega} \gg \tilde{\omega}$ to be
-far above any system frequency.
+At low temperatures $\tilde{s} \ll \eta$ and
+\begin{align}
+  \frac{1}{\hbar^2 \tau_S^2}\ev{\opr{B}_i^\mu{(\tilde{s})}^\dag\opr{B}_j^\nu(0)}
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 \frac{3}{\pi \tilde{s}^4},
+\end{align}
+while at high temperatures $\tilde{s} \gg \eta$ and
+\begin{align}
+  \frac{1}{\hbar^2 \tau_S^2}\ev{\opr{B}_i^\mu{(\tilde{s})}^\dag\opr{B}_j^\nu(0)}
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 \frac{8\pi^3}{\eta^4}
+  e^{-2\pi\tilde{s} / \eta} \\
+  &= \qty(\frac{\tau_0^2}{\tau_B \tau_S}) \frac{8\pi^3}{\eta^3}
+  e^{-2\pi\tilde{s} / \eta}.
+\end{align}
+Thus if $\tau_B \ll \tau_S$, the reservoir correlation time is $\tau_B / 2\pi$,
+which is comparable to the thermal correlation time. In either case, the
+correlation functions decay quickly for $\tilde{s} > 1$. Since $\tau_S \ll
+\tau_R$, this establishes the validity of the Markov approximation.
 
 
 \section{Superoperators in coordinates}

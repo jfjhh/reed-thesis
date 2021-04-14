@@ -14,7 +14,7 @@ all: $(SUBDIRS) notebook
 
 .PHONY: edits
 edits: # Convenience
-	JULIA_PROJECT="." jupyter notebook
+	JULIA_PROJECT="." JULIA_NUM_THREADS=`nproc` jupyter notebook
 
 .PHONY: subdirs $(SUBDIRS)
 $(SUBDIRS): notebook
