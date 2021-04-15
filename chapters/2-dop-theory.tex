@@ -351,11 +351,20 @@ in terms of the thermal correlation time $\tau_B = \beta\hbar$ and the
   = \SI{3.67e-23}{\s}
   \cong \SI{56}{\per\GeV}.
 \end{equation}
-If $\tau_B\tilde{\omega}/\tau_S \ll 1$, then
+In the high-temperature limit where $\tau_B\tilde{\omega}/\tau_S \ll 1$,
+$\tilde{\gamma}$ becomes
 \begin{equation}
   \tilde{\gamma}(\tilde{\omega})
   \approx \frac{\tau_0^2}{\tau_B \tau_S} \tilde{\omega}^2.
 \end{equation}
+The other limit where $\tau_B\tilde{\omega}/\tau_S \gg 1$ motivates the
+definition of the typical zero-temperature decay rate
+\begin{equation}
+  \tilde{\gamma}_0
+  = \lim_{\tau_B \to \infty} \tilde{\gamma}(1)
+  = {\qty(\frac{\tau_0}{\tau_S})}^2.
+\end{equation}
+
 What about $\tilde{S} = S\tau_S$? Applying the dipole approximation and letting
 $\tilde{\omega} = \omega\tau_S$ gives 
 \begin{equation}
@@ -372,7 +381,7 @@ where
   = \frac{1}{e^{\tau_B \tilde{\omega} / \tau_S} - 1}.
 \end{equation}
 To avoid the divergence of \cref{eq:Snondim}, we introduce an upper frequency
-cutoff $\tilde{\Omega}$. Physically, one expects the coupling to high-frequcency
+cutoff $\tilde{\Omega}$. Physically, one expects the coupling to high-frequency
 modes of the bath to weaken.\footnote{%
   This is not the case for the electromagnetic field, but in other contexts, one
   may view the bath as merely an effective model, and this cutoff is used to

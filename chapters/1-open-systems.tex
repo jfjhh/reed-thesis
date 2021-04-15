@@ -46,7 +46,7 @@ This means that a $(N+1)$-outcome operation cannot be a measurement on a
 $N$-dimensional system. Repeating such an operation cannot produce the same
 outcome with certainty.
 
-\subsection{Entropy}
+\section{Entropy}
 
 Since quantum states encode the probabilities of outcomes, it is relevant to
 have a measure for how uncertain we are about which outcome will happen.
@@ -93,7 +93,7 @@ a measurement with a definite outcome for $\dop$. Since the other outcomes are
 excluded, $\dop$ is called a \term{pure state}, rather than a \term{mixed state}
 which has probability spread out over more than one outcome.
 
-\subsection{Hardy's postulates}\label{sec:hardy}
+\section{Hardy's postulates}\label{sec:hardy}
 
 TODO: Rewrite as quantum logic.
 
@@ -203,18 +203,22 @@ change states:
   state $\dop$ after the operation becomes
   \begin{equation}
     \dop_m'
-    = P{(m)}^{-1} \sopr{O}_m \dop.
+    = P{(m)}^{-1} \sopr{O}_m(\dop).
     \label{eq:operation}
   \end{equation}
 \end{post}
-Inherent in \cref{post:operation} is the normalization condition $\tr\dop' = 1$,
-which implies that $\tr\sopr{O}_m\dop = \tr(\dop \opr{E}_m)$, as well as the
-requirement that $\sopr{O}_m\dop \ge \zopr$. If an operation is performed but
-the outcome is unknown, we may assign the state
+Since $\dop_m'$ must be a density operator, \cref{post:operation} implies that
+$\sopr{O}_m\dop \ge \zopr$ and
+\begin{equation}
+  \tr\sopr{O}_m(\dop)
+  = P(m)
+  = \tr(\dop \opr{E}_m).
+\end{equation}
+If an operation is performed but the outcome is unknown, we may assign the state
 \begin{equation}
   \dop'
   = \sum_m P(m) \dop_m'
-  = \sum_m \sopr{O}_m \dop,
+  = \sum_m \sopr{O}_m(\dop),
   \label{eq:non-selective}
 \end{equation}
 so that an effect $\opr{E}$ has the expected probability $\tr(\dop' \opr{E}) =
@@ -223,26 +227,26 @@ so that an effect $\opr{E}$ has the expected probability $\tr(\dop' \opr{E}) =
 The state of the ensemble $\dop = \sum_i p_i \dop_i$ after an operation with
 outcome $m$ is
 \begin{equation}
-  \frac{\sopr{O}_m \dop}{\tr\sopr{O}_m \dop}
-  = \sum_i P(i \,|\, m) \frac{\sopr{O}_m \dop_i}{\tr\sopr{O}_m \dop_i}
+  \frac{\sopr{O}_m(\dop)}{\tr\sopr{O}_m(\dop)}
+  = \sum_i P(i \,|\, m) \frac{\sopr{O}_m(\dop_i)}{\tr\sopr{O}_m(\dop_i)}
   \label{eq:ensemble-operation}
 \end{equation}
 By Bayes' theorem,
 \begin{equation}
   P(i \,|\, m)
   = \frac{P(i) P(m \,|\, i)}{P(m)}
-  = \frac{p_i \tr\sopr{O}_m \dop_i}{\tr\sopr{O}_m \dop}.
+  = \frac{p_i \tr\sopr{O}_m(\dop_i)}{\tr\sopr{O}_m(\dop)}.
 \end{equation}
 Now \cref{eq:ensemble-operation} becomes
 \begin{equation}
   \sopr{O}_m \qty(\sum_i p_i \dop_i)
-  = \sum_i p_i \sopr{O}_m \dop_i.
+  = \sum_i p_i \sopr{O}_m(\dop_i).
   \label{eq:convex-operation}
 \end{equation}
 Thus operations are convex linear.
 
 
-\subsection{Composite systems}
+\section{Composite systems}
 
 The success of physics lies in the apparent lack of causal connections between
 phenomena separated in space and time. Different things are different, and the
@@ -339,7 +343,7 @@ trace over $B$ of $\dop_A \tp \dop_B$ is
 and is extended linearly to combinations of product states.
 
 
-\subsection{Closed dynamics}
+\section{Closed dynamics}
 
 Now that we have described the composition of quantum systems, how do they
 change in time? We are often interested in the case where the information held
@@ -417,12 +421,14 @@ which is known as the \termalt{Liouville equation}{Liouville} or \term{von
   = 1$. Otherwise $\dot{\dop} = -\im\comm{\ham}{\dop}/\hbar$.
 }
 
+TODO: Dynamical pictures
+
+\section{Canonical quantization}
+
 TODO: Explain the link to classical phase space and canonical commutation. Why
 is $\ham$ the Hamiltonian?
 
-TODO: Dynamical pictures
-
-\subsection{Open dynamics}
+\section{Open dynamics}
 
 An \term{open system} is a quantum system where the information held by the
 quantum state may change. We will consider only open quantum systems that model
@@ -716,11 +722,10 @@ that the time-evolution only depends on the present time, to obtain the
   \tr_B\comm{\ham_I(t)}{\comm{\ham_I(t - s)}{\dop_S(t) \tp \dop_B}}.
   \label{eq:infbornmarkov}
 \end{equation}
-This is justified when the reservoir correlation functions
-in \cref{eq:onegammas} vanish quickly over a time $\tau_B$ that is smaller than
-the relaxation time $\tau_R$ (see \cref{sec:limitations}).
-Substituting \cref{eq:inthamdecomp} into \cref{eq:infbornmarkov} and
-using \cref{eq:onegammas} gives
+This is justified when the reservoir correlation functions in
+\cref{eq:onegammas} vanish quickly over a time $\tau_B$ that is smaller than the
+relaxation time $\tau_R$. Substituting \cref{eq:inthamdecomp} into
+\cref{eq:infbornmarkov} and using \cref{eq:onegammas} gives
 \begin{equation}
   \dot{\dop}_S
   = 2\herm \sum_{\alpha\beta\omega\omega'}
