@@ -467,61 +467,10 @@ while at high temperatures $\tilde{s} \gg \eta$ and
   &= \qty(\frac{\tau_0^2}{\tau_B \tau_S}) \frac{8\pi^3}{\eta^3}
   e^{-2\pi\tilde{s} / \eta}.
 \end{align}
-Thus if $\tau_B \ll \tau_S$, the reservoir correlation time is $\tau_B / 2\pi$,
-which is comparable to the thermal correlation time. In either case, the
-correlation functions decay quickly for $\tilde{s} > 1$. Since $\tau_S \ll
+Thus if $\tau_B \ll \tau_S$, the reservoir correlation time is $\tau_C = \tau_B
+/ 2\pi$, which is comparable to the thermal correlation time. In either case,
+the correlation functions decay quickly for $\tilde{s} > 1$. Since $\tau_S \ll
 \tau_R$, this establishes the validity of the Markov approximation.
-
-
-\section{Superoperators in coordinates}
-
-Consider an orthonormal basis $\ket{i}$ for $\hilb$ and thus $\liou$. This
-induces a basis for superoperators by pre and post-multiplication.
-
-The superoperator matrix element for left-multiplication is
-\begin{align}
-  \mel{ab}{\opr{A}_L}{cd}
-  &= \sum_{ef} \mel{ab}{A_{ef}}{ef}\ket{cd} \\
-  &= \sum_{ef} \delta_{fc} \mel{ab}{A_{ef}}{ed} \\
-  &= \sum_{ef} \delta_{fc} \delta_{ae} \delta_{bd} A_{ef} \\
-  &= \delta_{db} A_{ac},
-\end{align}
-while that for right-multiplication is
-\begin{align}
-  \mel{ab}{\opr{A}_R}{cd}
-  &= \sum_{ef} \mel{ab}{A_{ef}}{cd}\ket{ef} \\
-  &= \sum_{ef} \delta_{de} \mel{ab}{A_{ef}}{cf} \\
-  &= \sum_{ef} \delta_{de} \delta_{ac} \delta_{bf} A_{ef} \\
-  &= \delta_{ac} A_{db}.
-\end{align}
-Thus for both multiplications, we have that
-\begin{align}
-  \mel{ab}{\opr{A}_L\opr{B}_R}{cd}
-  &= \sum_{ef} \mel{ab}{\opr{A}_L}{ef}\mel{ef}{\opr{B}_R}{cd} \\
-  &= \sum_{ef} \delta_{fb} \delta_{ec} A_{ae} B_{df} \\
-  &= A_{ac} B_{db}.
-\end{align}
-In particular, if $\opr{B} = \opr{A}^\dag$, this is $A_{ac} A_{bd}^*$, so that
-the trace of the superoperator is $\norm{\opr{A}}^2$.
-
-Given $\opr{A}$, we have the commutator superoperator $[\opr{A}] = \opr{A}_L -
-\opr{A}_R$ and the anticommutator superoperator $\{\opr{A}\} = \opr{A}_L +
-\opr{A}_R$. We then see that
-\begin{equation}
-  \frac{1}{2}\mel{ab}{\{\opr{A}^\dag \opr{A}\}}{cd}
-  = \frac{1}{2}\sum_k\qty(\delta_{db} A_{ak}A_{ck}^* + \delta_{ac} A_{dk}A_{bk}^*),
-\end{equation}
-so the elements for the dissipator $\sopr{D} = \sum_i \gamma_i\qty(\opr{A}_L
-\opr{A}_R^\dag - \{\opr{A}^\dag \opr{A}\}/2)$ are
-\begin{equation}
-  \mel{ab}{\sopr{D}}{cd}
-  = \sum_i \gamma_i \qty(A_{ac}A_{bd}^* - \frac{1}{2}\sum_k\qty(\delta_{db} A_{ak}A_{ck}^* + \delta_{ac} A_{dk}A_{bk}^*))
-\end{equation}
-
-
-% Notebooks
-% \notebook{closed-simulations}
-% \notebook{ising-diss}
 
 \end{document}
 

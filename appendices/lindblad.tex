@@ -1,0 +1,142 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+
+\chapter{The generator of a quantum dynamical semigroup}
+
+\emph{The contents of this appendix follow~\cite{opensys}.}
+
+Let $\sopr{V}(t)$ for $t \ge 0$ be a family of completely positive and
+trace-preserving \textsc{cptp} maps on $\liou(\hilb)$ with the \term{semigroup
+property} that
+\begin{equation}
+  \sopr{V}(t)\sopr{V}(s)
+  = \sopr{V}(t + s).
+\end{equation}
+In the physical context, $\sopr{V}(t)$ is a dynamical map for the reduced
+dynamics of a system, and the semigroup property is that the dynamics are
+Markovian or memoryless, just like when one coarse-grains to the system time in
+the weak-coupling limit.
+
+By analogy to Stone's theorem, we expect that there is a generator $\sopr{L}$ of
+the semigroup such that
+\begin{equation}
+  \sopr{V}(t)
+  = e^{\sopr{L} t}.
+\end{equation}
+We are interested in obtaining a \term{master equation} of the form
+\begin{equation}
+  \dot{\dop}
+  = \sopr{L}\dop.
+\end{equation}
+
+We may find $\sopr{L}$ as follows. Since $\sopr{V}(t)$ is \textsc{cptp}, it may
+be decomposed with the help of the Kraus representation theorem as
+\begin{equation}
+  \sopr{V}(t) \dop
+  = \sum_i \opr{M}_i(t)\dop\opr{M}_i^\dag(t),
+  \label{eq:krausrep}
+\end{equation}
+where $\sum_i \opr{M}_i^\dag(t) \opr{M}_i = \idopr$. We can express the
+$\opr{M}_i$ in terms of an orthonormal complete basis $\{\opr{F}_n\}$ for
+$\liou(\hilb)$ as $\opr{M}_i = \sum_n \opr{F}_n
+\lprod{\opr{F}_n}{\opr{M}_i}$. Then \cref{eq:krausrep} becomes
+\begin{equation}
+  \sopr{V}(t) \dop
+  = \sum_{mn} c_{mn}(t) \opr{F}_m\dop\opr{F}_n^\dag,
+  \label{eq:Fintro}
+\end{equation}
+where
+\begin{equation}
+  c_{mn}(t)
+  \equiv \sum_i \lprod{\opr{F}_m}{\opr{M}_i(t)}\lprod{\opr{M}_i(t)}{\opr{F}_n}.
+  \label{eq:kraus-coeffs}
+\end{equation}
+For convenience, we may choose $\opr{F}_{d^2} = \idopr / \sqrt{d}$, where $d =
+\dim(\hilb)$. With an eye towards simplifying \cref{eq:Vderiv}, we eliminate
+the explicit time dependence of \cref{eq:kraus-coeffs} by defining
+\begin{equation}
+  a_{mn}
+  \equiv \lim_{t \to 0^+} \frac{c_{mn}(t) - d\delta_{d^2 d^2}}{t}
+  \label{eq:limcoeffs}
+\end{equation}
+and introduce the sum of Kraus operators
+\begin{align}
+  \opr{F}
+  &= \frac{1}{\sqrt{d}}\sum_{n=1}^{d^2 - 1} a_{n d^2} \opr{F}_n
+  \label{eq:kraussum} \\
+  &= \frac{\opr{F} + \opr{F}^\dag}{2}
+  + \im \frac{\opr{F} - \opr{F}^\dag}{2\im}
+  \equiv \opr{G} - \im\ham,
+  \label{eq:kraussherm}
+\end{align}
+where we have decomposed the sum $\opr{F}$ into Hermitian and anti-Hermitian
+parts. Now we may write the master equation $\dot{\dop} = \liou\dop$ as
+\begin{align}
+  \dot{\dop}
+  &= \lim_{\Delta t \to 0^+} \frac{\sopr{V}(\Delta t)\dop - \dop}{\Delta t} \\
+  %
+  \begin{split}
+  &= \lim_{\Delta t \to 0^+} \Bigg(%
+  \frac{c_{d^2 d^2} - d}{d\Delta t} \dop
+  + \sum_{m,n=1}^{d^2 - 1}
+  \frac{c_{mn}(\Delta t)}{\Delta t}\opr{F}_m \dop \opr{F}_n^\dag \\
+  &\hphantom{= \lim_{\Delta t \to 0^+} \Bigg.}
+  + \frac{1}{\sqrt{d}} \sum_{n=1}^{d^2 - 1} \qty(%
+  \frac{c_{nd^2}(\Delta t)}{\Delta t} \opr{F}_n \dop
+  + \frac{c_{d^2 n}(\Delta t)}{\Delta t} \dop \opr{F}_n^\dag)
+  \Bigg)
+  \end{split}
+  \label{eq:Vderiv} \\
+  %
+  &= \frac{a_{d^2 d^2}}{d} \dop 
+  + \opr{F}\dop + \dop\opr{F}^\dag
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
+  %
+  &= \frac{a_{d^2 d^2}}{d} \dop 
+  + \acomm{\opr{G}}{\dop}
+  - \im\comm{\ham}{\dop}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
+  %
+  &= \acomm{\opr{G}'}{\dop}
+  - \im\comm{\ham}{\dop}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag,
+  \label{eq:GHform}
+\end{align}
+where $\opr{G}' = \opr{G} + \flatfrac{a_{d^2 d^2} \idopr}{d}$. Since
+$\sopr{V}(t)$ is trace-preserving, $\tr\dot{\dop} = 0$. Applying this
+condition to \cref{eq:GHform} and cycling the trace gives
+\begin{equation}
+  0
+  = \tr\qty(2\opr{G}'\dop
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag \opr{F}_m \dop),
+\end{equation}
+so $\opr{G}' = -\sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag\opr{F}_m / 2$. This
+allows us to write \cref{eq:GHform} as
+\begin{equation}
+  \dot{\dop}
+  = -\im\comm{\ham}{\dop}
+  + \sum_{m,n=1}^{d^2 - 1} a_{mn}\qty(\opr{F}_m\dop\opr{F}_n^\dag -
+  \frac{1}{2}\acomm{\opr{F}_n^\dag \opr{F}_m}{\dop}),
+  \label{eq:markovian}
+\end{equation}
+which is the first form of the \term{Lindblad equation}. This may be simplified
+further if we diagonalize the coefficient matrix $\opr{a}$ by applying a unitary
+transformation $\opr{u}$ to give $\opr{a} = \opr{u}\opr{γ}\opr{u}^\dag$, where
+the $\qty{\gamma_k}_{k=1}^{d^2 - 1}$ are the non-negative eigenvalues of
+$\opr{a}$. This is possible since the coefficient matrix $\opr{c}$ is seen
+from \cref{eq:kraus-coeffs} to be Hermitian, and \cref{eq:limcoeffs} then gives
+that $\opr{a}$ is Hermitian. We may then express $\opr{F}_{n \neq d^2} =
+\sum_{k=1}^{d^2 - 1} \opr{L}_n u_{nk}$ in terms of the \termalt{Lindblad
+operators}{Lindblad} or \termalt{jump operator}{jump operators} $\opr{L}_n$ to
+find
+\begin{equation}
+  \dot{\dop}
+  = -\im\comm{\ham}{\dop}
+  + \sum_{k=1}^{d^2 - 1} \gamma_k \qty(\opr{L}_k\dop\opr{L}_k^\dag -
+  \frac{1}{2}\acomm{\opr{L}_k^\dag \opr{L}_k}{\dop}),
+  \label{eq:lindblad}
+\end{equation}
+which is the diagonal form of the Lindblad equation.
+
+\end{document}
+

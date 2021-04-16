@@ -136,7 +136,8 @@ following postulates:
     wonder which $d$-dimensional Hilbert space to assign. However, all finite
     $d$-dimensional (separable) complex Hilbert spaces are isometrically
     isomorphic to $\CC^d$, and all infinite-dimensional separable Hilbert spaces
-    are isometrically isomorphic to $\ell^2$.
+    are isometrically isomorphic to $\ell^2$ (square-summable sequences) and
+    to $L^2$ (square-integrable functions).
   }
 \end{post}
 
@@ -195,9 +196,11 @@ each outcome $m$ to an effect $\opr{E}_m$, where $\sum_m \opr{E}_m = \idopr$.
 Since effects are positive operators that determine the probabilities of each
 outcome, such an observable is called a \term{positive operator valued measure}
 (\textsc{povm}). The special case where the effects are projectors is called a
-\term{projection valued measure} (\textsc{pvm}). We now describe how operations
-change states:
+\term{projection valued measure} (\textsc{pvm}).
 
+TODO: Hermitian operators.
+
+We now describe how operations change states.
 \begin{post}\label{post:operation}
   An \term{operation} with outcome $m$ is described by a map $\sopr{O}_m$. The
   state $\dop$ after the operation becomes
@@ -421,12 +424,171 @@ which is known as the \termalt{Liouville equation}{Liouville} or \term{von
   = 1$. Otherwise $\dot{\dop} = -\im\comm{\ham}{\dop}/\hbar$.
 }
 
-TODO: Dynamical pictures
+Given an observable $\opr{A}$, its expected value over time is
+\begin{align}
+  \ev{\opr{A}}
+  &= tr(\dop(t)\opr{A}) \\
+  &= tr(\opr{U}(t)\dop(0)\opr{U}^\dag(t)\opr{A}) \\
+  &= tr(\dop(0)\opr{U}^\dag(t)\opr{A}\opr{U}(t)).
+\end{align}
+This suggests that the state may be regarded as constant, while an observable
+changes in time as
+\begin{equation}
+  \opr{A}_H(t)
+  = \opr{U}^\dag(t)\opr{A}\opr{U}(t).
+  \label{eq:heisenberg-picture}
+\end{equation}
+This perspective is known as the \term{Heisenberg picture}, and leads to the
+analogous \term{Heisenberg equation of motion}
+\begin{equation}
+  \dot{\opr{A}_H}
+  = -\im\comm{\opr{A}_H}{\ham}
+  \label{eq:heisenberg-eom}
+\end{equation}
+for observables. For reference, the usual perspective where the state changes in
+time is known as the \term{Schr\"odinger picture}.
 
 \section{Canonical quantization}
 
-TODO: Explain the link to classical phase space and canonical commutation. Why
-is $\ham$ the Hamiltonian?
+The discussion of quantum theory thus far has been fully general. The Liouville
+equation (\cref{eq:liouville}) specifies how a state $\dop$ changes in time,
+given the Hilbert space for the system, the operator $\ham$, and the initial
+state $\dop(0)$. How does one determine these quantities for a particular
+physical system? We will only consider physical systems that can be modeled by
+nonrelativistic classical mechanics. Consider a classical system with
+generalized coordinates $q_i$ and momenta $p_i$. If the system has classical
+Hamiltonian $H(\vq{q}, \vq{p})$, then Hamilton's equations of motion are
+\begin{align}
+  \dot{q_i} &= \pdv{H}{p_i} = \qty{q_i, H} \\
+  \dot{p_i} &= -\pdv{H}{q_i} = \qty{p_i, H},
+\end{align}
+in terms of the \term{Poisson bracket}
+\begin{equation}
+  \qty{f, g}
+  = \sum_i \qty(\pdv{f}{q_i}\pdv{g}{p_i} - \pdv{g}{q_i}\pdv{f}{p_i}).
+  \label{eq:poisson-bracket}
+\end{equation}
+We notice that Hamilton's equations are similar to the Heisenberg equations of
+motion
+\begin{align}
+  \dot{\opr{q}_i}
+  &= -\im\comm{\opr{q}_i}{\ham} \\
+  \dot{\opr{p}_i}
+  &= -\im\comm{\opr{p}_i}{\ham},
+\end{align}
+where the time-evolution operator $\ham$ takes the place of the Hamiltonian.
+This suggests the idea of a quantization map $Q$ that maps functions $f$ and $g$
+on phase space to operators. We expect that $Q(1) = \idopr$, $Q(q_i) =
+\opr{q}_i$ and $Q(p_i) = \opr{p}_i$. Then to obtain the Heisenberg equations of
+motion we must require that
+\begin{equation}
+  Q(\qty{f, g})
+  = -\im\comm{Q(f)}{Q(g)}.
+  \label{eq:quantization-bracket}
+\end{equation}
+In particular, since $\qty{q_i, p_j} = \delta_{ij}$, $Q$ must yield the
+\term{canonical commutation relations} (\textsc{ccr}s)
+\begin{equation}
+  \comm{\opr{q}_i}{\opr{p}_j}
+  = \im\delta_{ij}.
+  \label{eq:canonical-commutation}
+\end{equation}
+For the moment, consider a classical system with only one degree of
+freedom.\footnote{%
+  All the considerations to follow generalize naturally to many degrees of
+  freedom.
+}
+One can show that the only possible quantization for polynomials in $q$ and $p$
+with degree less than four is the \term{Weyl quantization}. This simply averages
+over all possible operator orders.\footnote{%
+  In general, the Weyl quantization of $f$ is
+  \begin{equation}
+    Q(f)
+    = \exp(\frac{1}{2\im}\sum_i \pdv{}{\opr{q}_i}{\opr{p}_i})
+    \hat{f}(\vecopr{q}, \vecopr{p}),
+  \end{equation}
+  where $\hat{f}$ is $f$ in the normal form where $\opr{q}_i$ always precedes
+  $\opr{p}_i$~\cite{shewellFormationQuantumMechanicalOperators1959}.
+}
+For example,
+\begin{equation}
+  Q(3q p^2)
+  = \opr{q}\opr{p}^2 + \opr{p}\opr{q}\opr{p} + \opr{p}^2 \opr{q}.
+\end{equation}
+What about a degree four polynomial like $q^2 p^2$? One may compute that
+\begin{equation}
+  q^2 p^2
+  = \frac{1}{9}\qty{q^3, p^3}
+  = \frac{1}{3}\qty{q^2 p, qp^2},
+\end{equation}
+yet
+\begin{equation}
+  \frac{1}{9}\comm{Q(q^3)}{Q(p^3)}
+  \ne \frac{1}{3}\comm{Q(q^2 p)}{Q(qp^2)},
+\end{equation}
+so there is no quantization of $q^2 p^2$. This result on the nonexistence of a
+general quantization map is known as Groenewold's
+theorem~\cite[p.~272]{hallQuantumTheoryMathematicians2013}. Luckily, we will
+only consider systems where the Weyl quantization satisfies
+\cref{eq:quantization-bracket}, and we may put the issue of quantization aside.
+
+Now we know that $\opr{q}$ and $\opr{p}$ must satisfy the \textsc{ccr}. But
+what are they? Weyl showed that $\opr{q}$ and $\opr{p}$ must be operators on an
+infinite-dimensional Hilbert
+space~\cite{weylQuantenmechanikUndGruppentheorie1927}. The usual assignment for
+square-integrable functions $f$ is $\opr{q}f(q) = qf(q)$ and $\opr{p}f(q) = -\im
+f'(q)$, which satisfies the \textsc{ccr}. How do we know that this is the right
+assignment? What if one should assign a different Hilbert space $\hilb$ with
+other position and momentum operators $\opr{q}'$ and $\opr{p}'$? By Stone's
+theorem, there are unitary operators $\opr{U}(t) = e^{\im t\opr{q}'}$ and
+$\opr{V}(s) = e^{\im s\opr{p}'}$. Then a formal application of the
+Baker-Campbell-Hausdorff (\textsc{bch}) formula\footnote{%
+  Namely that if $\comm{\opr{A}}{\comm{\opr{A}}{\opr{B}}} =
+  \comm{\opr{B}}{\comm{\opr{A}}{\opr{B}}} = \zopr$, then
+  \begin{equation}
+    e^{\opr{A}} e^{\opr{B}}
+    = e^{\opr{A} + \opr{B} + \comm{\opr{A}}{\opr{B}}/2}.
+    \label{eq:bch}
+  \end{equation}
+}
+gives that
+\begin{equation}
+  \opr{U}(t)\opr{V}(s)
+  = e^{-\im st}\opr{V}(s)\opr{U}(t),
+  \label{eq:weyl-relation}
+\end{equation}
+which is known as the Weyl
+relation~\cite[p.~281]{hallQuantumTheoryMathematicians2013}.\footnote{%
+  Since the Weyl relation was derived through a merely formal procedure, not all
+  operators satisfying the \textsc{ccr} satisfy the Weyl relation. The usual
+  $\opr{q}$ and $\opr{p}$ do satisfy the Weyl relation, so we may as well
+  stipulate that any putative operators $\opr{q}'$ and $\opr{p}'$ must satisfy
+  it as well.
+}
+The Stone-von Neumann theorem\footnote{%
+  The Stone-von Neumann theorem was also used to prove the equivalence between
+  the Schr\"odinger equation and Heisenberg's matrix mechanics.
+}
+is that there is a unitary operator $\opr{T}:L^2(\RR) \to \hilb$ such that
+\begin{align}
+  \opr{T}^\dag \opr{U}(t) \opr{T} &= e^{\im t \opr{q}} \\
+  \opr{T}^\dag \opr{V}(s) \opr{T} &= e^{\im s \opr{p}}.
+\end{align}
+Differentiating and setting $t = s = 0$ then gives that
+\begin{align}
+  \opr{T}^\dag \opr{q}' \opr{T} &= \opr{q} \\
+  \opr{T}^\dag \opr{p}' \opr{T} &= \opr{p}.
+\end{align}
+Given a density operator $\dop$ on $L^2(\RR)$, we may assign a density operator
+on $\hilb$ by $\dop' = \opr{T} \dop \opr{T}^\dag$, which satisfies that
+\begin{align}
+  \tr(\dop' \opr{q}') &= \tr(\dop \opr{q}) \\
+  \tr(\dop' \opr{p}') &= \tr(\dop \opr{p}),
+\end{align}
+and similar for polynomials in $p$ and $q$. Thus the predictions of quantum
+theory do not depend on the representation of a system's canonical coordinates,
+and we are justified in making the usual assignment for $\opr{q}$ and $\opr{p}$.
+
 
 \section{Open dynamics}
 
@@ -459,11 +621,12 @@ the following procedure.
 In summary, the state at time $t$ is
 \begin{equation}
   \dop_S(t)
-  = \tr_B(\opr{U}(t)\sopr{A}(\dop_0)\opr{U}^\dag(t)).
+  = \tr_B(\opr{U}(t)\sopr{A}(\dop_0)\opr{U}^\dag(t)),
   \label{eq:reduced-dynamics}
 \end{equation}
-Note that property (b) of $\sopr{A}$ ensures that $\dop_S(0) = \dop_0$, which is
-consistent.
+which we may express as the \term{dynamical map} $\sopr{V}(t) \dop_S(0) =
+\dop_S(t)$. Note that property (b) of $\sopr{A}$ ensures that $\dop_S(0) =
+\dop_0$, which is consistent.
 
 One can show that the only consistent assignment maps for a two-dimensional
 system are of the form $\sopr{A}(\dop_0) = \dop_0 \tp \dop_B$, where $\dop_B$ is
@@ -471,149 +634,50 @@ a constant density operator on $\hilb_B$~\cite{pechukasReducedDynamicsNeed1994}.
 We will consider $\dop_B$ to be a stationary state of the bath, such as a
 thermal state at some temperature. Why do we not require that the composite
 state $\dop(t)$ is always assignable, remaining within the image of $\sopr{A}$?
-Since $\dop_B$ does not change in time, this would require that the system does
-not interact with the bath. The only allowed open systems would be closed
-systems! What is wrong with requiring the composite state to be assignable? The
-issue is that interactions will inevitably entangle the system with the bath,
-causing one to be unable to consider the composite as the two subsystems in the
-product assignment.
+This would make $\sopr{V}$ satisfy that
+\begin{equation}
+  \sopr{V}(t + s)
+  = \sopr{V}(t)\sopr{V}(s).
+  \label{eq:assignable-map}
+\end{equation}
+Since $\dop_B$ does not change in time, this requires that the system does not
+interact with the bath. The only allowed open systems would be closed systems!
+What is wrong with requiring the composite state to be assignable? The issue is
+that interactions will inevitably entangle the system with the bath, causing one
+to be unable to consider the composite as the two subsystems in the product
+assignment.
 
 However, we are interested in the reduced dynamics of the system, and what
-happens on the timescale $\tau_S$ where the system changes appreciably. If the
-timescale of the excitations in the bath is $\tau_B$, then from the perspective
-of a system with $\tau_B \ll \tau_S$, the bath is effectively stationary. Thus
+happens on the timescale $\tau_R$ where the system changes appreciably. If the
+timescale of the correlations in the bath is $\tau_C$, then from the perspective
+of a system with $\tau_C \ll \tau_R$, the bath is effectively stationary. Thus
 $\dop(t)$ is approximately assignable if we only aim to consider the
 coarse-grained system dynamics. The notion of reduced dynamics only makes sense
 on system timescales, and requires several conditions on
 \cref{eq:reduced-dynamics} for the coarse-graining to be possible. Since the
-system must be weakly coupled to the bath for the bath to remain stationary,
-these simplifications are collectively called the \term{weak-coupling limit}.
+system must be weakly coupled to the bath for the bath to remain approximately
+stationary, these simplifications are collectively called the
+\term{weak-coupling limit}.
 
-Assume completely
-positive~\cite{pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005,cuffaroDebateConcerningProper2013}.
+This process will lead to a differential equation (\cref{eq:microlindblad}) for
+$\dop_S$. It is worth mentioning that this equation, known as the \term{Lindblad
+equation}, is in the general form for any map $\sopr{V}(t)$ on density matrices
+that satisfies \cref{eq:assignable-map}, with the technical condition that it is
+also completely positive.\footnote{%
+  For any Hilbert space $\tilde{\hilb}$, define the combined operation
+  $\sopr{V}(t) \tp \sidopr$ by $(\sopr{V}(t) \tp \sidopr)(\opr{A} \tp \opr{B}) =
+  \sopr{V}(t)\opr{A} \tp \opr{B}$ and extending linearly. We say that
+  $\sopr{V}(t)$ is \term{completely positive} if $(\sopr{V}(t) \tp
+  \sidopr)(\opr{C})$ is positive for every positive operator $\opr{C}$ on
+  $\hilb_S \tp \tilde{\hilb}$~\cite[p.~89]{opensys}.
+}
+On these grounds, it is often asserted that all reduced dynamics must be
+completely positive. This is not the case if the initial condition of the
+composite system is not a product state, and we have argued that the notion of
+reduced dynamics does not make sense outside of the weak-coupling limit. The
+debate concerning complete positivity remains a contentious
+issue~\cite{pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005,cuffaroDebateConcerningProper2013}.
 
-We will find that the most general form of $\liou$ is given by the
-\term{Lindblad equation} \cref{eq:lindblad}. To obtain this result, first
-consider diagonalizing $\dop_B$ as $\dop_B = \sum_j \lambda_j \op*{\phi_j}$ with
-orthonormal vectors $\phi_j \in \hilb_B$, where $\sum_j\lambda_j = 1$.
-Then \cref{eq:reduced-dynamics} becomes (writing $\dop_S$ as $\dop$)
-\begin{align}
-  \dop(t)
-  &= \sum_{ij} \mel{\phi_i}{\opr{U}(t)\qty(\dop(0) \tp
-  \lambda_j\op*{\phi_j}{\phi_j})\opr{U}^\dag(t)}{\phi_i}
-  \label{eq:krauspre} \\
-  &= \sum_{ij} \lambda_j\mel{\phi_i}{\opr{U}(t)}{\phi_j}\dop(0)
-  \mel{\phi_j}{\opr{U}^\dag(t)}{\phi_i}
-  \label{eq:krauspost} \\
-  &= \sum_{ij} \opr{M}_{ij}(t)\dop(0)\opr{M}_{ij}^\dag(t),
-  \label{eq:krausrep}
-\end{align}
-where $\opr{M}_{ij}(t) \equiv \sqrt{\lambda_j} \mel*{\phi_i}{\opr{U}(t)}{\phi_j}$.
-This decomposition in terms of the $\opr{M}_{ij}$ is an instance of the
-Choi-Kraus representation theorem (\cref{thm:kraus}). We can express the
-$\opr{M}_{ij}$ in terms of an orthonormal complete basis $\{\opr{F}_n\}$ for
-$\liou(\hilb_S)$ as $\opr{M}_{ij} = \sum_k \opr{F}_k
-\ip*{\opr{F}_k}{\opr{M}_{ij}}$. Then \cref{eq:krausrep} becomes
-\begin{equation}
-  \dop(t)
-  = \sum_{mn} c_{mn}(t) \opr{F}_m\dop(0)\opr{F}_n^\dag,
-  \label{eq:Fintro}
-\end{equation}
-where
-\begin{equation}
-  c_{mn}(t)
-  \equiv \sum_{ij} \ip{\opr{F}_m}{\opr{M}_{ij}(t)}\ip{\opr{M}_{ij}(t)}{\opr{F}_n}.
-  \label{eq:coeffs}
-\end{equation}
-For convenience, we may choose $\opr{F}_{d^2} = \idopr / \sqrt{d}$, where $d =
-\dim(\hilb_S)$. With an eye towards simplifying \cref{eq:Vderiv}, we eliminate
-the explicit time dependence of \cref{eq:coeffs} by defining
-\begin{equation}
-  a_{mn}
-  \equiv \lim_{t \to 0^+} \frac{c_{mn}(t) - d\delta_{d^2 d^2}}{t}
-  \label{eq:limcoeffs}
-\end{equation}
-and introduce the sum of Kraus operators
-\begin{align}
-  \opr{F}
-  &= \frac{1}{\sqrt{d}}\sum_{n=1}^{d^2 - 1} a_{n d^2} \opr{F}_n
-  \label{eq:kraussum} \\
-  &= \frac{\opr{F} + \opr{F}^\dag}{2}
-  + \im \frac{\opr{F} - \opr{F}^\dag}{2\im}
-  \equiv \opr{G} + \flatfrac{\ham}{\im\hbar}\!,
-  \label{eq:kraussherm}
-\end{align}
-where we have decomposed the sum $\opr{F}$ into Hermitian and anti-Hermitian
-parts and included $\hbar$ so that $\ham$ will have dimensions of energy. Now we
-may write the master equation $\liou\dop = \dot{\dop}$ as
-\begin{align}
-  \dot{\dop}
-  &= \lim_{\Delta t \to 0^+} \frac{\sopr{V}(\Delta t)\dop - \dop}{\Delta t} \\
-  %
-  &= \lim_{\Delta t \to 0^+} \Bigg(
-  \frac{c_{d^2 d^2} - d}{d\Delta t} \dop
-  + \sum_{m,n=1}^{d^2 - 1}
-  \frac{c_{mn}(\Delta t)}{\Delta t}\opr{F}_m \dop \opr{F}_n^\dag
-  + \frac{1}{\sqrt{d}} \sum_{n=1}^{d^2 - 1} \qty(%
-  \frac{c_{nd^2}(\Delta t)}{\Delta t} \opr{F}_n \dop
-  + \frac{c_{d^2 n}(\Delta t)}{\Delta t} \dop \opr{F}_n^\dag)
-  \Bigg) \label{eq:Vderiv} \\
-  %
-  &= \frac{a_{d^2 d^2}}{d} \dop 
-  + \opr{F}\dop + \dop\opr{F}^\dag
-  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
-  %
-  &= \frac{a_{d^2 d^2}}{d} \dop 
-  + \acomm{\opr{G}}{\dop}
-  + \frac{\comm{\ham}{\dop}}{\im\hbar}
-  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag \\
-  %
-  &= \acomm{\opr{G}'}{\dop}
-  + \frac{\comm{\ham}{\dop}}{\im\hbar}
-  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_m \dop \opr{F}_n^\dag,
-  \label{eq:GHform}
-\end{align}
-where $\opr{G}' = \opr{G} + \flatfrac{a_{d^2 d^2} \idopr}{d}$. Since
-$\sopr{V}(t)$ is trace-preserving, $\tr\dot{\dop} = 0$. Applying this
-condition to \cref{eq:GHform} and cycling the trace gives
-\[
-  0
-  = \tr\qty(2\opr{G}'\dop
-  + \sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag \opr{F}_m \dop)\mkern1mu,
-\]
-so $\opr{G}' = -\sum_{m,n=1}^{d^2 - 1} a_{mn} \opr{F}_n^\dag\opr{F}_m / 2$. This
-allows us to write \cref{eq:GHform} as
-\begin{equation}
-  \dot{\dop}
-  = \frac{\comm{\ham}{\dop}}{\im\hbar}
-  + \sum_{m,n=1}^{d^2 - 1} a_{mn}\qty(\opr{F}_m\dop\opr{F}_n^\dag -
-  \frac{1}{2}\acomm{\opr{F}_n^\dag \opr{F}_m}{\dop}),
-  \label{eq:markovian}
-\end{equation}
-which is the first form of the \term{Lindblad equation}. This may be simplified
-further if we diagonalize the coefficient matrix $\opr{a}$ by applying a unitary
-transformation $\opr{u}$ to give $\opr{a} = \opr{u}\opr{γ}\opr{u}^\dag$, where
-the $\qty{\gamma_k}_{k=1}^{d^2 - 1}$ are the non-negative eigenvalues of
-$\opr{a}$. This is possible since the coefficient matrix $\opr{c}$ is seen
-from \cref{eq:coeffs} to be Hermitian, and \cref{eq:limcoeffs} then gives that
-$\opr{a}$ is Hermitian. We may then express $\opr{F}_{n \neq d^2} =
-\sum_{k=1}^{d^2 - 1} \opr{L}_n u_{nk}$ in terms of the \termalt{Lindblad
-operators}{Lindblad} or \termalt{jump operator}{jump operators} $\opr{L}_n$ to
-find
-\begin{equation}
-  \dot{\dop}
-  = \frac{\comm{\ham}{\dop}}{\im\hbar}
-  + \sum_{k=1}^{d^2 - 1} \gamma_k \qty(\opr{L}_k\dop\opr{L}_k^\dag -
-  \frac{1}{2}\acomm{\opr{L}_k^\dag \opr{L}_k}{\dop})
-  \equiv
-  \sopr{L}\dop,
-  \label{eq:lindblad}
-\end{equation}
-which is the \emph{diagonal form} of the Lindblad equation. The eigenvalues
-$\gamma_k$ have dimensions of inverse time and the Lindblad operators may be
-taken to be traceless. The second term is often called the \term{dissipator}
-$\sopr{D}$ (see \cref{sec:interaction}), so the Lindbladian may be separated
-into unitary and non-unitary parts.
 
 \section{The weak-coupling limit\label{sec:interaction}}
 

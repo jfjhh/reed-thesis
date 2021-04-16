@@ -18,6 +18,7 @@
 *.nav
 *.snm
 *.synctex.gz
+*.synctex(busy)
 *.run.xml
 _minted*
 *.ipynb_checkpoints
