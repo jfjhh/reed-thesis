@@ -1,10 +1,9 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{Density operator theory}
+\chapter{Application to interacting spins}
 
-\section{The Born-Markov approximation for the Ising chain in a
-bath\label{sec:bm-ising}}
+\section{The weak-coupling limit for the Ising chain}\label{sec:weak-ising}
 
 The bath Hamiltonian is
 \begin{equation}
@@ -42,7 +41,12 @@ is\footnote{%
   \\
   &= -\sum_{i,\,\mu} \pauli_i^\mu \opr{B}_i^\mu,
 \end{align}
-where we have defined the Hermitian operator
+where the components of the \term{magnetic field operator} evaluated at
+$\vq{r}_i$ are\footnote{%
+  This operator arises from quantizing the electromagnetic field.
+  See the discussion of field quantization
+  in~\cite[p.~506]{shankarPrinciplesQuantumMechanics2012} for more details.
+}
 \begin{equation}
   \opr{B}_i^\mu
   = \im\mu_e\sum_{\vq{k},\, \lambda} \sqrt{\frac{\hbar c^2 \mu_0}{2V\omega_{\vq{k}}}}

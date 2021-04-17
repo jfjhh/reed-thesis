@@ -346,7 +346,7 @@ trace over $B$ of $\dop_A \tp \dop_B$ is
 and is extended linearly to combinations of product states.
 
 
-\section{Closed dynamics}
+\section{Closed dynamics}\label{sec:closed}
 
 Now that we have described the composition of quantum systems, how do they
 change in time? We are often interested in the case where the information held
@@ -427,9 +427,9 @@ which is known as the \termalt{Liouville equation}{Liouville} or \term{von
 Given an observable $\opr{A}$, its expected value over time is
 \begin{align}
   \ev{\opr{A}}
-  &= tr(\dop(t)\opr{A}) \\
-  &= tr(\opr{U}(t)\dop(0)\opr{U}^\dag(t)\opr{A}) \\
-  &= tr(\dop(0)\opr{U}^\dag(t)\opr{A}\opr{U}(t)).
+  &= \tr(\dop(t)\opr{A}) \\
+  &= \tr(\opr{U}(t)\dop(0)\opr{U}^\dag(t)\opr{A}) \\
+  &= \tr(\dop(0)\opr{U}^\dag(t)\opr{A}\opr{U}(t)).
 \end{align}
 This suggests that the state may be regarded as constant, while an observable
 changes in time as
@@ -441,7 +441,7 @@ changes in time as
 This perspective is known as the \term{Heisenberg picture}, and leads to the
 analogous \term{Heisenberg equation of motion}
 \begin{equation}
-  \dot{\opr{A}_H}
+  \dot{\opr{A}}_H
   = -\im\comm{\opr{A}_H}{\ham}
   \label{eq:heisenberg-eom}
 \end{equation}
@@ -660,16 +660,16 @@ stationary, these simplifications are collectively called the
 \term{weak-coupling limit}.
 
 This process will lead to a differential equation (\cref{eq:microlindblad}) for
-$\dop_S$. It is worth mentioning that this equation, known as the \term{Lindblad
-equation}, is in the general form for any map $\sopr{V}(t)$ on density matrices
+$\dop_S$. It is worth mentioning that this equation, known as the Lindblad
+equation, is in the general form for any map $\sopr{V}(t)$ on density matrices
 that satisfies \cref{eq:assignable-map}, with the technical condition that it is
 also completely positive.\footnote{%
-  For any Hilbert space $\tilde{\hilb}$, define the combined operation
-  $\sopr{V}(t) \tp \sidopr$ by $(\sopr{V}(t) \tp \sidopr)(\opr{A} \tp \opr{B}) =
+  For any Hilbert space $\hilb'$, define the combined operation $\sopr{V}(t) \tp
+  \idsopr$ by $(\sopr{V}(t) \tp \idsopr)(\opr{A} \tp \opr{B}) =
   \sopr{V}(t)\opr{A} \tp \opr{B}$ and extending linearly. We say that
   $\sopr{V}(t)$ is \term{completely positive} if $(\sopr{V}(t) \tp
-  \sidopr)(\opr{C})$ is positive for every positive operator $\opr{C}$ on
-  $\hilb_S \tp \tilde{\hilb}$~\cite[p.~89]{opensys}.
+  \idsopr)(\opr{C})$ is positive for every positive operator $\opr{C}$ on
+  $\hilb_S \tp \hilb'$~\cite[p.~89]{opensys}.
 }
 On these grounds, it is often asserted that all reduced dynamics must be
 completely positive. This is not the case if the initial condition of the
@@ -681,58 +681,117 @@ issue~\cite{pechukasReducedDynamicsNeed1994,shajiWhoAfraidNot2005,cuffaroDebateC
 
 \section{The weak-coupling limit\label{sec:interaction}}
 
-Now that we have found the general form for a stochastic \textsc{cptp}
-generator, we must now determine the conditions for interaction Hamiltonian
-in \cref{eq:fullham} to give rise to Markovian dynamics. While there are
-several different regimes where this is true, we will consider the
-\term{weak-coupling} limit which we justify by supposing that the environment is
-similar to a \term{harmonic bath} of many harmonic oscillators.
+We will now determine the conditions on the Hamiltonian of the composite system
+that give rise to reduced dynamics when the bath is in an equilibrium state
+$\dop_B$. We decompose the Hamiltonian as
+\begin{align}
+  \ham
+  &= \ham_0 + \ham_I \label{eq:H0HI} \\
+  &= \ham_S \tp \idopr + \idopr \tp \ham_B + \ham_I,
+\end{align}
+where $\ham_S$ is the Hamiltonian of the system, $\ham_B$ is the Hamiltonian of
+the bath, and $\ham_I$ is the interaction Hamiltonian between the system and the
+bath. First, we will recast the dynamics of the composite system into a
+convenient form. Recall the Heisenberg picture from \cref{sec:closed}. Given
+\cref{eq:H0HI}, we may similarly decompose the expected value of an observable
+$\opr{A}$ for the composite system. If we let
+\begin{align}
+  \opr{U}_0(t)
+  &= e^{-\im\ham_0 t} \\
+  \opr{U}_I(t)
+  &= \opr{U}_0^\dag(t) \opr{U}(t),
+\end{align}
+then we may decompose the expected value as
+\begin{align}
+  \ev{\opr{A}}
+  &= \tr(\opr{A} \opr{U}(t) \dop(0) \opr{U}^\dag(t)) \\
+  &= \tr(\opr{U}_0^\dag(t) \opr{A} \opr{U}_0(t) \,
+  \opr{U}_I(t) \dop(0) \opr{U}_I^\dag(t)).
+\end{align}
+This suggests that we define the time-dependent operators
+\begin{align}
+  \opr{A}_I(t)
+  &= \opr{U}_0^\dag(t) \opr{A} \opr{U}_0(t)
+  \label{eq:intobs} \\
+  \dop_I(t)
+  &= \opr{U}_I(t) \dop(0) \opr{U}_I^\dag(t)
+  \label{eq:intdop}.
+\end{align}
+This perspective is known as the \term{interaction picture}, and the associated
+equation of motion is
+\begin{equation}
+  \dot{\dop}_I
+  = -\im\comm{\ham_I}{\dop_I}.
+  \label{eq:intpic}
+\end{equation}
+We will use \cref{eq:intpic} in its integral form
+\begin{equation}
+  \dop_I(t)
+  = \dop_I(0) - \im\int_0^t \dd{s} \comm{\ham_I(s)}{\dop_I(s)}.
+  \label{eq:intpic-intform}
+\end{equation}
 
-We start by expressing the interaction Hamiltonian in terms of Hermitian
-operators as
-\[
+It will also be helpful to relate the interaction Hamiltonian to transition
+frequencies of the system as follows.\footnote{%
+  This decomposition requires that the spectrum of $\ham_S$ is discrete.
+}
+First, we write a general interaction Hamiltonian as
+\begin{equation}
   \ham_I
   = \sum_\alpha \opr{A}_\alpha \tp \opr{B}_\alpha.
-\]
-We suppose that the system in isolation would have \emph{discrete} energy
-levels, so the eigenoperators of the superoperator $\sopr{S} = \comm{\ham_S}{-}$
-form a complete basis for $\liou(\hilb_S)$. We then may write $\opr{A}_\alpha =
-\sum_\omega \opr{A}_{\alpha\omega}$, where
-\begin{equation}
-  \comm{\ham_S}{\opr{A}_{\alpha\omega}}
-  = -\omega\opr{A}_{\alpha\omega}
-  \label{eq:Aomega}
 \end{equation}
-and
+If $E$ is an eigenvalue of $\ham_S$, let $\opr{\Pi}(E)$ denote the projector
+onto the eigenspace for $E$. Now we let
 \begin{equation}
-  \opr{A}_{\alpha\omega}
+  \opr{A}_{\alpha}(\omega)
   = \sum_{E' - E = \omega} \opr{\Pi}(E)\opr{A}_\alpha\opr{\Pi}(E').
   \label{eq:Aprojectors}
 \end{equation}
-Using \cref{eq:Aomega} to commute past the exponential in \cref{eq:intobs}
-gives $\opr{A}_{\alpha\omega}' = e^{-\im\omega t} \opr{A}_{\alpha\omega}$ in the
-interaction picture. Thus the interaction Hamiltonian in the interaction picture
-is
+By the completeness of the energy projectors,
+\begin{align}
+  \sum_\omega \opr{A}_\alpha(\omega)
+  &= \sum_\omega
+  \sum_{E' - E = \omega} \opr{\Pi}(E)\opr{A}_\alpha\opr{\Pi}(E') \\
+  &= \sum_{E_1,\, E_2}
+  \opr{\Pi}(E_1)\opr{A}_\alpha\opr{\Pi}(E_2) \\
+  &= \opr{A}_\alpha.
+\end{align}
+The $\opr{A}_\alpha(\omega)$ also satisfy that
 \begin{equation}
-  \ham_I'
-  = \sum_{\alpha\omega} e^{-\im\omega t} \opr{A}_{\alpha\omega}
-  \tp \opr{B}_\alpha',
+  \comm{\ham_S}{\opr{A}_{\alpha}(\omega)}
+  = -\omega\opr{A}_{\alpha}(\omega).
+  \label{eq:Aomega}
+\end{equation}
+Using \cref{eq:Aomega} to commute past the exponential in \cref{eq:intobs}
+establishes that the corresponding interaction picture operators are
+\begin{equation}
+  \opr{A}_\alpha^I(\omega)
+  = e^{-\im\omega t} \opr{A}_{\alpha}(\omega).
+\end{equation}
+Thus the interaction Hamiltonian in the interaction picture is
+\begin{equation}
+  \ham_I(t)
+  = \sum_{\alpha\omega} e^{-\im\omega t} \opr{A}_{\alpha}(\omega)
+  \tp \opr{B}_\alpha^I(t),
   \label{eq:inthamdecomp}
 \end{equation}
-where $\opr{B}_\alpha'(t) = e^{-\ham_B t/\im\hbar} \opr{B}_\alpha e^{\ham_B t/
-\im\hbar}$ per \cref{eq:intobs}.
+where by \cref{eq:intobs}
+\begin{equation}
+  \opr{B}_\alpha^I(t)
+  = e^{\im\ham_B t} \opr{B}_\alpha e^{-\im\ham_B t}.
+\end{equation}
 
 Since we are interested in how fluctuations in different environment modes are
 related, we will consider the \term{reservoir correlation functions}
 \begin{equation}
-  \sensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
   \label{eq:corr}
 \end{equation}
 and their one-sided Fourier transform
 \begin{align}
   \Gamma_{\alpha\beta}(\omega)
   &\equiv \int_0^\infty \dd{s} e^{\im\omega s}
-  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
   \label{eq:onegammas} \\
   &\equiv \im S_{\alpha\beta}(\omega) +
   \flatfrac{\gamma_{\alpha\beta}(\omega)}{2}\!,
@@ -743,20 +802,14 @@ Hermitian and the matrix corresponding to the full Fourier transform
 \begin{equation}
   \gamma_{\alpha\beta}(\omega)
   \equiv \int_{-\infty}^\infty \dd{s} e^{\im\omega s}
-  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
   \label{eq:gammas}
 \end{equation}
 is positive.
 
-With this setup, we may now move to the main derivation. It is helpful to
-consider the interaction picture time evolution \cref{eq:intliou} in the
-integral form
-\[
-  \dop(t)
-  = \dop(0) - \im\int_0^t \dd{s} \comm{\ham_I(s)}{\dop(s)}.
-\]
-Applying \cref{eq:intliou} again and tracing out the environment gives the
-closed equation
+With this setup, we may now move to the main derivation.
+Applying \cref{eq:intpic} to \cref{eq:intpic-intform} and tracing out the
+environment gives the closed equation
 \[
   \dot{\dop}_S(t)
   = -\int_0^t \dd{s}
@@ -774,7 +827,7 @@ which is the \term{weak-coupling approximation}, and that
 \]
 which is the \term{Born approximation}. It should be noted that weak-coupling
 follows if the reservoir averages of the interactions vanish:
-$\ensavg[\dop_B]{\opr{B}_\alpha(t)} = 0$.
+$\ev{\opr{B}_\alpha(t)} = 0$.
 
 We now make the \term{Markov approximation} that $\dop_S(s) = \dop_S(t)$, so
 that the time-evolution only depends on the present time, to obtain the
@@ -787,7 +840,7 @@ that the time-evolution only depends on the present time, to obtain the
   \label{eq:infbornmarkov}
 \end{equation}
 This is justified when the reservoir correlation functions in
-\cref{eq:onegammas} vanish quickly over a time $\tau_B$ that is smaller than the
+\cref{eq:onegammas} vanish quickly over a time $\tau_C$ that is smaller than the
 relaxation time $\tau_R$. Substituting \cref{eq:inthamdecomp} into
 \cref{eq:infbornmarkov} and using \cref{eq:onegammas} gives
 \begin{equation}
@@ -795,16 +848,16 @@ relaxation time $\tau_R$. Substituting \cref{eq:inthamdecomp} into
   = 2\herm \sum_{\alpha\beta\omega\omega'}
   e^{\im(\omega' - \omega)t}
   \Gamma_{\alpha\beta}(\omega) \qty(%
-  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega'}^\dag
-  - \opr{A}_{\alpha\omega'}^\dag \opr{A}_{\beta\omega} \dop_S),
+  \opr{A}_{\beta}(\omega) \dop_S \opr{A}_{\alpha}^\dag(\omega')
+  - \opr{A}_{\alpha}^\dag(\omega') \opr{A}_{\beta}(\omega) \dop_S),
   \label{eq:decompsub}
 \end{equation}
-where $\herm\opr{Γ} \equiv (\opr{Γ} + \opr{Γ}^\dag) / 2$. If the typical times
+where $\herm\opr{C} \equiv (\opr{C} + \opr{C}^\dag) / 2$. If the typical times
 \[
   \tau_S = \abs{\omega' - \omega}^{-1}
   \qfor \omega' \ne \omega
 \]
-for system evolution are large compared to the relaxation time $\tau_R$, then
+for system evolution are small compared to the relaxation time $\tau_R$, then
 the contribution from the fast-oscillating terms of \cref{eq:decompsub} where
 $\omega' \ne \omega$ may be neglected. This \term{rotating wave} or
 \term{secular approximation} is analogous to how we consider the high-energy
@@ -815,61 +868,110 @@ obtain
   \dot{\dop}_S
   = 2\herm \sum_{\alpha\beta\omega}
   \Gamma_{\alpha\beta}(\omega) \qty(%
-  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega}^\dag
-  - \opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega} \dop_S).
+  \opr{A}_{\beta}(\omega) \dop_S \opr{A}_{\alpha}^\dag(\omega)
+  - \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega) \dop_S).
   \label{eq:rotwave}
 \end{equation}
 Now applying the decomposition \cref{eq:gammadecomp} gives the interaction
-picture Lindblad equation
+picture \term{Lindblad equation}
 \begin{equation}
   \dot{\dop}_S
-  = -\im\comm{\ham_{LS}}{\dop_S} + \sopr{D}\dop_S,
+  = -\im\comm{\ham_{LS}}{\dop_S} + \sopr{D}(\dop_S),
   \label{eq:microlindblad}
 \end{equation}
 where the \term{Lamb shift Hamiltonian} is
 \begin{equation}
   \ham_{LS}
   = \sum_{\alpha\beta\omega}
-  S_{\alpha\beta}(\omega) \opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega},
+  S_{\alpha\beta}(\omega) \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega),
   \label{eq:lamb-shift}
 \end{equation}
-and the \emph{dissipator} is
+and the \term{dissipator} is
 \begin{equation}
-  \sopr{D}\dop_S
-  = \sum_{\alpha\beta\omega} \gamma_{\alpha\beta} \qty(%
-  \opr{A}_{\beta\omega} \dop_S \opr{A}_{\alpha\omega}^\dag
-  - \frac{1}{2} \acomm{\opr{A}_{\alpha\omega}^\dag
-  \opr{A}_{\beta\omega}}{\dop_S}).
+  \sopr{D}(\dop_S)
+  = \sum_{\alpha\beta\omega} \gamma_{\alpha\beta}(\omega) \qty(%
+  \opr{A}_{\beta}(\omega) \dop_S \opr{A}_{\alpha}^\dag(\omega)
+  - \frac{1}{2} \acomm{\opr{A}_{\alpha}^\dag(\omega)
+  \opr{A}_{\beta}(\omega)}{\dop_S}).
   \label{eq:dissipator}
 \end{equation}
-The Lamb shift (or environment renormalization) Hamiltonian commutes with the
-system Hamiltonian since \cref{eq:Aomega} implies that
-$\comm*{\ham_S}{\opr{A}_{\alpha\omega}^\dag \opr{A}_{\beta\omega}} = 0$. Adding
-the system's Hamiltonian $\ham_S$ to $\ham_{LS}$ and diagonalizing gives the
-Schr\"odinger picture Lindblad equation \cref{eq:lindblad}.
+To transform back to the Schr\"odinger picture, one only needs to add the system
+Hamiltonian $\ham_S$ to $\ham_{LS}$.\footnote{%
+  One may then diagonalize $\gamma_{\alpha\beta}$ to put \cref{eq:microlindblad}
+  into the standard form of \cref{eq:lindblad}. In our example
+  $\gamma_{\alpha\beta}$ will already be diagonal.
+}
+
 
 \section{Relaxation to thermal equilibrium\label{sec:thermo}}
 
-The system will generally relax from its initial configuration to a stationary
-solution of \cref{eq:lindblad} (see \cref{sec:limitations}). We expect that
-the thermal state
-\[
-  \dop_S
-  = \frac{e^{-\beta\ham_S}}{Z}
-  \qq{where}
-  Z
-  = \tr(e^{-\beta\ham_S})
-\]
-would be the equilibrium state. This is true when the reservoir correlation
-functions obey the \textsc{kms} condition~\cite{kubo,martinschwinger}
+If the bath is in the \term{thermal state}
 \begin{equation}
-  \ensavg[\dop_B]{\opr{B}_\alpha^\dag(t) \opr{B}_\beta(0)}
-  = \ensavg[\dop_B]{\opr{B}_\beta(0) \opr{B}_\alpha^\dag(t + \im\beta)},
+  \dop_B
+  = \frac{e^{-\beta\ham_B}}{\tr e^{-\beta\ham_B}},
+\end{equation}
+then we expect that the system will generally relax from any initial
+configuration to the thermal state
+\begin{equation}
+  \dop_\text{th}
+  = \frac{e^{-\beta\ham_S}}{\tr e^{-\beta\ham_S}}.
+\end{equation}
+We will now prove that $\dop_\text{th}$ is a stationary state. First, we see
+that the Lamb shift Hamiltonian commutes with the system Hamiltonian, since
+\cref{eq:Aomega} implies that
+\begin{equation}
+  \comm*{\ham_S}{\opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega)}
+  = \zopr.
+\end{equation}
+Thus $\dop_\text{th}$ is unchanged by the unitary
+part of $\sopr{L}$, and may turn our attention towards showing that
+$\sopr{D}(\dop_\text{th}) = \zopr$. We may also use \cref{eq:Aomega} to find
+that
+\begin{align}
+  \dop_\text{th} \opr{A}_\alpha(\omega)
+  &= e^{\beta\omega} \opr{A}_\alpha(\omega) \dop_\text{th}
+  \label{eq:left-th} \\
+  \dop_\text{th} \opr{A}_\alpha^\dag(\omega)
+  &= e^{-\beta\omega} \opr{A}_\alpha^\dag(\omega) \dop_\text{th}.
+  \label{eq:right-th}
+\end{align}
+
+The reservoir correlation functions obey the \termalt{KMS
+condition}{\textsc{kms} condition}~\cite{kubo,martinschwinger}
+\begin{equation}
+  \ev{\opr{B}_\alpha^\dag(t) \opr{B}_\beta(0)}
+  = \ev{\opr{B}_\beta(0) \opr{B}_\alpha^\dag(t + \im\beta)}.
   \label{eq:kms}
 \end{equation}
-which is true when the environment is in the thermal state $\dop_B =
-{e^{-\beta\ham_B}} / {\tr(e^{-\beta\ham_B})}$.
-
+From \cref{eq:kms} it follows that
+\begin{equation}
+  \gamma_{\alpha\beta}(-\omega)
+  = e^{-\beta\omega} \gamma_{\beta\alpha}(\omega).
+  \label{eq:gamma-th}
+\end{equation}
+We may then use \cref{eq:left-th,eq:right-th,eq:gamma-th} to compute that the
+dissipator is
+\begin{align}
+  \sopr{D}(\dop_\text{th})
+  &= \sum_{\alpha\beta\omega} \gamma_{\alpha\beta}(\omega) \qty(%
+  \opr{A}_{\beta}(\omega) \dop_\text{th} \opr{A}_{\alpha}^\dag(\omega)
+  - \frac{1}{2} \acomm{\opr{A}_{\alpha}^\dag(\omega)
+  \opr{A}_{\beta}(\omega)}{\dop_\text{th}}
+  ) \\
+  &= \sum_{\alpha\beta\omega} \gamma_{\alpha\beta}(\omega) \qty(%
+  e^{-\beta\omega} \opr{A}_{\beta}(\omega) \opr{A}_{\alpha}^\dag(\omega)
+  - \frac{1}{2} \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega)
+  - \frac{1}{2} \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega)
+  ) \dop_\text{th} \\
+  &= \qty(%
+  \sum_{\alpha\beta\omega} \gamma_{\alpha\beta}(\omega)
+  e^{-\beta\omega} \opr{A}_{\beta}(\omega) \opr{A}_{\alpha}^\dag(\omega)
+  - \sum_{\alpha\beta\omega} \gamma_{\alpha\beta}(\omega)
+  \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega)
+  ) \dop_\text{th} \\
+  &= \zopr.
+\end{align}
+Thus $\dot{\dop}_\text{th} = 0$.
 
 \end{document}
 
