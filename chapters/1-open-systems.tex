@@ -1,7 +1,7 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{Open quantum systems}
+\chapter{Open quantum systems}\label{ch:open-quantum-systems}
 
 \dropcap{W}{hat} happens after performing an operation on a physical system?
 Our actions are uncertain, so the best we can do is to assign probabilities to
@@ -327,9 +327,14 @@ Consider a map $f$ of the $f_i$ and the countable sum of events $\opr{E} =
   &= \tr\qty(\dop f\qty(\sum_a E_a))
 \end{align}
 for all $\dop$. Thus $f$ is countably additive. If $\opr{E}_1 \le \opr{E}_2$,
-then $0 \le \tr(g(\dop) \qty(\opr{E}_2 - \opr{E}_1)) = \tr(\dop f\qty(\opr{E}_2
-- \opr{E}_1))$, so $f\qty(\opr{E}_1) \le f\qty(\opr{E}_2)$. It then follows that
-the $f_i$ are convex.\footnote{%
+then
+\begin{align}
+  0
+  &\le \tr(g(\dop) \qty(\opr{E}_2 - \opr{E}_1)) \\
+  &= \tr(\dop f\qty(\opr{E}_2 - \opr{E}_1)),
+\end{align}
+so $f\qty(\opr{E}_1) \le f\qty(\opr{E}_2)$. It then follows that the $f_i$ are
+convex.\footnote{%
   The argument is the same as that for the real linearity of a probability
   measure on effects given in~\cite{buschQuantumStatesGeneralized2003}.
 }
@@ -896,11 +901,11 @@ and the \term{dissipator} is
   \label{eq:dissipator}
 \end{equation}
 To transform back to the Schr\"odinger picture, one only needs to add the system
-Hamiltonian $\ham_S$ to $\ham_{LS}$.\footnote{%
-  One may then diagonalize $\gamma_{\alpha\beta}$ to put \cref{eq:microlindblad}
-  into the standard form of \cref{eq:lindblad}. In our example
-  $\gamma_{\alpha\beta}$ will already be diagonal.
-}
+Hamiltonian $\ham_S$ to $\ham_{LS}$. One may then diagonalize
+$\gamma_{\alpha\beta}$ to put \cref{eq:microlindblad} into the standard form of
+\cref{eq:lindblad}. In our examples $\gamma_{\alpha\beta}$ will already be
+diagonal. In this case, we call the operators defined by \cref{eq:Aomega} in the
+dissipator the \term{jump operators} of the open system.
 
 
 \section{Relaxation to thermal equilibrium\label{sec:thermo}}

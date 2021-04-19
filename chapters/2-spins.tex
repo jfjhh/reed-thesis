@@ -3,6 +3,153 @@
 
 \chapter{Application to interacting spins}
 
+With the preceeding theory of open quantum systems in place, we are now in a
+position to consider the central problem of this thesis: How do interacting
+spins relax to thermal equilibrium? We will approach this question in stages,
+starting with a single spin.
+
+\section{The closed two-dimensional system}
+
+Our first task is to characterize the closed dynamics of the two-dimensional
+quantum system. An arbitrary two-dimensional density operator may be expressed
+in terms of the identity operator $\idopr \equiv \pauli^0$ and \term{Pauli
+operators} $\pauli^a$ that satisfy the commutation relations
+\begin{equation}
+  \comm{\pauli^a}{\pauli^b}
+  = 2\im \varepsilon_{abc} \pauli^c,
+  \label{eq:pauli-comm}
+\end{equation}
+where $\varepsilon_{abc}$ is the Levi-Civita symbol. These will be abbreviated
+as a single vector $\paulivec$. Then a \term{Bloch vector} $\vq{v}$ with
+$\abs{\vq{v}} \le 1$ determines the density operator
+\begin{equation}
+  \dop
+  = \frac{1}{2}\qty(\idopr + \vq{v} \vdot \paulivec).
+  \label{eq:bloch-dop}
+\end{equation}
+The expectation values of the Pauli operators are $\ev{\paulivec} = \vq{v}$, so
+it suffices to determine the time evolution of $\vq{v}$. A similar vector
+$\vq{\omega}$ determines the general Hamiltonian\footnote{%
+  If the Hamiltonian $\ham = E\idopr + \ham_0$ includes an energy shift $E$, the
+  corresponding unitary operator is $\opr{U}(t) = e^{-\im t E}\opr{U}_0(t)$.
+  Then $\opr{U}(t) \dop \opr{U}^\dag(t) = \opr{U}_0(t) \dop \opr{U}_0^\dag(t)$,
+  so there is no difference.
+}
+\begin{equation}
+  \ham
+  = \frac{1}{2}\vq{\omega} \vdot \paulivec.
+\end{equation}
+The Liouville equation (\cref{eq:liouville}) is then
+\begin{align}
+  \dot{\dop}
+  &= -\frac{\im}{4}\comm{\vq{\omega} \vdot \paulivec}{\vq{v} \vdot \paulivec} \\
+  \frac{1}{2} \dot{\vq{v}} \vdot \paulivec
+  &= \frac{1}{2}(\vq{\omega} \cross \vq{v}) \vdot \paulivec,
+\end{align}
+so the Bloch vector follows the differential equation
+\begin{equation}
+  \dot{\vq{v}}
+  = \vq{\omega} \cross \vq{v}.
+\end{equation}
+The solution of this equation is
+\begin{equation}
+  \vq{v}(t)
+  = e^{-t \vq{\omega} \vdot \vecopr{L}} \vq{v}(0),
+\end{equation}
+where the components of $\vecopr{L}$ are generators of three-dimensional
+rotations which satisfy the commutation relations
+\begin{equation}
+  \comm{\opr{L}^a}{\opr{L}^b}
+  = \varepsilon_{abc} \opr{L}^c.
+\end{equation}
+Thus the most general time evolution for the two-dimensional system is
+precession of the Bloch vector around $\vu{\omega}$ with angular frequency
+$\omega$.
+
+
+\section{Relaxation of the two-dimensional system}
+
+Now what happens when a two-dimensional system is coupled to a thermal bath? The
+most relevant application is the electronic states of an atom coupled to the
+electromagnetic field. We will approximate the atom as just two energy levels: a
+ground and first excited state. For simplicity we will consider the system
+Hamiltonian
+\begin{equation}
+  \ham_S
+  = \frac{\omega}{2}\pauli^z,
+\end{equation}
+where $\omega$ is the frequency of light emitted from the transition. The
+weak-coupling limit for the electric dipole interaction with the bath is similar
+to that for the magnetic dipole interaction considered later in
+\cref{sec:weak-ising}, so will simply state the results here and focus on
+investigating the dynamics.\footnote{%
+  A full derivation is given in~\cite[pp.~141--149]{opensys}.
+}
+To focus on the relaxation of the system, we ignore the Lamb shift and consider
+only the effect of the dissipator. The jump operators are
+\begin{equation}
+  \pauli^\pm
+  = \frac{\pauli^x \pm \im\pauli^y}{2}
+\end{equation}
+and the Lindblad equation is
+\begin{equation}
+  \dot{\dop}
+  = \gamma_0(N + 1) \qty(\pauli^- \dop \pauli^+ -
+  \frac{1}{2}\acomm{\pauli^+\pauli^-}{\dop})
+  + \gamma_0 N \qty(\pauli^+ \dop \pauli^- -
+  \frac{1}{2}\acomm{\pauli^-\pauli^+}{\dop}),
+  \label{eq:atom-lindblad}
+\end{equation}
+where
+\begin{equation}
+  \gamma_0
+  = \frac{4\omega^3 \abs{\vq{d}}^2}{3}
+  \qc
+  N
+  = \frac{1}{e^{\beta\omega} - 1},
+\end{equation}
+and $\vq{d}$ is the transition matrix element of the dipole operator from the
+excited to ground state. \Cref{eq:atom-lindblad} describes stimulated emission
+with rate $\gamma_0 N$, spontaneous emission with rate $\gamma_0$, and
+absorption with rate $\gamma_0 N$. Substituting the density operator in the form
+of \cref{eq:bloch-dop} into the Lindblad equation gives the differential
+equations
+\begin{align}
+  \dot{v}_x
+  &= -\frac{\gamma}{2} v_x, \\
+  \dot{v}_y
+  &= -\frac{\gamma}{2} v_y, \\
+  \dot{v}_z
+  &= -\frac{\gamma}{2} v_z - \gamma_0,
+\end{align}
+where the total transition rate is
+\begin{equation}
+  \gamma
+  = \gamma_0(2N + 1).
+\end{equation}
+The equilibrium solution is seen to be
+\begin{equation}
+  v_x
+  = v_y
+  = 0
+  \qand
+  v_z
+  = -\frac{1}{2N + 1},
+\end{equation}
+so the stationary population of the excited state is
+\begin{equation}
+  n_e^\text{th}
+  = \frac{1}{2}\qty(1 + v_z)
+  = \frac{N}{2N + 1}.
+\end{equation}
+From the initial state $\vq{v}(0) = \vu{z}$, we see that the population
+explicitly approaches the thermal equilibrium value as
+\begin{equation}
+  n_e(t)
+  = n_e^\text{th}(1 - e^{-\gamma t}).
+\end{equation}
+
+
 \section{The weak-coupling limit for the Ising chain}\label{sec:weak-ising}
 
 The bath Hamiltonian is
