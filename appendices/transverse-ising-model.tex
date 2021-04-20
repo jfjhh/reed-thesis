@@ -1,17 +1,10 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{The transverse-field Ising model}
+\chapter{The transverse-field Ising model}\label{ch:ising}
 
-We would like to solve the Hamiltonian
-\begin{equation}
-  \ham
-  = -J\sum_{i \in \ZZ_N} \qty(%
-  \opr{S}_i^x\opr{S}_{i+1}^x
-  + g \opr{S}_i^z
-  )
-\end{equation}
-which we nondimensionalize as
+We would like to solve the Hamiltonian \cref{eq:transverse-ising}, which we
+nondimensionalize as
 \begin{equation}
   \frac{4}{J}\ham
   = -\sum_{i \in \ZZ_N} \qty(%

@@ -72,6 +72,7 @@ isbn=false,
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
 \usepackage{xstring}
+\usepackage{pgffor}
 \usepackage{subfiles}
 \newcommand{\notebook}[1]{\subfile{../notebooks/tex/#1}}
 
@@ -159,7 +160,7 @@ isbn=false,
 \usepackage{graphicx}
 \setkeys{Gin}{draft=false}
 
-\graphicspath{{figs/}{notebooks/tex/}}
+\graphicspath{{figs/}{notebooks/}{notebooks/tex/}}
 
 % More preamble commands, separated for reuse by notebooks
 \input{preamble/math-packages}

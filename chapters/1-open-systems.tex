@@ -3,132 +3,29 @@
 
 \chapter{Open quantum systems}\label{ch:open-quantum-systems}
 
-\dropcap{W}{hat} happens after performing an operation on a physical system?
-Our actions are uncertain, so the best we can do is to assign probabilities to
-the possible outcomes. Quantum mechanics is a theory for determining the
-probabilities of such outcomes. Physical theories model the relevant aspects of
-phenomena by abstracting away unnecessary information. Newtonian mechanics
-considers point masses while neglecting the material composition of bodies. This
-enables a simpler description of motion. Just as Newtonian mechanics models
-physical systems as ``Newtonian systems'' of point masses, quantum mechanics
-models physical systems with \termalt{quantum state}{quantum states} which
-represent only the probabilistic description of operation outcomes. A penny and
-a quarter are different physical systems that correspond to the same ``quantum
-system{,}'' as far as the outcomes of coin tosses are concerned.\footnote{%
-  That is, in an ideal sense. Actual coins made from many atoms are not
-  two-outcome systems. For example, the coin atoms could melt into a blob,
-  rendering them unflippable.
-}
+\dropcap{Y}{ou}, a novice baker, mix ingredients to make cake batter. You know
+everything about this cake batter: after all, you made it. However, you are
+unsure about how the cake will turn out in your dodgy oven. You bake the cake
+and let it cool. You try to cut a slice of cake, but instead you get a slice of
+disaster: the inside is goopy. As consolation for your experience, take pride in
+the fact that you just performed a quantum measurement.
 
-\section{A sketch of quantum mechanics}
+The setup in quantum theory is just like the cake. One starts with a
+\term{quantum state}, which encodes the probabilities one assigns to each
+outcome of an operation. These operations could be anything, and the outcomes
+are often not mutually exclusive. When we do consider operations with exclusive
+outcomes, like the operation of checking if the cake is baked or not, there is
+sometimes an upper bound on the number of outcomes we may see. For the cake
+system there are two outcomes. This property of a quantum system is its
+\term{dimension}.
 
-What follows is a sketch of quantum theory that helps motivate the mathematical
-formalism we use later.
-
-We are interested in performing operations that have consistent effects, for
-otherwise we could make little sense of the world. Consider performing an
-operation with $m$ outcomes on a quantum system. Given a particular outcome,
-this operation is a \term{measurement} if repeating the operation gives the same
-outcome with probability one.\footnote{%
-  On this view, the result of a measurement is defined operationally. This
-  avoids confusion with properties of \emph{physical} systems: an outcome with
-  probability one is a different kind of thing than a physical property.
-}
-
-We may then characterize a quantum system by its \term{dimension} $N$, which is
-the maximum number of outcomes distinguishable by a measurement.\footnote{%
-  This supposes that such systems exist, which requires experimental
-  verification. For example, Stern-Gerlach type experiments demonstrate the
-  existence of a two-dimensional quantum system. As far as we are concerned, we
-  have examples of quantum systems for all dimensions.
-}
-This means that a $(N+1)$-outcome operation cannot be a measurement on a
-$N$-dimensional system. Repeating such an operation cannot produce the same
-outcome with certainty.
-
-\section{Entropy}
-
-Since quantum states encode the probabilities of outcomes, it is relevant to
-have a measure for how uncertain we are about which outcome will happen.
-
-To do so, we must quantify the uncertainty expressed by a probability
-distribution of outcomes. The most successful definition of this uncertainty due
-to Shannon considers the \term{surprisal} $I$ of an event with probability
-$p$~\cite{shannonMathematicalTheoryCommunication1948}. This is a function $I$
-that has the following intuitive properties:\footnote{%
-  Technically, $I$ is defined for a random variable $X$ with support
-  $\mathcal{X}$, so that $I:\mathcal{X} \to \RR$ is a function of the
-  probability of an event: $I(x) = f(P(x))$.
-}
-\begin{enumerate}
-  \item $I(1) = 0$: Certain events are unsurprising.
-  \item $I(p) < I(p')$ if $p' < p$: Less probable events are more surprising.
-  \item $I(p) \ge 0$: Surprisal cannot be negative.
-  \item $I(p,\, p') = I(p) + I(p')$: The surprisal of independent events is the
-    sum of the surprisals for each event.
-\end{enumerate}
-The only functions with these properties are of the form $I(p) = b\log p$ for $b
-< 0$. Choosing $b$ amounts to choosing the base of the logarithm and the unit of
-information. It is standard to use base two for which the unit of the surprisal
-\begin{equation}
-  I(p) = -\log p
-  \label{eq:surprisal}
-\end{equation}
-is the \term{bit}. The uncertainty expressed by a probability distribution of
-outcomes is called the \term{Shannon entropy}, and is defined as the expected
-surprisal of an outcome:
-\begin{align}
-  H
-  &= \ev{I} \\
-  &= -\sum_i p_i \log p_i,
-  \label{eq:entropy}
-\end{align}
-where $0 \log 0 \coloneqq \lim_{p \to 0} p \log p = 0$. Thus an operation with a
-certain outcome has $H = 0$. The most uncertain one can be in a $m$-outcome
-operation is to have $p_i = 1/m$. In that case, $H = \log m$.
-
-We now define the \term{von Neumann entropy} $S$ of a quantum state $\dop$ to be
-the minimum entropy of any measurement of the state. If $S(\dop) = 0$, there is
-a measurement with a definite outcome for $\dop$. Since the other outcomes are
-excluded, $\dop$ is called a \term{pure state}, rather than a \term{mixed state}
-which has probability spread out over more than one outcome.
-
-\section{Hardy's postulates}\label{sec:hardy}
-
-TODO: Rewrite as quantum logic.
-
-Now that we have the notion of a pure state, we may indicate postulates of
-quantum theory.
-
-We expect that $K$ real numbers are needed to describe a quantum state $\dop$
-and to predict the probabilities of outcomes. In quantum theory, we posulate the
-following statements about $N$ and $K$:
-\begin{enumerate}
-  \item $K$ is a function of $N$, which we may select to be the smallest value
-    consistent with the remaining postulates.
-  \item A $N$-dimensional system constrained to only $M$ states distinguishable
-    by measurement behaves like a system of dimension $M$.
-  \item A composite system consisting of subsystems $A$ and $B$ satisfies $N =
-    N_A N_B$ and $K = K_A K_B$.
-\end{enumerate}
-These statements apply equally well to classical probability theory. Quantum
-theory is distinguished by the final postulate:
-\begin{enumerate}
-  \item[\textbf{4.}] There is a continuous and reversible transformation between
-    any two pure states of a system.
-\end{enumerate}
-These postulates are enough to reproduce quantum mechanics as we know it. While
-this has been just a sketch, Hardy gives a more precise description and
-demonstrates agreement with the formalism to
-follow~\cite{hardyQuantumTheoryFive2001}. In particular, Hardy shows that $K =
-N^2$, which corresponds to considering a complex Hilbert space.
 
 \section{The mathematical formalism}
 
 Different mathematical formalisms for quantum mechanics differ in how they
 represent states and operations, but they agree on the assignment of
-probabilities to outcomes. Motivated by \cref{sec:hardy}, we now make the
-following postulates:
+probabilities to outcomes. We will now review postulates for quantum theory
+based on Hilbert spaces.
 \begin{post}\label{post:hilb}
   A quantum system is described by a separable complex Hilbert space
   $\hilb$.\footnote{%
@@ -171,8 +68,12 @@ following postulates:
   \end{equation}
   Such a combination is known as an \term{ensemble}.
 \end{post}
+Note that the convex structure of the set of quantum states is necessary for
+consistency. One must obtain the same results when one makes two state
+assignments, predicts outcomes for each, and averages the results, as when one
+assigns the average state first and then predicts outcomes.
 
-It is simple to prove that any such probability measure $P$ on an effect
+It is simple to prove that any probability measure $P$ on an effect
 $\opr{E}$ may be represented by the \term{Born rule}
 \begin{equation}
   P(\opr{E})
@@ -196,9 +97,22 @@ each outcome $m$ to an effect $\opr{E}_m$, where $\sum_m \opr{E}_m = \idopr$.
 Since effects are positive operators that determine the probabilities of each
 outcome, such an observable is called a \term{positive operator valued measure}
 (\textsc{povm}). The special case where the effects are projectors is called a
-\term{projection valued measure} (\textsc{pvm}).
-
-TODO: Hermitian operators.
+\term{projection valued measure} (\textsc{pvm}). A \textsc{pvm} with the maximum
+number of outcomes may be conveniently represented by the self-adjoint operator
+\begin{equation}
+  \opr{M}
+  = \sum_m m \op{v_m}.
+\end{equation}
+By virtue of this definition, the expected value of the \textsc{pvm} is
+\begin{align}
+  \ev{\opr{M}}
+  &= \sum_m m P(m) \\
+  &= \sum_m m \tr(\dop \op{v_m}) \\
+  &= \tr(\dop\qty(\sum_m m \op{v_m})) \\
+  &= \tr(\dop\opr{M}).
+\end{align}
+From here on, most observables will be \textsc{pvm}s represented by self-adjoint
+operators.
 
 We now describe how operations change states.
 \begin{post}\label{post:operation}
@@ -425,8 +339,9 @@ This allows us to differentiate \cref{eq:unitary-evolution} to find
 \end{align}
 which is known as the \termalt{Liouville equation}{Liouville} or \term{von
   Neumann equation}.\footnote{%
-  \Cref{eq:liouville} is given in \term{Planck units} where $\hbar = c = G = k_B
-  = 1$. Otherwise $\dot{\dop} = -\im\comm{\ham}{\dop}/\hbar$.
+  \Cref{eq:liouville} is given in \term{natural units} where $\hbar = c =
+  \varepsilon_0 = m_e = 1$. Otherwise $\dot{\dop} =
+  -\im\comm{\ham}{\dop}/\hbar$.
 }
 
 Given an observable $\opr{A}$, its expected value over time is
