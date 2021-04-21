@@ -3,7 +3,63 @@
 \chaptermark{Introduction}
 \markboth{Introduction}{Introduction}
 
-Introductory content.
+The applications of quantum mechanics include exciting topics like the many-body
+physics of materials like high-temperature superconductors, or new technologies
+for quantum sensing and computation. One barrier towards making progress in
+these areas is that quantum systems are notoriously difficult to simulate.
+Consider simulating eight interacting spins (\cref{fig:spins}), which can be
+thought of as similar to bar magnets. The analog in classical computing is to
+manipulate memory on the scale of a few bytes (\SI{8}{bits}), which is trivial
+to do. However, the way that we will simulate the spins requires diagonalizing a
+matrix with dimension $4^8 = \num{65536}$, which is significantly more
+difficult.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{spins}
+  \caption{%
+    Interacting spins.
+  }\label{fig:spins}
+\end{figure}
+
+Nonetheless, this thesis must take the classical simulation approach to address
+another barrier to these technologies: decoherence. Any novel quantum system
+that we create is not isolated from the rest of the world. On one hand, it is
+difficult to perfectly isolate a system, and on the other hand, if the system
+were perfectly isolated, we could not communicate with it. Due to the inevitable
+interaction of a system with its environment, the quantum states that an
+experimenter so carefully sets up threaten to be destroyed with time. If the
+quantum state of the spins is like a house of cards, then environment-induced
+decoherence is a bit like leaving the cards out in the rain. Depending on how
+hard it rains, the cards may fall sooner or later. The cards might even buckle
+with no rain due to the humidity of being outside. An important aspect of the
+different approaches to making quantum computers is the coherence time: how long
+the quantum state goes without being destroyed.
+
+In the context of quantum computing, this decoherence is often modeled as a kind
+of random error, like a bit flipping unexpectedly. However, this is not the full
+story for decoherence. We generally expect the interaction with an environment
+at some temperature to result in the system relaxing towards that temperature,
+like an ice cube melting in the sun. The rate at which this happens depends on
+the details of the interaction with the environment and the system itself. A bit
+flip type model for decoherence may be too reductive. The situation is like
+timing how long it takes an ice cube to melt in the sun, and then trying to use
+that to predict how long it takes an ice sculpture to melt. If the sculpture is
+a bigger ice cube, you might predict well, but if the sculpture is a snowman
+under an ice umbrella, your calculations might be off by quite a bit. This
+thesis will investigate a particular model of interacting spins to assess the
+effect of system composition on the relaxation time.
+
+In particular, \cref{ch:open-quantum-systems} will review quantum mechanics and
+develop the relevant theory of open quantum systems needed to study the
+relaxation of a system due to environment-induced decoherence. \Cref{ch:spins}
+will give a simple application of the theory to a two-level atom, and then
+discuss a more involved application to our main system of study, the
+transverse-field Ising model. These results will then enable numerical
+computations for the relaxation rates of the transverse-field Ising model in
+\cref{ch:computations}, which we will use to assess the effect of the spin
+interactions on relaxation.
+
 
 \chapter*{Note on Notation}
 \addcontentsline{toc}{chapter}{Note on Notation}

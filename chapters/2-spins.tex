@@ -1,7 +1,7 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{Application to interacting spins}
+\chapter{Application to interacting spins}\label{ch:spins}
 
 With the preceeding theory of open quantum systems in place, we are now in a
 position to consider the central problem of this thesis: How do interacting
@@ -187,12 +187,15 @@ is around~\cite[p.~325]{kittelIntroductionSolidState2004}
   \approx \frac{1}{2} k_B T_c
   \approx \SI{45}{\meV}.
 \end{equation}
-The solution of this model is straightforward but somewhat involved, so it is
-given in \cref{ch:ising}. The idea is to formally transform the interacting
-spins into free fermions. Each of the $N$ free fermion modes may be occupied or
-not, and is indexed by numbers $k$ that are evenly spaced across the interval
-the first Brillouin zone $[-\pi,\, \pi]$ (according to \cref{eq:fourierk}). Each
-mode has energy
+This model has also been simulated experimentally with trapped
+ions~\cite{blattQuantumSimulationsTrapped2012,kimQuantumSimulationTransverse2011}.
+
+The solution of the model by diagonalizing the Hamiltonian is straightforward
+but somewhat involved, so it is given in \cref{ch:ising}. The idea is to
+formally transform the interacting spins into free fermions. Each of the $N$
+free fermion modes may be occupied or not, and is indexed by numbers $k$ that
+are evenly spaced across the interval the first Brillouin zone $[-\pi,\, \pi]$
+(according to \cref{eq:fourierk}). Each mode has energy
 \begin{equation}
   E_k
   = \sqrt{g^2 + 2g\cos k + 1}
@@ -740,8 +743,12 @@ far above any system frequency, we have the following limits.
 In either case, the Lamb-shift Hamiltonian may be neglected since
 $\tilde{\Omega} \tau_0 \ll \tau_S$.
 
-We may verify that the reservoir correlation functions do decay over a time
-scale that is much less than the relaxation time $\tau_R$.\footnote{%
+Now that we have calculated $\gamma$, we may verify that the weak-coupling limit
+is valid. We already know that the bath is changed little by the system,
+$\ev{\opr{B}_i^\mu} = 0$, and that the secular approximation holds for the
+numbers of spins that we will consider. It remains to verify that the reservoir
+correlation functions decay over a time scale that is much less than the
+relaxation time $\tau_R$.\footnote{%
   Analogous results for the electric field are given in~\cite[p.~574]{opensys}.
 }
 Recall that the rate $\gamma(\omega)$ is given by the Fourier transform of the
@@ -782,7 +789,7 @@ while at high temperatures $\tilde{s} \gg \eta$ and
 Thus if $\tau_B \ll \tau_S$, the reservoir correlation time is $\tau_C = \tau_B
 / 2\pi$, which is comparable to the thermal correlation time. In either case,
 the correlation functions decay quickly for $\tilde{s} > 1$. Since $\tau_S \ll
-\tau_R$, this establishes the validity of the Markov approximation.
+\tau_R$, this establishes the validity of the weak-coupling limit.
 
 \end{document}
 
