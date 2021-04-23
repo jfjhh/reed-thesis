@@ -3,4 +3,85 @@
 \chaptermark{Conclusion}
 \markboth{Conclusion}{Conclusion}
 
-\dropcap{H}{ere's} a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
+We will first discuss the time evolution, energy levels, and spaghetti diagrams.
+The time evolution across all systems looks just as one expects. Motion is
+generally oscillatory like for the two-level atom, but as $N$ increases higher
+frequencies are available for the system evolution and manifest like the wiggles
+in \cref{fig:time-evolution-5}.
+
+The exponential fits at $\eta = 10$ are reasonable, but the discrepancies from
+the true envelopes serve as a reminder that the spin relaxation plots to follow
+are to be taken with a grain of salt.
+
+The energy levels have a parity dependence as expected from the solution of the
+full transverse-field Ising model, but generally show that the energy levels for
+$\hat{\ham}_x$ as $g \to 0$ are far more degenerate than those for
+$\hat{\ham}_z$ as $g \to 1$. This offers an explanation of the trends for the
+relaxation rates. Take \cref{fig:energy-levels-5} for example. For small $g$,
+roughly half of the frequencies are zero and half of the frequencies are two
+(neglecting the lowest eigenvalue below $-4$). For large $g$, the energies are
+divided up more. For large $\eta$, \cref{eq:gamma-nondim} is like
+$\tilde{\omega}^3$, and we see that the small $g$ case has the larger sum of
+cubes. This difference in the energy levels for different $g$ may explain the
+general shape of the limiting rates discussed below as $\eta \to \infty$. The
+effect only arises as $N$ grows because there are an insufficient number of
+eigenvalues to split at small $N$. At $N = 2$, the maximal similarity between
+the different sides of the energy level diagram may explain the comparable decay
+rates found as well.
+
+The spaghetti diagrams are difficult to decipher. Again, since the
+eigenoperators $\opr{V}_i$ of $\sopr{L}$ are not even states, it is difficult to
+ascribe meaning to a particular eigenvalue (noodle). Looking to
+\cref{fig:spin-spectrum-3}, the overlaid spin relaxation rate for $\eta = 10$
+starts to blend in with the spaghetti near $g = 1$, but behaves differently
+elsewhere. Here and in later spaghetti diagrams, the overlaid rate appears to be
+influenced by the presence of noodles much higher, but tends to remain within an
+order of magnitude of the value at $g = 1$. The large magnitude of the spaghetti
+for $N = 4$ appears to be a consequence of the parity dependence in the
+transverse-field Ising model. The full diagram for $N = 6$ could not be
+computed, but its largest value at $g = 0.01$ was found to be $586.9$, which is
+similar to the general magnitude for $N = 4$.
+
+Overall, the single-spin relaxation plots demonstrate that relaxation rates do
+depend on the system being considered at all temperatures. It should be
+reiterated that these plots show the dimensionless rates, so while the
+difference between $g = 0$ and $g = 1$ at high temperature in
+\cref{fig:spin-relaxation-4} is about a factor of six, this is a multiplier for
+an overall rate $\tilde{\gamma}_0$ that may be quite large for any practical
+purposes. Given that caveat, we identify two general types of behavior depending
+on temperature. Across all numbers of spins, the high-temperature relaxation
+rates approach a fixed shape that varies for each $N$:
+\begin{itemize}
+  \item For $N = 2$ there is a minimum relaxation rate around $g = 0.65$.
+  \item For $N = 3$ there is a maximum relaxation rate around $g = 0.40$.
+  \item For $N = 4$ there is a remnant of a peak but the rate generally
+    decreases with increasing $g$.
+  \item For $N = 5$ there is a maximum relaxation rate around $g = 0.45$.
+\end{itemize}
+
+The story at low temperature is a bit different.
+\begin{itemize}
+  \item For $N = 2$ the rates appear to quickly reach a parabola-like shape for
+    $\eta \approx 10$. Afterwards, the fitting becomes unstable as demonstrated
+    by the reversal of the temperature dependence for the rates and the large
+    error ribbons in the last plot.
+  \item For $N = 3$ rates decrease somewhat linearly until $g = 0.5$ and then
+    level out for $\eta \approx 10$. The later plots at lower temperature
+    demonstrate the convergence of the rates for small $g$ but show instability
+    in the fit for $g$ near $0.5$.
+  \item For $N = 4$ the convergence to the previous line-flat shape is quicker
+    and the transition from low to high $g$ across $g = 0.5$ is smoothed. The
+    fit is stable and the shape remains for very low temperatures in the last
+    plot.
+  \item For $N = 5$ the flat part of the curve has lifted to reveal a parabola
+    shape with a minimum at about $g = 0.45$.
+\end{itemize}
+
+In short, the answer to the question ``How much does varying the parameter $g$
+change the relaxation rate of $\ev{\pauli_1^z}$?'' is by at most a factor of
+ten. Given the deviation of the single-spin relaxation rate from the rest of the
+spaghetti, it is unclear how well this result generalizes to other systems.
+Extensions of this project to larger systems and a more systematic exploration
+of other interesting systems or random ensembles of Hamiltonians are left as
+directions for future work.
+

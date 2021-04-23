@@ -1,4 +1,4 @@
-\documentclass[12pt,draft]{reedthesis}
+\documentclass[12pt]{reedthesis}
 
 % Core packages
 \usepackage[fleqn]{mathtools} % Load before newtxmath
@@ -128,8 +128,6 @@ isbn=false,
 \usepackage{lettrine}
 \newcommand{\dropcap}[2]{\textsc{#1#2}}
 
-% \ifdraft{\overfullrule=1mm}{}
-
 \usepackage{parskip}
 
 \usepackage{imakeidx}
@@ -144,7 +142,7 @@ isbn=false,
 \usepackage[final]{minted}
 \setminted{%
   breaklines,
-  fontsize=\footnotesize,
+  fontsize=\small,
   baselinestretch=1,
 }
 \ifoptionfinal{%
@@ -174,43 +172,10 @@ isbn=false,
 \usepackage[all]{hypcap}
 \usepackage{cleveref}
 
-\IfEq{\jobname}{\detokenize{thesis}}{% Full document
-  % Nothing different
-  }{% In a subfile
-  % Looks like this must be after hyperref is loaded for \url to work.
-  \AtBeginDocument{%
-    \ifdraft{%
-      {%
-        \setlength{\parindent}{0pt}
-        \setlength{\parskip}{\baselineskip}
-
-        {\LARGE
-          \textsf{Document information}
-        }
-
-        Alex Striff \\ \@date
-
-        \input{HEAD.out}
-
-        {\small
-          \let\clearpage\relax
-          \renewcommand{\cfttoctitlefont}{\Large\normalfont\liningnums}
-          \setlength{\cftbeforetoctitleskip}{0.5\baselineskip}
-          \setlength{\cftaftertoctitleskip}{0pt}
-          \renewcommand{\cftchapafterpnum}{}
-          \tableofcontents
-        }
-      }
-      }{}
-    }
-}
-
 \crefname{thm}{theorem}{theorems}
 \crefname{lem}{lemma}{lemmas}
 \crefname{defn}{definition}{definitions}
 \crefname{post}{postulate}{postulates}
-
-\ifdraft{}{\usepackage{autonum}}
 
 \definecolor{linkcolor}{rgb}{0.0,0.25,0.5}
 \definecolor{rubric}{rgb}{0.7,0.05,0.0}
@@ -223,7 +188,9 @@ isbn=false,
 
 \title{\textbf{\large
     Relaxation for an Open System of Interacting Spins
-}\ifdraft{\\\textbf{Draft}}{}}
+}
+\\ Draft
+}
 \author{Alex Striff}
 % The month and year that you submit your final draft to the library
 % (May or December)

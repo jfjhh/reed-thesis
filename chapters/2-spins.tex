@@ -229,7 +229,7 @@ where
   &= \frac{1}{\pi}\int_0^\pi \dd{k} \frac{\cos(kn)}{E_k}.
 \end{align}
 Pfeuty's $\ev{\pauli_i^z}$ is shown in \cref{fig:pfeuty-sz}.
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.75\linewidth]{pfeuty}
   \caption{%
@@ -305,14 +305,20 @@ compactification is implemented by the function $f(g)$. A natural choice is to
 redefine $g$ and use spherical linear interpolation to rotate between $\ham_x$
 and $\ham_z$ with
 \begin{equation}
-  \ham_S
+  \ham_S(g)
+  = \sqrt{\abs{\ham_x}\cdot\abs{\ham_z}} \hat{\ham}_\text{int}(g)\qc
+  0 \le g \le 1,
+  \label{eq:Hinterp}
+\end{equation}
+where
+\begin{equation}
+  \ham_\text{int}(g)
   = -\sqrt{\abs{\ham_x}\cdot\abs{\ham_z}} \qty(%
   \frac{\sin((1-g)\theta)}{\sin\theta} \hat{\ham}_x
   + \frac{\sin(g\theta)}{\sin\theta} \hat{\ham}_z
-  )\qc
-  0 \le g \le 1,
+  ),
 \end{equation}
-where a normalized operator $\hat{\opr{A}} = \opr{A} / \abs{A}$ and the angle
+a normalized operator $\hat{\opr{A}} = \opr{A} / \abs{A}$, and the angle
 $\theta$ between $\ham_x$ and $\ham_z$ are defined with respect to the inner
 product
 \begin{equation}
@@ -321,6 +327,13 @@ product
 \end{equation}
 An overall magnitude $\sqrt{\abs{\ham_x}\cdot\abs{\ham_z}}$ is reintroduced so
 that systems with diffent numbers of spins may be more easily compared below.
+Because the energies are symmetric about zero ($\sum_i \tilde{E}_i = 0$), this
+normalization of the Hamiltonians ensures that the energy variance $\sum_i
+\tilde{E}_i^2$ is the same for all $g$. Thus the heat capacities
+$\ev{\ham_S^2}_c / k_B T^2$ of any two systems for different $g$ become the same
+as $\beta \to 0$~\cite[p.~112]{kardarStatisticalPhysicsParticles2007}. It is in
+this sense that the normalization in \cref{eq:Hinterp} makes different systems
+behave similarly.
 
 Now we may add in the interaction with the bath. The field Hamiltonian is
 \begin{equation}
@@ -358,6 +371,7 @@ The interaction Hamiltonian for electron spins in a magnetic field is\footnote{%
   \end{split}
   \\
   &= -\sum_{i,\,\mu} \pauli_i^\mu \opr{B}_i^\mu,
+  \label{eq:mudotB}
 \end{align}
 where the components of the \term{magnetic field operator} evaluated at
 $\vq{r}_i$ are\footnote{%
@@ -665,6 +679,7 @@ in terms of the thermal correlation time $\tau_B = \beta$ and the
   \tau_0
   = \sqrt{\frac{\mu_e^2}{9\pi}}
   = \SI{3.67e-23}{\s}.
+  \label{eq:tau0}
 \end{equation}
 In the high-temperature limit where $\tau_B\tilde{\omega}/\tau_S \ll 1$,
 $\tilde{\gamma}$ becomes
