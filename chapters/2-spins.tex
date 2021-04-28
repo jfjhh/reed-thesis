@@ -104,10 +104,14 @@ and the simplified Lindblad equation $\dot{\dop} = \sopr{D}\dop$ is
   \frac{1}{2}\acomm{\pauli^-\pauli^+}{\dop}),
   \label{eq:atom-lindblad}
 \end{equation}
-where
+where\footnote{%
+  The rate $\gamma_0$ is also known as the \term{Einstein $A$
+  coefficient}~\cite[p.~417]{griffithsIntroductionQuantumMechanics2018}
+}
 \begin{equation}
   \gamma_0
-  = \frac{4}{3}\omega^3 \abs{\vq{d}}^2
+  = \frac{4}{3}\abs{\vq{d}}^2 \omega^3 
+  \label{eq:einstein-A}
   \qc
   N
   = \frac{1}{e^{\beta\omega} - 1},
@@ -690,7 +694,11 @@ where $\pv$ denotes the Cauchy principal value, to find
 
 We will now nondimensionalize $\gamma$ and $S$. Starting with $\gamma$, we first
 apply the dipole approximation to find $\gamma_{i\mu,j\nu}(\omega) = \delta_{ij}
-\delta_{\mu\nu} \gamma(\omega)$, where
+\delta_{\mu\nu} \gamma(\omega)$, where\footnote{%
+  At zero temperature, $\gamma(\omega)$ becomes the \term{Einstein $A$
+  coefficient}. Compare this to the analogous result (\cref{eq:einstein-A}) for
+  electric dipole radiation.
+}
 \begin{equation}
   \gamma(\omega)
   = \frac{4}{3}\mu_B^2 \omega^3 (1 + n_B(\omega)).
