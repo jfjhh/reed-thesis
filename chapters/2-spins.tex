@@ -57,7 +57,11 @@ The solution of this equation is
   = e^{-t \vq{\omega} \vdot \vecopr{L}} \vq{v}(0),
 \end{equation}
 where the components of $\vecopr{L}$ are generators of three-dimensional
-rotations which satisfy the commutation relations
+rotations which satisfy the commutation relations\footnote{%
+  That is, $\opr{L}^x \vq{r} = \vq{x} \cross \vq{r}$, etc. Contrary to the norm
+  in quantum mechanics, this representation of $\mathfrak{so}(3)$ does not use
+  the imaginary unit $\im$.
+}
 \begin{equation}
   \comm{\opr{L}^a}{\opr{L}^b}
   = \varepsilon_{abc} \opr{L}^c.
@@ -91,7 +95,7 @@ only the effect of the dissipator. The jump operators are
   \pauli^\pm
   = \frac{\pauli^x \pm \im\pauli^y}{2}
 \end{equation}
-and the Lindblad equation is
+and the simplified Lindblad equation $\dot{\dop} = \sopr{D}\dop$ is
 \begin{equation}
   \dot{\dop}
   = \gamma_0(N + 1) \qty(\pauli^- \dop \pauli^+ -
@@ -120,7 +124,7 @@ equations
   \dot{v}_y
   &= -\frac{\gamma}{2} v_y, \\
   \dot{v}_z
-  &= -\frac{\gamma}{2} v_z - \gamma_0,
+  &= -\gamma v_z - \gamma_0,
 \end{align}
 where the total transition rate is
 \begin{equation}
@@ -129,24 +133,36 @@ where the total transition rate is
 \end{equation}
 The equilibrium solution is seen to be
 \begin{equation}
-  v_x
-  = v_y
+  v_x^\text{eq}
+  = v_y^\text{eq}
   = 0
   \qand
-  v_z
+  v_z^\text{eq}
   = -\frac{1}{2N + 1},
 \end{equation}
 so the stationary population of the excited state is
 \begin{equation}
-  n_e^\text{th}
+  n_e^\text{eq}
   = \frac{1}{2}\qty(1 + v_z)
-  = \frac{N}{2N + 1}.
+  = \frac{N}{2N + 1}
 \end{equation}
-From the initial state $\vq{v}(0) = \vu{z}$, we see that the population
-explicitly approaches the thermal equilibrium value as
+and that of the ground state is
 \begin{equation}
-  n_e(t)
-  = n_e^\text{th}(1 - e^{-\gamma t}).
+  n_g^\text{eq}
+  = \frac{1}{2}\qty(1 - v_z)
+  = \frac{N + 1}{2N + 1}.
+\end{equation}
+Thus
+\begin{equation}
+  \frac{n_e^\text{eq}}{n_g^\text{eq}}
+  = \frac{N}{N + 1}
+  = e^{-\beta\omega},
+\end{equation}
+which is the expected Boltzmann factor from statistical mechanics. We explicitly
+see that $v_z$ decays to its equilibrium value with rate $\gamma$ because
+\begin{equation}
+  v_z(t)
+  = v_z^\text{eq} - e^{-\gamma t}\qty(v_z^\text{eq} - v_z(0)).
 \end{equation}
 
 
@@ -167,17 +183,17 @@ study, the \term{transverse-field Ising model}\footnote{%
 is an interesting candidate because it undergoes a so-called quantum phase
 transition. The model is that $N$ spins with an anisotropic nearest-neighbor
 interaction in the $x$-direction are subject to an external magnetic field in
-the $z$-direction. We impose periodic boundary conditions so that
-$\pauli^a_{N} = \pauli^a_0$. The parameter $g$ characterizes the strength of the
-magnetic field relative to the interaction energy $J$. Taking iron for
-reference,\footnote{%
+the $z$-direction. We impose periodic boundary conditions so that $\pauli^a_{N}
+= \pauli^a_0$. The parameter $g$ characterizes the strength of the magnetic
+field relative to the interaction energy $J$. To get a sense for the scale of
+$J$, take iron for reference.\footnote{%
   $\alpha$-Fe has $T_c = \SI{1044}{\K}$.
 }
-the interaction energy for two electron spins $a = \SI{1}{\AA}$ apart
+The interaction energy for two electron spins $a = \SI{1}{\AA}$ apart
 is~\cite[p.~292]{griffithsIntroductionElectrodynamics2017}
 \begin{equation}
   J_e
-  = \frac{\mu_e^2 \mu_0}{4\pi a^3}
+  = \frac{\mu_B^2 \mu_0}{4\pi a^3}
   \approx \SI{0.05}{\meV},
 \end{equation}
 while the corresponding exchange energy
@@ -187,7 +203,8 @@ is around~\cite[p.~325]{kittelIntroductionSolidState2004}
   \approx \frac{1}{2} k_B T_c
   \approx \SI{45}{\meV}.
 \end{equation}
-This model has also been simulated experimentally with trapped
+We will keep the larger value in mind. This model has also been simulated
+experimentally with trapped
 ions~\cite{blattQuantumSimulationsTrapped2012,kimQuantumSimulationTransverse2011}.
 
 The solution of the model by diagonalizing the Hamiltonian is straightforward
@@ -213,7 +230,7 @@ energies of elementary excitations from the ground state. It is plotted for
 different values of $g$ in \cref{fig:ising-modes}.
 \notebook{ising-modes}
 From this, Pfeuty~\cite{pfeutyOnedimensionalIsingModel1970} has shown that the
-ground state in the continuum limit has
+ground state in the continuum limit $N \to \infty$ has
 \begin{align}
   \ev{\pauli_i^z}
   &= G(0) \\
@@ -313,7 +330,7 @@ and $\ham_z$ with
 where
 \begin{equation}
   \ham_\text{int}(g)
-  = -\sqrt{\abs{\ham_x}\cdot\abs{\ham_z}} \qty(%
+  = -\qty(%
   \frac{\sin((1-g)\theta)}{\sin\theta} \hat{\ham}_x
   + \frac{\sin(g\theta)}{\sin\theta} \hat{\ham}_z
   ),
@@ -330,10 +347,14 @@ that systems with diffent numbers of spins may be more easily compared below.
 Because the energies are symmetric about zero ($\sum_i \tilde{E}_i = 0$), this
 normalization of the Hamiltonians ensures that the energy variance $\sum_i
 \tilde{E}_i^2$ is the same for all $g$. Thus the heat capacities
-$\ev{\ham_S^2}_c / k_B T^2$ of any two systems for different $g$ become the same
-as $\beta \to 0$~\cite[p.~112]{kardarStatisticalPhysicsParticles2007}. It is in
-this sense that the normalization in \cref{eq:Hinterp} makes different systems
-behave similarly.
+\begin{equation}
+  C
+  = \frac{1}{k_B T^2}\qty(\ev{\ham_S^2} - \ev{\ham_S}^2)
+\end{equation}
+of any two systems for different $g$ become the same as $\beta \to
+0$~\cite[p.~112]{kardarStatisticalPhysicsParticles2007}. It is in this sense
+that the normalization in \cref{eq:Hinterp} makes different systems behave
+similarly.
 
 Now we may add in the interaction with the bath. The field Hamiltonian is
 \begin{equation}
@@ -343,7 +364,11 @@ Now we may add in the interaction with the bath. The field Hamiltonian is
   \label{eq:bath-hamiltonian}
 \end{equation}
 which is a collection of harmonic oscillators: one for each wavenumber $\vq{k}$
-and polarization $\lambda$ of photons that make up the electromagnetic field.
+and polarization $\lambda$ of photons that make up the electromagnetic
+field.\footnote{%
+  The polarization $\lambda = \pm 1$ marks either right or left circular
+  polarization.
+}
 The vacuum energy $\sum_{\vq{k},\, \lambda} \omega_{\vq{k}} / 2$ is dropped,
 since it diverges in the continuum limit.
 
@@ -359,7 +384,7 @@ The interaction Hamiltonian for electron spins in a magnetic field is\footnote{%
   &= -\int\dd{\vq{r}} \vecopr{\mu} \vdot \vecopr{B}
   \\
   \begin{split}
-  &= -\int\dd{\vq{r}} \sum_i \mu_e \delta(\vq{r}_i) \vecopr{\pauli}_i \\
+  &= -\int\dd{\vq{r}} \sum_i \mu_B \delta(\vq{r}_i) \vecopr{\pauli}_i \\
   &\vdot
   \im\sum_{\vq{k},\, \lambda} \sqrt{\frac{1}{2V\omega_{\vq{k}}}}
   \qty(%
@@ -375,13 +400,16 @@ The interaction Hamiltonian for electron spins in a magnetic field is\footnote{%
 \end{align}
 where the components of the \term{magnetic field operator} evaluated at
 $\vq{r}_i$ are\footnote{%
-  This operator arises from quantizing the electromagnetic field.
-  See the discussion of field quantization
+  This operator arises from quantizing the electromagnetic field. The vector
+  $\vq{e}_{\vq{k},\lambda}$ is $\vq{e}_{\vq{k},\pm 1} =
+  \mp\qty(\vu{e}_{\vq{k},x} \pm \im\vu{e}_{\vq{k},y}) / \sqrt{2}$, with
+  $\vu{e}_{\vq{k},x}$ and $\vu{e}_{\vq{k},y}$ perpendicular to $\vq{k}$. See the
+  discussion of field quantization
   in~\cite[p.~506]{shankarPrinciplesQuantumMechanics2012} for more details.
 }
 \begin{equation}
   \opr{B}_i^\mu
-  = \im\mu_e\sum_{\vq{k},\, \lambda} \sqrt{\frac{1}{2V\omega_{\vq{k}}}}
+  = \im\mu_B\sum_{\vq{k},\, \lambda} \sqrt{\frac{2\pi}{V\omega_{\vq{k}}}}
   \qty(%
   {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
   e^{\im\vq{k}\vdot\vq{r}_i} \opr{a}_{\vq{k},\lambda}
@@ -429,7 +457,7 @@ In the interaction picture:
 \begin{align}
   \opr{B}_i^\mu(t)
   &= e^{\im\ham_B t} \opr{B}_i^\mu e^{-\im\ham_B t} \\
-  &= \im\mu_e\sum_{\vq{k},\, \lambda} \sqrt{\frac{1}{2V\omega_{\vq{k}}}}
+  &= \im\mu_B\sum_{\vq{k},\, \lambda} \sqrt{\frac{2\pi}{V\omega_{\vq{k}}}}
   \qty(%
   {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
   e^{\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t)} \opr{a}_{\vq{k},\lambda}
@@ -446,7 +474,7 @@ The spectral correlation tensor is then
   \ev{\opr{B}_i^\mu{(t)}^\dag \opr{B}_j^\nu(t - s)}
   \\
   \begin{split}
-  &= -\frac{\mu_e^2}{2V} \int_0^\infty \dd{s}
+  &= -\frac{2\pi\mu_B^2}{V} \int_0^\infty \dd{s}
   \sum_{\vq{k},\, \vq{k}',\, \lambda,\, \lambda'}
   \sqrt{\frac{1}{\omega_{\vq{k}} \omega_{\vq{k'}}}}
   :
@@ -485,12 +513,13 @@ The spectral correlation tensor is then
 \end{split}
 \end{align}
 
-In the thermal state
+The thermal state is
 \begin{equation}
   \dop_B
   = \frac{e^{-\beta\ham_B}}{\tr e^{-\beta\ham_B}}
   = \prod_{\vq{k},\,\lambda} \qty(1 - e^{-\beta\omega_{\vq{k}}})
-  e^{-\beta\omega_{\vq{k}} \opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k},\lambda}}
+  e^{-\beta\omega_{\vq{k}} \opr{a}^\dag_{\vq{k},\lambda}
+  \opr{a}_{\vq{k},\lambda}}.
 \end{equation}
 Since $\comm{\opr{a}_{\vq{k},\lambda}}{\opr{a}^\dag_{\vq{k}',\lambda'}} =
 \delta_{\vq{k}\vq{k}'}\delta_{\lambda\lambda'} \idopr$,
@@ -510,10 +539,13 @@ Since $\comm{\opr{a}_{\vq{k},\lambda}}{\opr{a}^\dag_{\vq{k}',\lambda'}} =
   \\
   &= e^{\beta \omega_{\vq{k}}}
   \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
-  - \delta_{\vq{k}\vq{k}'}\delta_{\lambda\lambda'}
-  \\
-  &= \delta_{\vq{k}\vq{k}'}\delta_{\lambda\lambda'} n_B(\omega_{\vq{k}}),
+  - \delta_{\vq{k}\vq{k}'}\delta_{\lambda\lambda'},
 \end{align}
+so we find that
+\begin{equation}
+  \ev{\opr{a}^\dag_{\vq{k},\lambda} \opr{a}_{\vq{k}',\lambda'}}
+  = \delta_{\vq{k}\vq{k}'}\delta_{\lambda\lambda'} n_B(\omega_{\vq{k}}),
+\end{equation}
 where
 \begin{equation}
   n_B(\omega)
@@ -534,7 +566,7 @@ Then for a thermal bath, the spectral correlation tensor becomes
 \begin{align}
   \begin{split}
   \Gamma_{i\mu,j\nu}(\omega)
-  &= \frac{\mu_e^2}{2V} \int_0^\infty \dd{s}
+  &= \frac{2\pi\mu_B^2}{V} \int_0^\infty \dd{s}
   \sum_{\vq{k},\,\lambda}
   \frac{1}{\omega_{\vq{k}}}
   :
@@ -562,7 +594,7 @@ In the continuum limit,
   \frac{1}{V}\sum_{\vq{k}}
   \mapsto
   \int \frac{\dd{\vq{k}}}{{(2\pi)}^3}
-  = \frac{1}{{(2\pi c)}^3} \int_0^\infty \dd{\omega_k} \omega_k^2
+  = \frac{1}{{(2\pi)}^3} \int_0^\infty \dd{\omega_k} \omega_k^2
   \int\dd{\Omega},
   \label{eq:continuum-limit}
 \end{equation}
@@ -593,33 +625,32 @@ Thus
   \int\dd{\Omega} e^{\pm\im k_z \Delta r_{ij}}
   \sum_\lambda {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
   {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
-  = \frac{8\pi\omega_k^2}{3c^2} \delta_{\mu\nu}
-  G_{\nu}\qty(\frac{\omega_k\Delta r_{ij}}{c}),
+  = \frac{8\pi\omega_k^2}{3} \delta_{\mu\nu}
+  G_{\nu}\qty(\omega_k\Delta r_{ij}),
   \label{eq:angular-integral}
 \end{equation}
 where
 \begin{equation}
   G_{\nu}(u)
-  = \qty(\delta_{\nu z} - \frac{\delta_{\nu x} + \delta_{\nu y}}{2})
+  = 3\qty(\delta_{\nu z} - \frac{\delta_{\nu x} + \delta_{\nu y}}{2})
   \frac{\sinc u - \cos u}{u^2}
-  + \frac{\delta_{\nu x} + \delta_{\nu y}}{2} \sinc u.
+  + \frac{3}{2}\qty(\delta_{\nu x} + \delta_{\nu y}) \sinc u.
 \end{equation}
 Note that in the dipole approximation
 \begin{equation}
   \lim_{u \to 0} G_\nu(u)
   = \qty(\delta_{\nu z} - \frac{\delta_{\nu x} + \delta_{\nu y}}{2})
-  \frac{1}{3}
-  + \frac{\delta_{\nu x} + \delta_{\nu y}}{2}
-  = \frac{1}{3}.
+  + \frac{3}{2}\qty(\delta_{\nu x} + \delta_{\nu y})
+  = 1.
 \end{equation}
 Now \cref{eq:angular-integral} gives that the continuum limit of the spectral
 correlation tensor for the spin chain is
 \begin{align}
   \begin{split}
   \Gamma_{i\mu,j\nu}(\omega)
-  &= \delta_{\mu\nu} \frac{1}{6\pi^2 \mu_e^2}
+  &= \delta_{\mu\nu} \frac{2\mu_B^2}{3\pi}
   \int_0^\infty \dd{\omega_k} \omega_k^3
-  G_{\nu}\qty(\frac{\omega_k \Delta r_{ij}}{c})
+  G_{\nu}\qty(\omega_k \Delta r_{ij})
   :
   \\
   &\qty(1 + n_B(\omega_k)) \int_0^\infty \dd{s} e^{\im s(\omega - \omega_k)}
@@ -643,30 +674,30 @@ where $\pv$ denotes the Cauchy principal value, to find
   \\
   \shortintertext{where}
   \gamma_{i\mu,j\nu}(\omega)
-  &= \delta_{\mu\nu} \frac{\mu_e^2 \omega^3}{3\pi}
-  G_{\nu}\qty(\frac{\abs{\omega} \Delta r_{ij}}{c})
+  &= \delta_{\mu\nu} \frac{4\mu_B^2 \omega^3}{3}
+  G_{\nu}\qty(\abs{\omega} \Delta r_{ij})
   (1 + n_B(\omega))
   \label{eq:gamma-full}
   \\
   S_{i\mu,j\nu}(\omega)
-  &= \delta_{\mu\nu} \frac{\mu_e^2}{6\pi^2}
+  &= \delta_{\mu\nu} \frac{2\mu_B^2}{3\pi}
   \pv\int_0^\infty \dd{\omega_k} \omega_k^3
-  G_{\nu}\qty(\frac{\omega_k \Delta r_{ij}}{c})
+  G_{\nu}\qty(\omega_k \Delta r_{ij})
   \qty(\frac{1 + n_B(\omega_k)}{\omega - \omega_k}
   + \frac{n_B(\omega_k)}{\omega + \omega_k}).
   \label{eq:S-full}
 \end{align}
-The dipole approximation then leaves
+
+We will now nondimensionalize $\gamma$ and $S$. Starting with $\gamma$, we first
+apply the dipole approximation to find $\gamma_{i\mu,j\nu}(\omega) = \delta_{ij}
+\delta_{\mu\nu} \gamma(\omega)$, where
 \begin{equation}
   \gamma(\omega)
-  = \frac{\mu_e^2 \omega^3}{9\pi}
-  (1 + n_B(\omega))
+  = \frac{4}{3}\mu_B^2 \omega^3 (1 + n_B(\omega)).
   \label{eq:gamma-dipole}
 \end{equation}
-for all spins and polarizations.
-
-We will now nondimensionalize $\gamma$ and $S$. Letting $\tilde{\gamma} = \gamma
-\tau_S$ and $\tilde{\omega} = \omega\tau_S$ gives
+Letting $\tilde{\gamma} = \gamma \tau_S$ and $\tilde{\omega} = \omega\tau_S$
+gives
 \begin{equation}
   \tilde{\gamma}(\tilde{\omega})
   = {\qty(\frac{\tau_0}{\tau_S})}^2 \tilde{\omega}^3
@@ -677,8 +708,8 @@ in terms of the thermal correlation time $\tau_B = \beta$ and the
 \term{vacuum magnetic timescale}
 \begin{equation}
   \tau_0
-  = \sqrt{\frac{\mu_e^2}{9\pi}}
-  = \SI{3.67e-23}{\s}.
+  = \sqrt{\frac{4}{3}\mu_B^2}
+  = \SI{6.35e-23}{\s}.
   \label{eq:tau0}
 \end{equation}
 In the high-temperature limit where $\tau_B\tilde{\omega}/\tau_S \ll 1$,
@@ -717,20 +748,40 @@ modes of the bath to weaken.\footnote{%
   may view the bath as merely an effective model, and this cutoff is used to
   describe the effective interaction.
 }
-For simplicity, we just set the upper limit of the
-integral to $\tilde{\Omega}$, though other cutoffs like $e^{-\tilde{\omega}_k /
-\tilde{\Omega}}$ are common. As we will see, the exact functional form does not
-matter. If we set the frequency cutoff $\tilde{\Omega} \gg \tilde{\omega}$ to be
+For simplicity, we just set the upper limit of the integral to
+$\tilde{\Omega}$.\footnote{%
+  This hard cutoff of setting the upper limit to $\tilde{\Omega}$ is performed
+  in~\cite[p.~265]{opensys}. In general, one considers a function called the
+  spectral density that is related to the coupling in the interaction
+  Hamiltonian. When this function includes
+  \begin{equation}
+    \frac{\tilde{\Omega}^2}{\tilde{\Omega}^2 + {\omega}^2},
+  \end{equation}
+  it is said to have a Lorentz-Drude cutoff, which is sometimes considered
+  instead of the hard cutoff~\cite[p.~175]{opensys}. The low-frequency behavior
+  of our spectral density classifies it as an Ohmic spectral density, which is
+  the most common type to be considered because it arises from electromagnetic
+  interactions in three dimensions. The exact functional form of the cutoff does
+  not matter much because we ensure that the system transitions at frequencies
+  far below the cutoff.
+}
+If we set the frequency cutoff $\tilde{\Omega} \gg \tilde{\omega}$ to be
 far above any system frequency, we have the following limits.
 \begin{itemize}
   \item In the high-temperature limit where $\tau_B\tilde{\Omega} / \tau_S \ll
-    1$, $\tilde{S}$ simplifies to
+    1$, $\tilde{S}$ simplifies to\footnote{%
+      To evaluate these principal value integrals, it suffices to just ignore
+      the pole at $u = 1$.
+    }
     \begin{align}
       \tilde{S}(\tilde{\omega})
       &\approx \frac{1}{2\pi} \frac{\tau_0^2}{\tau_B\tau_S}
       \pv\int_0^{\tilde{\Omega}} \dd{\tilde{\omega}_k} \tilde{\omega}_k^2
       \qty(\frac{1}{\tilde{\omega} - \tilde{\omega}_k}
       + \frac{1}{\tilde{\omega} + \tilde{\omega}_k}) \\
+      &= \frac{\tilde{\omega}^2}{\pi} \frac{\tau_0^2}{\tau_B\tau_S}
+      \pv\int_0^{\tilde{\Omega} / \tilde{\omega}} \dd{u}
+      \frac{u^2}{1 - u^2} \\
       &= \frac{\tau_0^2}{\tau_B\tau_S} \frac{\tilde{\omega}}{\pi}
       \qty(\tilde{\omega}\atanh\qty(\frac{\tilde{\omega}}{\tilde{\Omega}})
       - \tilde{\Omega}) \\
@@ -745,6 +796,9 @@ far above any system frequency, we have the following limits.
       &\approx \frac{1}{2\pi} {\qty(\frac{\tau_0}{\tau_S})}^2
       \pv\int_0^{\tilde{\Omega}} \dd{\tilde{\omega}_k}
       \frac{\tilde{\omega}_k^2}{\tilde{\omega} - \tilde{\omega}_k} \\
+      &= \frac{\tilde{\omega}^2}{2\pi} {\qty(\frac{\tau_0}{\tau_S})}^2
+      \pv\int_0^{\tilde{\Omega} / \tilde{\omega}} \dd{u}
+      \frac{u^2}{1 - u} \\
       &= -\frac{1}{2\pi} {\qty(\frac{\tau_0}{\tau_S})}^2 \qty(%
       \frac{\tilde{\Omega}^2}{2} + \tilde{\Omega}\tilde{\omega} -
       \tilde{\omega}^2
@@ -755,24 +809,35 @@ far above any system frequency, we have the following limits.
       ).
     \end{align}
 \end{itemize}
-In either case, the Lamb-shift Hamiltonian may be neglected since
-$\tilde{\Omega} \tau_0 \ll \tau_S$.
+In both cases, $\tilde{S}$ is small if $\tau_0\Omega \ll 1$, which we will
+assume. Because the Lamb-shift Hamiltonian (\cref{eq:lamb-shift}) scales with
+$\tilde{S}$, it may then be neglected.
 
 Now that we have calculated $\gamma$, we may verify that the weak-coupling limit
-is valid. We already know that the bath is changed little by the system,
-$\ev{\opr{B}_i^\mu} = 0$, and that the secular approximation holds for the
-numbers of spins that we will consider. It remains to verify that the reservoir
-correlation functions decay over a time scale that is much less than the
-relaxation time $\tau_R$.\footnote{%
+is valid. We already know that the bath is changed little by the system due to
+its infinite size, that $\ev{\opr{B}_i^\mu(t)} = 0$, and that the secular
+approximation holds for the numbers of spins that we will consider because
+$\tau_0$ is so small. It remains to verify that the reservoir correlation
+functions decay over a time scale that is much less than the relaxation time
+$\tau_R$.\footnote{%
   Analogous results for the electric field are given in~\cite[p.~574]{opensys}.
 }
-Recall that the rate $\gamma(\omega)$ is given by the Fourier transform of the
-reservoir correlation functions
-$\ev{\opr{B}_i^\mu{(t)}^\dag\opr{B}_j^\nu(t-s)}$, which are constant in $t$ and
-the same for all sites and polarizations. The correlation functions are then the
-inverse Fourier transform of $\gamma$:
+The point of this thesis is to find the relaxation time $\tau_R$, so we cannot
+make a direct comparison. However, on physical grounds we do expect that the
+relaxation time is much slower than the system time $\tau_S$ for all realistic
+temperatures.\footnote{%
+  Also, if we instead suppose that this is true, then we expect the relaxation
+  time to be on the order of $\gamma^{-1}(1)$. For the case to be otherwise, we
+  must have $\tau_B \approx \tau_0$, which corresponds to a temperature of
+  \SI{1.2e11}{\K} or higher.
+}
+Recall that the rate $\gamma(\omega)$ is given by the Fourier transform
+(\cref{eq:gammas}) of the reservoir correlation functions
+$\ev{\opr{B}_i^\mu{(s)}^\dag\opr{B}_j^\nu(0)}$, which are the same for all sites
+and polarizations. The correlation functions are then the inverse Fourier
+transform of $\gamma(\omega)$:
 \begin{equation}
-  \ev{\opr{B}_i^\mu{(t)}^\dag\opr{B}_j^\nu(t-s)}
+  \ev{\opr{B}_i^\mu{(s)}^\dag\opr{B}_j^\nu(0)}
   = \frac{1}{2\pi}\int_{-\infty}^\infty \dd{\omega} e^{-\im\omega s}
   \gamma(\omega).
 \end{equation}
@@ -782,7 +847,35 @@ parameter $\eta = \tau_B / \tau_S$, we find that
   \frac{1}{\tau_S^2}\ev{\opr{B}_i^\mu{(\tilde{s})}^\dag\opr{B}_j^\nu(0)}
   &= \frac{1}{2\pi}\int_{-\infty}^\infty \dd{\tilde{\omega}}
   e^{-\im\tilde{\omega} \tilde{s}}
-  \tilde{\gamma}(\tilde{\omega}) \\
+  \tilde{\gamma}(\tilde{\omega})
+  \\
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 \frac{1}{2\pi}
+  \int_{-\infty}^\infty \dd{\tilde{\omega}}
+  e^{-\im\tilde{\omega} \tilde{s}}
+  \tilde{\omega}^3
+  \qty(1 + \frac{1}{e^{\eta\tilde{\omega}} - 1})
+  \\
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 
+  \im^3 \dv[3]{\tilde{s}}
+  \frac{1}{2\pi} \int_{-\infty}^\infty \dd{\tilde{\omega}}
+  e^{-\im\tilde{\omega} \tilde{s}}
+  \frac{e^{\eta \tilde{\omega}}}{e^{\eta \tilde{\omega}} - 1}
+  \\
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 
+  \im^3 \dv[3]{\tilde{s}}
+  \frac{1}{2\pi} \int_{-\infty}^\infty \dd{\tilde{\omega}}
+  e^{-\im\tilde{\omega} (\tilde{s} + \im\eta / 2)}
+  \frac{1}{2}\csch(\frac{\eta \tilde{\omega}}{2})
+  \\
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 
+  \im^3 \dv[3]{\tilde{s}} \qty(%
+  -\frac{\im}{2\eta}\tanh(\frac{\pi}{\eta}\qty(\tilde{s} + \frac{\im\eta}{2}))
+  )
+  \\
+  &= {\qty(\frac{\tau_0}{\tau_S})}^2 
+  \im^3 \dv[3]{\tilde{s}}
+  \qty(-\frac{\im}{2\eta}\coth(\frac{\pi\tilde{s}}{\eta}))
+  \\
   &= {\qty(\frac{\tau_0}{\tau_S})}^2 \frac{\pi^3}{\eta^4}
   \sinh{\qty(\frac{\pi \tilde{s}}{\eta})}^{-4} \qty(%
   1 + 2\cosh{\qty(\frac{\pi\tilde{s}}{\eta})}^2

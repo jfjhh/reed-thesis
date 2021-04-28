@@ -3,29 +3,80 @@
 
 \chapter{Open quantum systems}\label{ch:open-quantum-systems}
 
-\dropcap{Y}{ou}, a novice baker, mix ingredients to make cake batter. You know
-everything about this cake batter: after all, you made it. However, you are
-unsure about how the cake will turn out in your dodgy oven. You bake the cake
-and let it cool. You try to cut a slice of cake, but instead you get a slice of
-disaster: the inside is goopy. As consolation for your experience, take pride in
-the fact that you just performed a quantum measurement.
+\dropcap{S}{omebody} flips a coin. Which side will it land on? Physics should be
+able to provide an answer to this question. All that we need to answer this
+question is the initial state of the coin and the mechanics of the flipping
+process. However, we do not know which side the coin starts on, so the best we
+can do is assign probabilities to each side. Starting from heads, flipping the
+coin will produce either heads or tails with some probabilities, and similar if
+the coin starts as tails, though perhaps the probabilities are different. We may
+then assign probabilities to the outcomes of the flipping operation (heads or
+tails), given the initial belief for the probabilities of each starting side. In
+doing this analysis, we have neglected all details about the atomic composition
+of the coin and the details of how the coin is flipped. This situation suggests
+a new way of looking at the coin. If we are only interested in determining the
+side the coin lands on, then we may model the system with only the probabilities
+of the different flip outcomes, and we do not need to consider the positions and
+momenta of the atoms that make up the coin. Just as Newtonian mechanics
+abstracts away the atomic details of the coin and only considers an effective
+Newtonian system with an ideal rigid body, we may consider ``coin mechanics''
+where we abstract away details and consider an ideal ``coin system.'' A coin
+system would specify an initial ``coin state'' and the probabilities needed to
+analyze the flipping operation. Such a probabilistic theory is more general than
+classical mechanics, which requires deterministic operations.
 
-The setup in quantum theory is just like the cake. One starts with a
-\term{quantum state}, which encodes the probabilities one assigns to each
-outcome of an operation. These operations could be anything, and the outcomes
-are often not mutually exclusive. When we do consider operations with exclusive
-outcomes, like the operation of checking if the cake is baked or not, there is
-sometimes an upper bound on the number of outcomes we may see. For the cake
-system there are two outcomes. This property of a quantum system is its
-\term{dimension}.
+In 1924, a similar situation was discovered in a beam of silver atoms by Otto
+Stern and Walther Gerlach~\cite{gerlachUberRichtungsquantelungIm1924}. With the
+apparatus in \cref{fig:silver-furnace}, silver atoms were vaporized in a
+furnace, passed through collimators, subjected to a non-uniform magnetic field,
+and then detected on a plate.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.75\linewidth]{silver-furnace}
+  \caption{%
+    The original Stern-Gerlach
+    experiment~\cite{schmidt-bockingSternGerlachExperimentRevisited2016}.
+  }\label{fig:silver-furnace}
+\end{figure}
+The initial state of a silver atom is thought to be random (isotropic) because
+of the furnace and the lack of a reason to think otherwise, and the operation
+being performed is simply that of waiting until the atom hits the plate.
+Surprisingly, the plate looked like \cref{fig:stern-gerlach}.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.75\linewidth]{stern-gerlach}
+  \caption{%
+    Early detection plates from a postcard Gerlach sent to Niels Bohr
+    {\small(Courtesy of the \href{https://www.nbarchive.dk}{Niels Bohr Archive}
+    in Copenhagen)}.
+  }\label{fig:stern-gerlach}
+\end{figure}
+With no magnet (left), the atoms are not deflected, yet with the magnet (right),
+the atoms are separated cleanly into two beams. This happens for all
+orientations of the magnet around the beam. As experiments of this type
+improved, it became clear that the classical probability theory used in a coin
+system was insufficient to describe which side a silver atom would be deflected
+towards. Rather than coin mechanics, a new theory known as \term{quantum
+mechanics} emerged. This theory uses a different mathematical formalism to
+calculate the probabilities of outcomes, and provides some guidance on how to
+represent physical systems within that formalism.
+
+We will develop this quantum theory from the ground up.
+\Cref{sec:math-form,sec:composite,sec:closed,sec:quantization} have some overlap
+with the standard undergraduate curriculum. However, because we use a fully
+general notion of the quantum state without any reference to a physical system,
+the development is initially different from the usual approach that considers
+the wavefunctions of particles. In particular, \cref{sec:composite} on composite
+systems is not usually covered. After these preliminaries, we start to develop
+the theory of open quantum systems in \cref{sec:open}.
 
 
-\section{The mathematical formalism}
+\section{The mathematical formalism}\label{sec:math-form}
 
-Different mathematical formalisms for quantum mechanics differ in how they
+Different mathematical formalisms for quantum theory differ in how they
 represent states and operations, but they agree on the assignment of
-probabilities to outcomes. We will now review postulates for quantum theory
-based on Hilbert spaces.
+probabilities to outcomes. We will now give postulates for the widely used
+Hilbert space description of the quantum probability theory.
 \begin{post}\label{post:hilb}
   A quantum system is described by a separable complex Hilbert space
   $\hilb$.\footnote{%
@@ -39,7 +90,7 @@ based on Hilbert spaces.
 \end{post}
 
 \begin{post}\label{post:effects}
-  An outcome corresponds to an \term{effect} $\opr{E}$, which is a self-adjoint
+  An outcome corresponds to an \term{effect} $\opr{E}$, which is a Hermitian
   operator on $\hilb$ such that $\zopr \le \opr{E} \le \idopr$.\footnotemark%
 \end{post}
 \footnotetext{%
@@ -80,7 +131,7 @@ $\opr{E}$ may be represented by the \term{Born rule}
   = \tr(\dop\opr{E}),
   \label{eq:effect_probability}
 \end{equation}
-where $\dop \ge \zopr$ is a self-adjoint operator known as a \term{density
+where $\dop \ge \zopr$ is a Hermitian operator known as a \term{density
   operator}~\cite{buschQuantumStatesGeneralized2003,
   buschOperationalQuantumPhysics1997}.\footnote{%
   The more specific case where effects are restricted to be projections $\op{v}$
@@ -98,7 +149,7 @@ Since effects are positive operators that determine the probabilities of each
 outcome, such an observable is called a \term{positive operator valued measure}
 (\textsc{povm}). The special case where the effects are projectors is called a
 \term{projection valued measure} (\textsc{pvm}). A \textsc{pvm} with the maximum
-number of outcomes may be conveniently represented by the self-adjoint operator
+number of outcomes may be conveniently represented by the Hermitian operator
 \begin{equation}
   \opr{M}
   = \sum_m m \op{v_m}.
@@ -111,7 +162,7 @@ By virtue of this definition, the expected value of the \textsc{pvm} is
   &= \tr(\dop\qty(\sum_m m \op{v_m})) \\
   &= \tr(\dop\opr{M}).
 \end{align}
-From here on, most observables will be \textsc{pvm}s represented by self-adjoint
+From here on, most observables will be \textsc{pvm}s represented by Hermitian
 operators.
 
 We now describe how operations change states.
@@ -138,8 +189,13 @@ If an operation is performed but the outcome is unknown, we may assign the state
   = \sum_m \sopr{O}_m(\dop),
   \label{eq:non-selective}
 \end{equation}
-so that an effect $\opr{E}$ has the expected probability $\tr(\dop' \opr{E}) =
-\ev{\tr(\dop_m' \opr{E})}_m$.
+so that the next outcome with effect $\opr{E}$ has the expected probability
+\begin{align}
+  P(\opr{E})
+  &= \tr(\dop' \opr{E}) \\
+  &= \sum_m P(m) \tr(\dop_m' \opr{E}) \\
+  &= \sum_m P(m) P(\opr{E} \,|\, m).
+\end{align}
 
 The state of the ensemble $\dop = \sum_i p_i \dop_i$ after an operation with
 outcome $m$ is
@@ -163,7 +219,7 @@ Now \cref{eq:ensemble-operation} becomes
 Thus operations are convex linear.
 
 
-\section{Composite systems}
+\section{Composite systems}\label{sec:composite}
 
 The success of physics lies in the apparent lack of causal connections between
 phenomena separated in space and time. Different things are different, and the
@@ -286,7 +342,7 @@ change, $\sopr{O}$ must be invertible. Kadison's theorem\footnote{%
 }
 states that all such operations have the form
 \begin{equation}
-  \sopr{O}\dop
+  \sopr{O}(\dop)
   = \opr{U}\dop\opr{U}^\dag,
   \label{eq:unitary-operation}
 \end{equation}
@@ -322,7 +378,7 @@ for real $t$, $t'$. Then since $\opr{U}(0) = \idopr$ is unitary, $\opr{U}(t)$ is
 unitary. We would like a description of $\opr{U}(t)$ that does not depend on
 time. This is provided by Stone's
 theorem~\cite{stoneOneParameterUnitaryGroups1932}, which states that there is a
-self-adjoint operator $\ham$ such that
+Hermitian operator $\ham$ such that
 \begin{equation}
   \opr{U}(t)
   = e^{-\im\ham t}.
@@ -368,7 +424,7 @@ analogous \term{Heisenberg equation of motion}
 for observables. For reference, the usual perspective where the state changes in
 time is known as the \term{Schr\"odinger picture}.
 
-\section{Canonical quantization}
+\section{Canonical quantization}\label{sec:quantization}
 
 The discussion of quantum theory thus far has been fully general. The Liouville
 equation (\cref{eq:liouville}) specifies how a state $\dop$ changes in time,
@@ -510,7 +566,7 @@ theory do not depend on the representation of a system's canonical coordinates,
 and we are justified in making the usual assignment for $\opr{q}$ and $\opr{p}$.
 
 
-\section{Open dynamics}
+\section{Open dynamics}\label{sec:open}
 
 An \term{open system} is a quantum system where the information held by the
 quantum state may change. We will consider only open quantum systems that model
@@ -659,14 +715,20 @@ frequencies of the system as follows.\footnote{%
 First, we write a general interaction Hamiltonian as
 \begin{equation}
   \ham_I
-  = \sum_\alpha \opr{A}_\alpha \tp \opr{B}_\alpha.
+  = \sum_\alpha \opr{A}_\alpha \tp \opr{B}_\alpha,
 \end{equation}
-If $E$ is an eigenvalue of $\ham_S$, let $\opr{\Pi}(E)$ denote the projector
-onto the eigenspace for $E$. Now we let
+where $\opr{A}_\alpha$ and $\opr{B}_\alpha$ are Hermitian. If $E$ is an
+eigenvalue of $\ham_S$, let $\opr{\Pi}(E)$ denote the projector onto the
+eigenspace for $E$. Now we let
 \begin{equation}
   \opr{A}_{\alpha}(\omega)
-  = \sum_{E' - E = \omega} \opr{\Pi}(E)\opr{A}_\alpha\opr{\Pi}(E').
+  = \sum_{E' - E = \omega} \opr{\Pi}(E)\opr{A}_\alpha\opr{\Pi}(E'),
   \label{eq:Aprojectors}
+\end{equation}
+which satisfy that
+\begin{equation}
+  \opr{A}_\alpha^\dag(\omega)
+  = \opr{A}_\alpha(-\omega).
 \end{equation}
 By the completeness of the energy projectors,
 \begin{align}
@@ -677,7 +739,7 @@ By the completeness of the energy projectors,
   \opr{\Pi}(E_1)\opr{A}_\alpha\opr{\Pi}(E_2) \\
   &= \opr{A}_\alpha.
 \end{align}
-The $\opr{A}_\alpha(\omega)$ also satisfy that
+The $\opr{A}_\alpha(\omega)$ also satisfy
 \begin{equation}
   \comm{\ham_S}{\opr{A}_{\alpha}(\omega)}
   = -\omega\opr{A}_{\alpha}(\omega).
@@ -701,67 +763,119 @@ where by \cref{eq:intobs}
   \opr{B}_\alpha^I(t)
   = e^{\im\ham_B t} \opr{B}_\alpha e^{-\im\ham_B t}.
 \end{equation}
+From here on we will drop the superscript $I$ and consider all time-dependent
+operators to be in the interaction picture. For example, $\dop_S(t)$ is the
+reduced state of the system in the interaction picture.
 
 Since we are interested in how fluctuations in different environment modes are
 related, we will consider the \term{reservoir correlation functions}
 \begin{equation}
-  \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}.
   \label{eq:corr}
 \end{equation}
-and their one-sided Fourier transform
+Because $\dop_B$ is a stationary state of the bath, the correlation functions do
+not depend on time.\footnote{%
+  To see this, we use the product rule, \cref{eq:heisenberg-eom}, and the fact
+  that $\comm{\dop_B}{\ham_B} = \zopr$ to find that
+  \begin{align}
+    \dv{t} \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+    &= \im\ev{%
+      \comm{\ham_B}{\opr{B}_\alpha^\dag(t)}\opr{B}_\beta(t - s)
+      + \opr{B}_\alpha^\dag(t)\comm{\ham_B}{\opr{B}_\beta(t - s)}
+    } \\
+    &= \im\ev{%
+      \ham_B\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)
+      - \opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)\ham_B
+    } \\
+    &= \im\tr(%
+    \comm{\dop_B}{\ham_B} \opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)
+    ) \\
+    &= 0.
+  \end{align}
+}
+We may then express the correlation functions as
+\begin{equation}
+  \ev{\opr{B}_\alpha^\dag(s)\opr{B}_\beta(0)}
+\end{equation}
+and consider their one-sided Fourier transforms
 \begin{align}
   \Gamma_{\alpha\beta}(\omega)
-  &\equiv \int_0^\infty \dd{s} e^{\im\omega s}
-  \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  &\coloneqq \int_0^\infty \dd{s} e^{\im\omega s}
+  \ev{\opr{B}_\alpha^\dag(s)\opr{B}_\beta(0)}
   \label{eq:onegammas} \\
-  &\equiv \im S_{\alpha\beta}(\omega) +
-  \flatfrac{\gamma_{\alpha\beta}(\omega)}{2}\!,
+  &\eqqcolon
+  \frac{1}{2}\gamma_{\alpha\beta}(\omega)
+  + \im S_{\alpha\beta}(\omega),
   \label{eq:gammadecomp}
 \end{align}
-where the corresponding matrix $\opr{S} = (\opr{Γ} - \opr{Γ}^\dag) / 2\im$ is
-Hermitian and the matrix corresponding to the full Fourier transform
+where the corresponding matrix $\mq{S} = (\mq{Γ} - \mq{Γ}^\dag) / 2\im$ is
+Hermitian and the matrix corresponding to the full Fourier transforms
 \begin{equation}
   \gamma_{\alpha\beta}(\omega)
-  \equiv \int_{-\infty}^\infty \dd{s} e^{\im\omega s}
-  \ev{\opr{B}_\alpha^\dag(t)\opr{B}_\beta(t - s)}
+  = \int_{-\infty}^\infty \dd{s} e^{\im\omega s}
+  \ev{\opr{B}_\alpha^\dag(s)\opr{B}_\beta(0)}
   \label{eq:gammas}
 \end{equation}
 is positive.
 
-With this setup, we may now move to the main derivation.
-Applying \cref{eq:intpic} to \cref{eq:intpic-intform} and tracing out the
-environment gives the closed equation
-\[
+With this setup, we may now move to the main derivation of the Lindblad equation
+in the interaction picture. Applying \cref{eq:intpic} to
+\cref{eq:intpic-intform} and tracing out the environment gives the closed
+equation
+\begin{equation}
   \dot{\dop}_S(t)
   = -\int_0^t \dd{s}
   \tr_B\comm{\ham_I(t)}{\comm{\ham_I(s)}{\dop_S(s) \tp \dop_B}}
-\]
-for the system density operator. In doing so we have made two assumptions: that
-\[
-  \tr_B\comm{\ham_I(t)}{\dop(0)}
-  = 0,
-\]
-which is the \term{weak-coupling approximation}, and that
-\[
+  \label{eq:first-approx}
+\end{equation}
+for the system density operator. In doing so we have made two assumptions. The
+first is the \term{Born approximation}, which states that $\dop_B$ is stationary
+(in the coarse-grained sense mentioned previously):
+\begin{equation}
   \dop(t)
-  = \dop_S(t) \tp \dop_B,
-\]
-which is the \term{Born approximation}. It should be noted that weak-coupling
-follows if the reservoir averages of the interactions vanish:
-$\ev{\opr{B}_\alpha(t)} = 0$.
+  = \dop_S(t) \tp \dop_B.
+\end{equation}
+The second is the \term{weak-coupling approximation}, which states that
+\begin{equation}
+  \tr_B\comm{\ham_I(t)}{\dop(0)}
+  = 0.
+\end{equation}
+Because
+\begin{align}
+  \tr_B\comm{\ham_I(t)}{\dop(0)}
+  &= \sum_\alpha \qty(%
+  \opr{A}_\alpha(t) \dop_S(t) \tr(B_\alpha(t) \dop_B)
+  - \dop_S(t) \opr{A}_\alpha(t) \tr(\dop_B B_\alpha(t))
+  ) \\
+  &= \sum_\alpha \comm{\opr{A}_\alpha(t)}{\dop_S(t)} \ev{B_\alpha(t)},
+\end{align}
+this is equivalent to the statement that the reservoir averages of the
+interactions vanish:
+\begin{equation}
+  \ev{\opr{B}_\alpha(t)} = 0.
+\end{equation}
 
-We now make the \term{Markov approximation} that $\dop_S(s) = \dop_S(t)$, so
-that the time-evolution only depends on the present time, to obtain the
-\term{Redfield equation}. To simplify further, we make the substitution $s
-\mapsto t - s$ and set the upper limit of the integral to infinity:
+We would now like to perform a set of approximations that makes
+\cref{eq:first-approx} depend only on $\dop_S(t)$, called the \term{Markov
+approximation}. First, we suppose that $\dop_S(s) = \dop_S(t)$, so that the
+time-evolution only depends on the present time. Then \cref{eq:first-approx}
+becomes the \term{Redfield equation}
+\begin{equation}
+  \dot{\dop}_S(t)
+  = -\int_0^t \dd{s}
+  \tr_B\comm{\ham_I(t)}{\comm{\ham_I(s)}{\dop_S(t) \tp \dop_B}}.
+  \label{eq:redfield}
+\end{equation}
+To simplify further, we make the substitution $s \mapsto t - s$ and set the
+upper limit of the integral to infinity:
 \begin{equation}
   \dot{\dop}_S
   = -\int_0^\infty \dd{s}
   \tr_B\comm{\ham_I(t)}{\comm{\ham_I(t - s)}{\dop_S(t) \tp \dop_B}}.
   \label{eq:infbornmarkov}
 \end{equation}
-This is justified when the reservoir correlation functions in
-\cref{eq:onegammas} vanish quickly over a time $\tau_C$ that is smaller than the
+The Markov approximation is justified when the reservoir correlation functions
+(\cref{eq:corr}) vanish quickly over a time $\tau_C$ that is smaller than the
 relaxation time $\tau_R$. Substituting \cref{eq:inthamdecomp} into
 \cref{eq:infbornmarkov} and using \cref{eq:onegammas} gives
 \begin{equation}
@@ -773,18 +887,20 @@ relaxation time $\tau_R$. Substituting \cref{eq:inthamdecomp} into
   - \opr{A}_{\alpha}^\dag(\omega') \opr{A}_{\beta}(\omega) \dop_S),
   \label{eq:decompsub}
 \end{equation}
-where $\herm\opr{C} \equiv (\opr{C} + \opr{C}^\dag) / 2$. If the typical times
-\[
+where $\herm\opr{C} \coloneqq (\opr{C} + \opr{C}^\dag) / 2$. We would like
+\cref{eq:decompsub} to have the simple form $\dot{\dop}_S = \sopr{L}(\dop_S)$,
+where $\sopr{L}$ is a time-independent \term{superoperator} called the
+\term{Liouvillian}. If the typical times
+\begin{equation}
   \tau_S = \abs{\omega' - \omega}^{-1}
   \qfor \omega' \ne \omega
-\]
+\end{equation}
 for system evolution are small compared to the relaxation time $\tau_R$, then
 the contribution from the fast-oscillating terms of \cref{eq:decompsub} where
 $\omega' \ne \omega$ may be neglected. This \term{rotating wave} or
 \term{secular approximation} is analogous to how we consider the high-energy
 position distribution in the infinite square well to be uniform, even though it
-is actually a fast-oscillating function. By coarse-graining in this sense, we
-obtain
+is actually a fast-oscillating function. We then obtain
 \begin{equation}
   \dot{\dop}_S
   = 2\herm \sum_{\alpha\beta\omega}
@@ -793,19 +909,19 @@ obtain
   - \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega) \dop_S).
   \label{eq:rotwave}
 \end{equation}
-Now applying the decomposition \cref{eq:gammadecomp} gives the interaction
-picture \term{Lindblad equation}
+Now applying the decomposition of $\Gamma_{\alpha\beta}$ (\cref{eq:gammadecomp})
+gives the interaction picture \term{Lindblad equation}
 \begin{equation}
   \dot{\dop}_S
   = -\im\comm{\ham_{LS}}{\dop_S} + \sopr{D}(\dop_S)
-  \equiv \sopr{L}(\dop_S),
+  \coloneqq \sopr{L}(\dop_S),
   \label{eq:microlindblad}
 \end{equation}
 where the \term{Lamb shift Hamiltonian} is
 \begin{equation}
   \ham_{LS}
   = \sum_{\alpha\beta\omega}
-  S_{\alpha\beta}(\omega) \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega),
+  S_{\alpha\beta}(\omega) \opr{A}_{\alpha}^\dag(\omega) \opr{A}_{\beta}(\omega)
   \label{eq:lamb-shift}
 \end{equation}
 and the \term{dissipator} is
@@ -821,8 +937,9 @@ To transform back to the Schr\"odinger picture, one only needs to add the system
 Hamiltonian $\ham_S$ to $\ham_{LS}$. One may then diagonalize
 $\gamma_{\alpha\beta}$ to put \cref{eq:microlindblad} into the standard form of
 \cref{eq:lindblad}. In our examples $\gamma_{\alpha\beta}$ will already be
-diagonal. In this case, we call the operators defined by \cref{eq:Aomega} in the
-dissipator the \term{jump operators} of the open system.
+diagonal. In this case, we call the operators $\opr{A}_\alpha(\omega)$
+(\cref{eq:Aprojectors}) in the dissipator the \term{jump operators} of the open
+system.
 
 
 \section{Relaxation to thermal equilibrium\label{sec:thermo}}
@@ -858,14 +975,29 @@ that
   \label{eq:right-th}
 \end{align}
 
-The reservoir correlation functions obey the \termalt{KMS
-condition}{\textsc{kms} condition}~\cite{kubo,martinschwinger}
-\begin{equation}
+We may rearrange the reservoir correlation functions to find that
+\begin{align}
   \ev{\opr{B}_\alpha^\dag(t) \opr{B}_\beta(0)}
-  = \ev{\opr{B}_\beta(0) \opr{B}_\alpha^\dag(t + \im\beta)}.
+  &= {\qty(\tr e^{-\beta\ham_B})}^{-1}
+  \tr(e^{-\beta\ham_B} \opr{B}_\alpha^\dag(t) \opr{B}_\beta(0)) \\
+  &= {\qty(\tr e^{-\beta\ham_B})}^{-1}
+  \tr(e^{-\beta\ham_B} e^{\im\ham_B t}\opr{B}_\alpha e^{-\im\ham_B t} \opr{B}_\beta) \\
+  &= {\qty(\tr e^{-\beta\ham_B})}^{-1}
+  \tr(e^{-\beta\ham_B} \opr{B}_\beta e^{\im\ham_B (t + \im\beta)} \opr{B}_\alpha
+  e^{-\im\ham_B (t + \im\beta)}) \\
+  &= \ev{\opr{B}_\beta(0) \opr{B}_\alpha^\dag(t + \im\beta)},
   \label{eq:kms}
-\end{equation}
-From \cref{eq:kms} it follows that
+\end{align}
+which is known as the the \termalt{KMS boundary condition}{\textsc{kms} boundary
+  condition}~\cite{kubo,martinschwinger}.\footnote{%
+  The similarity between the thermal state $\dop_B \propto e^{-\beta\ham_B}$ and
+  the time evolution operator $\opr{U}(t) = e^{-\im t \ham_B}$ invites the study
+  of the correlation functions in complex time. It is called a boundary
+  condition because of its relevance for the theory of thermodynamic Green
+  functions~\cite{bechstedtThermodynamicGreenFunctions2015}.
+}
+Fourier-transforming \cref{eq:kms} gives a relation for $\gamma_{\alpha\beta}$
+(\cref{eq:gammas}):
 \begin{equation}
   \gamma_{\alpha\beta}(-\omega)
   = e^{-\beta\omega} \gamma_{\beta\alpha}(\omega).

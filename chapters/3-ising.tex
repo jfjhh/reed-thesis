@@ -63,7 +63,8 @@ parameter $g$. \Cref{fig:spaghetti} explains the name.
 In addition to varying the parameter $g$, we also would like to vary the
 dimensionless inverse temperature $\eta$. It is a bit confusing to decipher
 spaghetti diagrams across $g$ and temperature, so we will instead perform a
-least squares fit of the single exponential model
+least squares fit to find the rate $s$ and amplitude $A$ of the single
+exponential model
 \begin{equation}
   \ev{\pauli_1^z}(\tilde{t})
   = A e^{-s \tilde{t}} + \ev{\pauli_1^z}(\infty)
@@ -87,14 +88,24 @@ hardware used is given in \cref{ch:computer-details}.
 
 \notebook{document-computations}
 
+\cleardoublepage%
+
 \section{Results}
 
 The results of the preceeding computations for $N$ from \numrange{2}{5} are
 given on the following pages. For easy comparison, each set of plots for a given
-number of spins spans an even and odd page. Note that in
-\cref{fig:spin-relaxation-2,fig:spin-relaxation-3,fig:spin-relaxation-4,fig:spin-relaxation-5}
-the first three plots show relaxation rates decreasing with temperature, while
-the next three plots flip the order.
+number of spins spans an even and odd page. To interpret the plots, note that:
+\begin{itemize}
+  \item The highlighted line in each spaghetti diagram is the single-spin
+    relaxation rate for $\eta = 10$, which shows how the full collection of
+    rates is filtered to produce a different rate for a particular expected
+    value.
+
+  \item In
+    \cref{fig:spin-relaxation-2,fig:spin-relaxation-3,fig:spin-relaxation-4,fig:spin-relaxation-5}
+    the first three plots show relaxation rates decreasing with temperature,
+    while the next three plots flip the order.
+\end{itemize}
 
 \newcommand*\cleartoleftpage{%
   \clearpage
