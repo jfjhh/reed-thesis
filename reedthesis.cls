@@ -184,31 +184,20 @@
   \fi
 
   \PassOptionsToPackage{dvipsnames}{xcolor}
-  \usepackage[object=vectorian]{pgfornament}
-  \usepackage{lipsum,tikz}
-  % \newcommand{\sectionline}{\centerline{\hbox to \wd0 {\hbox{}\hrulefill\hbox{}}}}
-  \newcommand{\sectionline}{
-  \noindent
-  \begin{center}
-  {
-    \resizebox{0.5\linewidth}{1ex}
-    {{%
-    {\begin{tikzpicture}
-    \node  (C) at (0,0) {};
-    \node (D) at (9,0) {};
-    \path (C) to [ornament=88] (D);
-    \end{tikzpicture}}}}}%
-    \end{center}
-  }
-  % \newcommand{\sectionline}{%
-  %   \noindent
-  %   \begin{center}
-  %     \resizebox{0.5\linewidth}{1ex}
-  %     \begin{tikzpicture}
-  %       \node (C) at (0,0) {};
-  %       \node (D) at (9,0) {};
-  %       \path (C) to [ornament=88] (D);
-  %     \end{tikzpicture}
+  % \usepackage[object=vectorian]{pgfornament}
+  % \usepackage{lipsum,tikz}
+  \newcommand{\sectionline}{\centerline{\hbox to \wd0 {\hbox{}\hrulefill\hbox{}}}}
+  % \newcommand{\sectionline}{
+  % \noindent
+  % \begin{center}
+  % {
+  %   \resizebox{0.5\linewidth}{1ex}
+  %   {{%
+  %   {\begin{tikzpicture}
+  %   \node  (C) at (0,0) {};
+  %   \node (D) at (9,0) {};
+  %   \path (C) to [ornament=88] (D);
+  %   \end{tikzpicture}}}}}%
   %   \end{center}
   % }
 

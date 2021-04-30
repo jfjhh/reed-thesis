@@ -27,8 +27,15 @@ url=false,
 isbn=false,
 ]{biblatex}
 
-\AtEveryBibitem{\clearlist{language}\clearfield{note}}
-\AtEveryCitekey{\clearlist{language}\clearfield{note}}
+\defbibheading{bibliography}[\bibname]{%
+  \chapter*{#1}
+  \addcontentsline{toc}{chapter}{#1}
+  \chaptermark{#1}
+  \markboth{#1}{#1}
+}
+
+\AtEveryBibitem{\clearlist{language}\clearfield{note}\clearfield{pagetotal}}
+\AtEveryCitekey{\clearlist{language}\clearfield{note}\clearfield{pagetotal}}
 
 \DefineBibliographyStrings{english}{%
   backrefpage = {page},% originally "cited on page"
@@ -61,14 +68,6 @@ isbn=false,
 % {\usebibmacro{string+doiurlisbn}{\mkbibquote{#1}}}
 
 \addbibresource{\jobname.bib}
-\AtEndDocument{%
-  % \bibliographystyle{unsrtnat}
-  % \bibliography{thesis}
-
-  \printbibliography%
-
-  \printindex%
-}
 
 \usepackage{ifdraft} % final: for printing (set bw, etc.)
 \usepackage{xstring}
@@ -132,6 +131,7 @@ isbn=false,
 
 \usepackage{imakeidx}
 \makeindex
+\indexsetup{othercode={\thispagestyle{empty}}}
 \newcommand{\term}[1]{\index{#1}\textbf{#1}}
 \newcommand{\termalt}[2]{\index{#1}\textbf{#2}}
 
@@ -142,7 +142,7 @@ isbn=false,
 \usepackage[final]{minted}
 \setminted{%
   breaklines,
-  fontsize=\small,
+  fontsize=\normalsize,
   baselinestretch=1,
 }
 \ifoptionfinal{%
@@ -190,33 +190,36 @@ isbn=false,
     Relaxation for an Open System of Interacting Spins
 }
 }
-\author{Alex Striff}
+\author{Alexander B{.}~Striff}
 % The month and year that you submit your final draft to the library
 % (May or December)
 \date{May 2021}
 \division{Mathematical and Natural Sciences}
-\advisor{Darrell Schroeter}
+\advisor{Darrell F{.}~Schroeter}
 \department{Physics}
 
 \begin{document}
-\maketitle
 \pagenumbering{roman}
 \frontmatter
-\pagenumbering{arabic}
+\maketitle
 \pagestyle{empty}
 
 \include{acknowledgements}
-% \chapter*{Preface} % Optional
-\include{abstract}
-% \chapter*{Dedication} % Optional
 
-\mainmatter%
-\pagestyle{fancyplain}
 {%
   \hypersetup{linkcolor=black} % For table of contents
   \tableofcontents
   \listoffigures
+  \thispagestyle{empty}
 }
+\pagestyle{fancyplain}
+
+\include{abstract}
+
+\newpage\thispagestyle{empty}\mbox{}\newpage
+
+\pagenumbering{arabic}
+\mainmatter%
 
 \include{introduction}
 \input{chapters/subfiles.txt}
@@ -227,12 +230,12 @@ isbn=false,
 \subfile{appendices/transverse-ising-model}
 \subfile{appendices/computer-details}
 
-{\nocite{*}}
-
 \backmatter% Adds index and bibliography to TOC
 
-% Bibliography added by \AtEndDocument in preamble so that subfiles have
-% bibliographies.
+\nocite{*}
+\printbibliography%
+\cleardoublepage%
+\printindex%
 
 \end{document}
 
