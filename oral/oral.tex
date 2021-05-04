@@ -1,0 +1,451 @@
+\documentclass[12pt,c]{beamer}
+
+\usepackage[normalem]{ulem}
+\usepackage{multicol}
+\usepackage{wasysym}
+\usepackage{multicol}
+
+\usepackage{mathtools} % Load before newtxmath
+\mathtoolsset{%
+  mathic,
+}
+\usepackage[%
+math-style=ISO,
+bold-style=ISO,
+sans-style=italic,
+nabla=upright,
+partial=upright,
+]{unicode-math}
+
+
+\definecolor{rubric}{rgb}{0.7,0.05,0.0}
+
+\usecolortheme[snowy]{owl}
+\setbeamercolor{title}{fg=rubric}
+% \setbeamerfont{frametitle}{shape=\itshape}
+\setbeamercolor{frametitle}{bg=white}
+\setbeamertemplate{frametitle}[default]%[center]
+\setbeamertemplate{caption}{\insertcaption}
+% \setbeamertemplate{caption}[numbered]
+% \setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\setbeamercolor{section in toc}{fg=normal text.fg}
+\setbeamercolor{footnote}{fg=gray}
+\setbeamercolor{alerted text}{fg=rubric}
+\setbeamercolor*{bibliography item}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry author}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry title}{fg=rubric}
+\setbeamercolor*{bibliography entry location}{fg=normal text.fg}
+\setbeamercolor*{bibliography entry note}{fg=normal text.fg}
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \color{normal text.fg}
+    \hspace{1em}%
+    \insertframenumber\,/\,\inserttotalframenumber%
+}
+
+\AtBeginSection[]{%
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+\usepackage[sorting=none,doi=false,url=false,isbn=false]{biblatex}
+\addbibresource{references.bib}
+\renewcommand*{\bibfont}{\footnotesize}
+
+% Fonts
+\usefonttheme[stillsansserifsmall]{serif} % So beamer won't change fonts
+% \usefonttheme{default}
+\usepackage[semibold]{libertinus-otf}
+% \usepackage[full]{textcomp} % to get the right copyright, etc.
+% \usepackage[T1]{fontenc} % LY1 also works
+% \setmainfont[Numbers={OldStyle,Proportional}]{fbb}
+% \setsansfont[Scale=0.95]{Cabin}
+% \usepackage[supstfm=fbb-Regular-sup-t1]{superiors}
+\setmainfont[Numbers={OldStyle,Proportional}]{Libertinus Serif} % We need lots of unicode, like ⊗
+\usepackage[supstfm=libertinesups,supscaled=1.2,raised=-.13em]{superiors}
+\setmonofont[Scale=MatchLowercase]{JuliaMono} % We need unicode
+\usepackage[cal=cm,bb=boondox,frak=boondox]{mathalfa}
+
+\newcommand{\spacedsc}{\scshape\addfontfeatures{LetterSpace=5}}
+
+% Use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\hypersetup{%
+  pdfborder={0 0 0},
+  breaklinks=true,
+}
+\urlstyle{same} % don't use monospace font for urls
+
+% \setlength{\parindent}{0pt}
+% \setlength{\parskip}{6pt plus 2pt minus 1pt}
+% \setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\tikzset{% Animate with beamer overlays
+  invisible/.style={opacity=0},
+  visible on/.style={alt={#1{}{invisible}}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+
+\graphicspath{{./figs/}}
+
+\input{preamble/math-packages}
+\input{preamble/math-commands}
+
+\renewcommand\footnoterule{}
+\renewcommand\thefootnote{\textcolor{gray}{\arabic{footnote}}}
+% \setbeamertemplate{footnote}{%
+%   \scriptsize\noindent\raggedright$^*$\insertfootnotetext\par%
+% }
+
+\title{Relaxation for an Open System of Interacting Spins}
+\author{Alex Striff \\ Advisor: Darrell Schroeter}
+\institute{\textit{Reed College \\ Thesis Oral Defense}}
+\date{May 4, 2021}
+
+\begin{document}
+
+{%
+  \beamertemplatenavigationsymbolsempty%
+  \begin{frame}
+    \begin{tikzpicture}[remember picture,overlay,opacity=0.125]
+      \node[at=(current page.center)] {%
+          % \includegraphics[keepaspectratio,
+          % width=\paperwidth,
+          % height=\paperheight]{spins}
+        };
+    \end{tikzpicture}
+    \titlepage%
+  \end{frame}
+}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+
+\section{Why care about thermalization and relaxation rates?}
+
+\begin{frame}{We know little information about large systems}
+  \begin{multicols}{2}
+    \begin{figure}[h]
+      \centering
+      % http://marcmmw.freeshell.org/esp/fisica/intercambio_de_energia.html
+      \includegraphics[width=0.5\linewidth]{hard-gas}
+      \caption{A hard-sphere gas}\label{fig:hard-gas}
+    \end{figure}
+    \begin{figure}[h]
+      \centering
+      % https://tex.stackexchange.com/a/155242
+      \includegraphics[width=0.5\linewidth]{diamond}
+      \caption{Diamond}\label{fig:diamond}
+    \end{figure}
+    \vfill\null\columnbreak%
+    Thermodynamic quantities:
+    \begin{itemize}
+      \item Temperature
+      \item Energy
+      \item Entropy
+      \item Heat capacity
+      \item Magnetization
+    \end{itemize}
+    \vspace{\baselineskip}
+    Occam's razor: Assign the most uncertain state with known $\ev{E}$ (maximum
+    entropy)
+    \color{gray}
+    \[
+      \dop
+      = \frac{e^{-\beta\ham}}{\tr e^{-\beta\ham}}
+    \]
+  \end{multicols}
+\end{frame}
+
+\begin{frame}{(The eigenstate thermalization hypothesis)}
+  \begin{figure}[h]
+    \centering
+    % http://marcmmw.freeshell.org/esp/fisica/intercambio_de_energia.html
+    \includegraphics[width=0.5\linewidth]{hard-gas}
+    \caption{A hard-sphere gas}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{System-environment interactions}
+  \begin{figure}[h]
+    \centering
+    % https://tex.stackexchange.com/a/155242
+    \includegraphics[width=0.3333\linewidth]{diamond}
+    \caption{Diamond}
+  \end{figure}
+  \begin{center}
+    $
+    \vcenter{\hbox{\includegraphics[width=0.3333\textwidth]{spins}}}
+    \overset{\ham_I}{\longleftrightarrow}
+    \quad
+    \vcenter{\hbox{\includegraphics[width=0.3333\textwidth]{thermal-bath}}}
+    $
+  \end{center}
+\end{frame}
+
+\begin{frame}{Limitations of quantum devices}
+  \begin{multicols}{2}
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.85\linewidth]{nv-probe}
+      \caption{Scanning NV magnetometer}
+    \end{figure}
+    \vfill\null\columnbreak%
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.85\linewidth]{ibm-q}
+      \caption{IBM Quantum computer}
+    \end{figure}
+  \end{multicols}
+  \begin{figure}[h]
+    \centering
+    \vspace{-2\baselineskip}
+    \includegraphics[width=0.85\linewidth]{nv-coherence}
+  \end{figure}
+\end{frame}
+
+
+\section{Review of open quantum systems}
+
+\begin{frame}{The quantum state}
+  A \alert{quantum state} assigns probabilities to outcomes.
+  \begin{center}
+    \includegraphics[width=0.3333\textwidth]{stern-gerlach}
+  \end{center}
+  $\ket{\psi} \in \hilb$ does not assign even odds for all orientations.
+  \frownie%
+  
+  How to represent half-$\ket{\uparrow}$ and half-$\ket{\downarrow}$?
+  \begin{align*}
+    \dop
+    &= \frac{1}{2}\op{\uparrow} + \frac{1}{2}\op{\downarrow} \\
+    &= \sum_i p_i \op{\psi_i}
+  \end{align*}
+  A \alert{density operator} $\dop$ represents a general quantum state.
+\end{frame}
+
+\begin{frame}{Weak coupling to a thermal bath}
+  \begin{center}
+    $
+    \vcenter{\hbox{\includegraphics[width=0.3333\textwidth]{spins}}}
+    \overset{\ham_I}{\longleftrightarrow}
+    \quad
+    \vcenter{\hbox{\includegraphics[width=0.3333\textwidth]{thermal-bath}}}
+    $
+  \end{center}
+  \begin{itemize}
+    \item Start with $\dop(0) = \dop_S(0) \tp \dop_B$.
+
+    \item The combined system has unitary evolution from the Hamiltonian
+      \[
+        \ham
+        = \ham_S + \ham_B + \ham_I.
+      \]
+
+    \item Then throw away the bath: $\dop_S(t) = \tr_B\dop(t)$.
+
+    \item How to find $\dop_S(t)$ \alert{directly} from $\dop_S(0)$?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Reduced dynamics}
+  Whatever it is, the result must also be a density operator.
+  \[
+    \ket{\Psi(t)} = \opr{U}(t) \ket{\Psi(0)}
+    \quad\mapsto\quad
+    \dop(t)
+    = \sopr{V}(t)\dop(0)
+  \]
+  \pause%
+  Usually $\dop(t + \dd{t})$ depends only on $\dop(t)$, not the past.
+  \[
+    \sopr{V}(t + \dd{t})\dop(0)
+    = \sopr{V}(\dd{t})\sopr{V}(t)\dop(0)
+  \]
+  Then there is a generator of time evolution.
+  \[
+    \ket{\dot{\Psi}} = -\im\ham\ket{\Psi}
+    \quad\mapsto\quad
+    \dot{\dop} = \sopr{L}(\dop)
+  \]
+  \pause%
+  Any \textcolor{gray}{\textsc{cptp}} $\sopr{L}$ may be put into
+  \alert{Lindblad form}.
+  \[
+    \sopr{L}(\dop)
+    = -\im\comm{\ham_S + \ham_{LS}}{\dop}
+    + \sum_{i,\,\omega} \gamma_i(\omega) \qty(%
+    \opr{A}_i(\omega)\dop\opr{A}_i^\dag(\omega)
+    - \frac{1}{2}\acomm{\opr{A}_i^\dag(\omega)\opr{A}_i(\omega)}{\dop}
+    )
+  \]
+\end{frame}
+
+\begin{frame}{Example: Atomic emission}
+  The eigenstates of hydrogen are \alert{not} stable.
+  \textcolor{gray}{(E\&M vacuum)}
+  \[
+    \vcenter{\hbox{\includegraphics[width=0.5\textwidth]{hydrogen}}}
+    \quad
+    \vcenter{\hbox{\includegraphics[width=0.125\textwidth]{two-level.png}}}
+    \quad
+    \ham = \frac{\omega}{2}\,\pauli_z
+  \]
+  \begin{center}
+    \includegraphics[width=0.75\textwidth]{populations}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Understanding the dissipator $\sopr{D}$}
+  For the two-level system
+  {\small
+    \begin{align*}
+      \sopr{D}(\dop)
+      = \gamma_0(N + 1) \qty(\pauli^- \dop \pauli^+ -
+      \frac{1}{2}\acomm{\pauli^+\pauli^-}{\dop})
+      + \gamma_0 N \qty(\pauli^+ \dop \pauli^- -
+      \frac{1}{2}\acomm{\pauli^-\pauli^+}{\dop})
+    \end{align*}
+  }
+  \begin{multicols}{2}
+    System evolution is a piecewise deterministic process (\textsc{pdp})
+    {\color{gray} with $P(\text{jump}) \propto \gamma$}
+    \[
+      \ket{\psi}
+      \mapsto
+      \frac{\pauli^+\ket{\psi}}{\norm{\pauli^+\ket{\psi}}}
+      \qq{or}
+      \frac{\pauli^-\ket{\psi}}{\norm{\pauli^-\ket{\psi}}}
+    \]
+    \vspace{\baselineskip}
+    {\color{gray}
+      \[
+        \ham_I
+        = \vecopr{E} \vdot \vecopr{D}
+        \approx -\frac{\Omega}{2}\qty(\pauli^+ + \pauli^-)
+      \]
+    }
+    \vfill\null\columnbreak%
+    \vfill
+    \begin{figure}[b]
+      \centering
+      \includegraphics[width=\linewidth]{pdp}
+      \caption{%
+        A realization of the \textsc{pdp} for the driven two-level atom 
+      }
+    \end{figure}
+  \end{multicols}
+\end{frame}
+
+\begin{frame}{The transverse-field Ising chain}
+  \[
+    \vcenter{\hbox{\includegraphics[width=0.2\linewidth]{tim}}}
+    \qquad
+    \ham
+    = -J\sum_{i \in \ZZ_N} \qty(%
+    \opr{S}_i^x\opr{S}_{i+1}^x
+    + \frac{g}{2} \opr{S}_i^z
+    )
+  \]
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.625\linewidth]{ising-modes}
+    \caption{Elementary excitation spectra across field strength $g$}
+  \end{figure}
+\end{frame}
+
+
+\section{Results}
+
+\begin{frame}{Time evolution}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{time-evolution-2}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Exponential fit}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{exponential-fit-2}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Energy levels}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{energy-levels-2}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Dissipator spectrum (spaghetti diagram)}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{spin-spectrum-2}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \includegraphics[keepaspectratio,width=0.95\paperwidth,height=0.95\paperheight]{%
+    spin-relaxation-2}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}{Time evolution}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{time-evolution-5}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Exponential fit}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{exponential-fit-5}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Energy levels}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{energy-levels-5}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Dissipator spectrum (spaghetti diagram)}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{spin-spectrum-5}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \includegraphics[keepaspectratio,width=0.95\paperwidth,height=0.95\paperheight]{%
+    spin-relaxation-5}
+  \end{center}
+\end{frame}
+
+
+\section*{References}
+
+\begin{frame}{References}
+  \nocite{opensys,liebTwoSolubleModels1961,pfeutyOnedimensionalIsingModel1970}
+  \printbibliography%
+\end{frame}
+
+\end{document}
+
