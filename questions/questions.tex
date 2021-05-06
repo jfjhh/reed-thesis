@@ -1,0 +1,308 @@
+\documentclass[12pt]{article}
+
+% Core packages
+\usepackage{mathtools} % Load before newtxmath
+\mathtoolsset{%
+  mathic,
+  showonlyrefs,
+}
+% \allowdisplaybreaks%
+
+\usepackage[%
+math-style=ISO,
+bold-style=ISO,
+sans-style=italic,
+nabla=upright,
+partial=upright,
+]{unicode-math}
+
+\usepackage[%
+backend=biber,
+% backref=true,
+sorting=none,
+style=phys,
+biblabel=brackets,
+citestyle=numeric-comp,
+doi=false,
+url=false,
+isbn=false,
+]{biblatex}
+
+% \defbibheading{bibliography}[\bibname]{%
+%   \section*{#1}
+%   \sectionmark{#1}
+%   \markboth{#1}{#1}
+% }
+
+\AtEveryBibitem{\clearlist{language}\clearfield{note}\clearfield{pagetotal}}
+\AtEveryCitekey{\clearlist{language}\clearfield{note}\clearfield{pagetotal}}
+
+\DefineBibliographyStrings{english}{%
+  backrefpage = {page},% originally "cited on page"
+  backrefpages = {pages},% originally "cited on pages"
+}
+
+\newbibmacro{string+doiurlisbn}[1]{%
+  \iffieldundef{doi}{%
+    \iffieldundef{url}{%
+      \iffieldundef{isbn}{%
+        \iffieldundef{issn}{%
+          #1%
+          }{%
+          \href{http://books.google.com/books?vid=ISSN\thefield{issn}}{#1}%
+        }%
+        }{%
+        \href{http://books.google.com/books?vid=ISBN\thefield{isbn}}{#1}%
+      }%
+      }{%
+      \href{\thefield{url}}{#1}%
+    }%
+    }{%
+    \href{http://dx.doi.org/\thefield{doi}}{#1}%
+  }%
+}
+
+\DeclareFieldFormat{title}{\usebibmacro{string+doiurlisbn}{\mkbibemph{#1}}}
+% \DeclareFieldFormat[article,incollection]{title}%
+% \DeclareFieldFormat[article]{title}%
+% {\usebibmacro{string+doiurlisbn}{\mkbibquote{#1}}}
+
+\addbibresource{thesis.bib}
+
+\usepackage{ifdraft} % final: for printing (set bw, etc.)
+\usepackage{xstring}
+\usepackage{pgffor}
+\usepackage{subfiles}
+\newcommand{\notebook}[1]{\subfile{../notebooks/tex/#1}}
+
+
+% Layout and styling
+\usepackage{etoolbox}
+\usepackage{multicol}
+\usepackage[final]{microtype}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{rotating}
+\usepackage{fnpct}
+\setlist[enumerate,1]{label=\textbf{\arabic*.}}
+
+\usepackage[labelfont=bf]{caption}
+\usepackage{sectsty}
+\allsectionsfont{\normalfont\scshape}
+\chapterfont{\normalfont\scshape\liningnums}
+
+% Fonts
+\usepackage[full]{textcomp} % to get the right copyright, etc.
+\usepackage[semibold]{libertinus-otf}
+\usepackage[T1]{fontenc} % LY1 also works
+\setmainfont[Numbers={OldStyle,Proportional}]{Libertinus Serif} % We need lots of unicode, like ⊗
+\usepackage[supstfm=libertinesups,supscaled=1.2,raised=-.13em]{superiors}
+\setmonofont[Scale=MatchLowercase]{JuliaMono} % We need lots of unicode, like ⊗
+\usepackage[cal=cm,bb=boondox,frak=boondox]{mathalfa}
+
+% 1.5 / 1.208, where 1.208 is the default baseline skip to font size ratio.
+% That is, for 12pt font, the default baseline skip is 14.5pt
+% https://www.tug.org/svn/texlive/trunk/Master/texmf-dist/tex/latex/base/size12.clo?view=co
+% \linespread{1.24137}
+
+\usepackage{parskip}
+
+
+% Code highlighting
+% \usepackage{textcomp}
+% \usepackage{tcolorbox}
+% \usepackage[final]{minted}
+% \setminted{%
+%   breaklines,
+%   fontsize=\normalsize,
+%   baselinestretch=1,
+% }
+% \ifoptionfinal{%
+%   \setminted{style=bw}
+%   }{%
+%   \setminted{style=friendly}
+%   \setminted[wolfram]{style=mathematica}
+% }
+
+% Graphics
+\PassOptionsToPackage{final}{graphicx}
+\def\figwidth{\linewidth}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\setkeys{Gin}{draft=false}
+
+\graphicspath{{../figs/}{../notebooks/}{../notebooks/tex/}}
+
+% More preamble commands, separated for reuse by notebooks
+\input{preamble/math-packages}
+\input{preamble/math-commands}
+% \input{preamble/ansi-colors}
+
+% Reference management (order-sensitive)
+\usepackage{xparse}
+% \usepackage[pdfusetitle,final,backref,breaklinks]{hyperref}
+\usepackage[pdfusetitle,final,breaklinks]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{cleveref}
+
+\definecolor{linkcolor}{rgb}{0.0,0.25,0.5}
+\definecolor{rubric}{rgb}{0.7,0.05,0.0}
+\definecolor{resultbg}{rgb}{0.95,0.95,0.95}
+\hypersetup{%
+  allcolors=rubric,
+}
+\urlstyle{same}
+\ifoptionfinal{\hypersetup{hidelinks}}{\hypersetup{colorlinks}}
+
+\title{Thesis Defense Questions}
+\author{Alexander B{.}~Striff}
+\date{May 2021}
+
+\begin{document}
+\thispagestyle{empty}
+\maketitle
+
+\section{Principal value integrals}
+
+The \emph{principal value integral} of a real function $f:[a, b] \to \RR$ with a
+pole at $x_0 \in [a, b]$ is defined as
+\begin{equation}
+  \pv\int_a^b \dd{x} f(x)
+  = \lim_{\varepsilon \to 0^+} \qty(%
+  \int_a^{x_0 - \varepsilon} \dd{x} f(x)
+  \int_{x_0 + \varepsilon}^b \dd{x} f(x)
+  ),
+  \label{eq:pv}
+\end{equation}
+where $\int_a^{x_0} \dd{x} f(x) = \pm\infty$ and $\int_{x_0}^b \dd{x} f(x) =
+\mp\infty$. We will integrate a simplified version of eq.~(2.84):
+\begin{equation}
+  \pv\int_0^b \dd{u} \frac{u^2}{1 - u^2},
+\end{equation}
+where $b > 1$. First, we will compute the indefinite integral by writing the
+integrand as
+\begin{equation}
+  \frac{u^2}{1 - u^2}
+  = \frac{A(u)}{1 - u} + \frac{B(u)}{1 + u}.
+\end{equation}
+This requires that $A(u) = -B(u) = u/2$, so we find that
+\begin{align}
+  \int\dd{u}\frac{u^2}{1 - u^2}
+  &= \frac{1}{2}\int\dd{u}\qty(\frac{u}{1 - u} - \frac{u}{1 + u}) \\
+  &= \frac{1}{2}\qty(-u - \ln(1 - u) - u + \ln(1 + u)) + C \\
+  &= -u + \atanh u + C.
+\end{align}
+Now we substitute the limits of integration to find that
+\begin{align}
+  &\pv\int_a^b \dd{x} f(x) \\
+  &=
+  0 - \atanh 0
+  -b + \atanh b \\
+  &\quad+ \lim_{\varepsilon \to 0^+} \qty(%
+  -(1 - \varepsilon) + \atanh(1 - \varepsilon)
+  + (1 + \varepsilon) - \atanh(1 + \varepsilon)
+  ) \\
+  &=
+  -b + \atanh b
+  + \lim_{\varepsilon \to 0^+} \qty(%
+  \atanh(1 - \varepsilon)
+  - \atanh(1 + \varepsilon)
+  ) \\
+  &=
+  -b + \frac{1}{2}\ln(\frac{1 + b}{1 - b})
+  + \frac{1}{2} \lim_{\varepsilon \to 0^+}
+  \ln(\frac{(2-\varepsilon)(-\varepsilon)}{\varepsilon(2+\varepsilon)})
+  \\
+  &=
+  -b + \frac{1}{2}\ln(\frac{1 + b}{1 - b})
+  + \frac{1}{2} \ln(-1)
+  \\
+  &=
+  -b + \frac{1}{2}\ln(\frac{b + 1}{b - 1})
+  \\
+  &= -b + \acoth b,
+\end{align}
+since $\ln(-z) = \ln z + \im\pi$.
+
+\section{Time-dependent perturbation theory}
+
+There are a few differences between the open system approach in the thesis and
+the perturbative calculations
+in~\cite{griffithsIntroductionQuantumMechanics2018}.
+
+The weak-coupling Lindblad equation only describes the time evolution on a
+coarse-grained time scale, so it will produce incorrect results for time scales
+beneath the bath correlation time. In the Markovian regime the reduced dynamics
+show exponential decay of populations at small times, while the true populations
+are initially unchanging. However, the general idea of reduced dynamics is
+consistent with perturbation theory. The two-level system is a special case
+where the composite system may be exactly reduced, and the decoherence results
+found agree with the quadratic transition probability (eq.~(11.43)
+of~\cite{griffithsIntroductionQuantumMechanics2018}) for small times found in
+perturbation theory~\cite[p.~230]{opensys}. (This limit demonstrates the quantum
+Zeno effect, but the full theory of open systems is required to model an
+indirect continuous measurement by the interaction of a system with a probe
+particle~\cite[p.~167--171]{opensys}.)
+
+The other difference is in the treatment of the quantum state and the
+electromagnetic field. The perturbative approach considers only pure states and
+incoherent radiation (see footnote 12
+in~\cite[p.~414]{griffithsIntroductionQuantumMechanics2018}). This suffices to
+find the absorption rate for a thermal bath, but fails to predict spontaneous
+emission directly without recourse to statistical mechanics. The open system
+approach requires quantization of the electromagnetic field, and thus enables
+all processes including spontaneous emission to be modeled (seen in eq.~(2.11)).
+Additionally, one may consider entangled states of light or of the system that
+cannot be described by pure states in the perturbative approach. Only the open
+system approach shows how a pure state can evolve into a mixed state, and allow
+one to study the entropy flux due to dissipative effects of the
+bath~\cite[p.~128]{opensys}.
+
+\section{Spaghetti diagrams}
+
+For the purposes of the thesis, a \emph{spaghetti diagram} is a plot that shows
+how the eigenvalues of a Hermitian matrix $\ham(\lambda)$ vary as a function of
+the parameter $\lambda$. They are used in the thesis to provide insight into the
+energy levels of the normalized Ising Hamiltonian (eq.~(2.35)) and the spectrum
+of all possible relaxation rates for a system. A simple example of a spaghetti
+diagram is given by perturbing the infinite square well. We know that the energy
+levels of the square well grow like $n^2$, but what happens when the bump of
+\cref{fig:bump} is introduced?
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.75\linewidth]{bump}
+  \caption{%
+    The potential bump added to the square well.
+  }\label{fig:bump}
+\end{figure}
+Let the height of the bump be $\lambda$. We expect that $\lambda = 0$ is the
+usual square well and that $\lambda \to \infty$ should be similar to two square
+wells with twofold degeneracy in each energy level, but what happens in between?
+This is what spaghetti diagrams can show us. Using Darrell's finite difference
+code from Quantum II, we may compute the spaghetti diagram for $\lambda$
+(\cref{fig:spaghetti}).
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.75\linewidth]{spaghetti}
+  \caption{%
+    A spaghetti diagram for increasing the height of the bump.
+  }\label{fig:spaghetti}
+\end{figure}
+The diagram tells us three things about the transition between the two extremes
+of $\lambda$.
+\begin{itemize}
+  \item The twofold degeneracy as $\lambda \to \infty$ is reproduced.
+
+  \item The bump height $\lambda$ required to join two energy levels increases
+    with $n$. (The middle of the transitions for the blue, green, and purple
+    levels shifts slightly further to the right as $n$ increases.)
+
+  \item The significant width of the bump causes the energy levels of the two
+    new wells in the $\lambda \to \infty$ limit to be higher than those of the
+    unperturbed well, since the effective width is smaller than $a / 2$.
+\end{itemize}
+
+\printbibliography%
+
+\end{document}
+
