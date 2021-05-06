@@ -22,3 +22,12 @@ plot([k -> √(1 + g^2 + 2g*cos(π - k)) for g in isings], xlim=(-1.0π, 1.0π),
     legendtitle=L"g", label=[L"%$g" for g in isings], legend=:bottomright,
     xlabel=L"\pi - k", ylabel=L"E_k")
 ```
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.75\linewidth]{../../figs/ising-modes}
+\caption{%
+Elementary excitation spectra of the transverse-field Ising model across $g$.
+}\label{fig:ising-modes}
+\end{center}
+\end{figure}

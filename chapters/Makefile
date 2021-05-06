@@ -14,26 +14,10 @@ $(INCFILE): $(TEXFILES)
 .PHONY: subfiles
 subfiles: $(addsuffix .pdf, $(SUBFILES))
 
-.PHONY: HEAD.out
-HEAD.out:
-	echo 'Previous commit: ' > $@
-	git rev-list --format=%s --max-count=1 HEAD | tail -1 >> $@
-	echo '\\' >> $@
-	echo "\url{https://github.com/jfjhh/reed-thesis/commit/`git rev-parse --short HEAD`}" >> $@
-	echo '' >> $@
-	echo 'Current diff:' >> $@
-	echo '\vspace{-\baselineskip}' >> $@
-	echo '\begin{minted}{text}' >> $@
-	git diff --stat --stat-width=80 HEAD >> $@
-	echo '\end{minted}' >> $@
-
-%.pdf: %.tex HEAD.out
-	latexmk $<
-
 .PHONY: clean
 clean:
 	latexmk -c
-	rm -fv *.xdv *.bbl *.brf
+	rm -fv *.xdv *.bbl *.brf *.aux *.run.xml xelatex*.fls
 	rm -rfv _minted-*
 
 .PHONY: distclean

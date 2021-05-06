@@ -26,6 +26,7 @@ n = 2;
 Due to the exponential growth of the Hilbert space, we will only be able to
 fully consider up to $N = 5$ spins.
 
+
 # Interpolating Hamiltonians
 
 First, we implement the trace norm and \cref{eq:Hinterp}.
@@ -280,7 +281,7 @@ the dissipator spectrum.
 function effective_rate(ℒrates, ℒops, ρ0, op, η)
     cs = hcat([vec(V.data) for V in ℒops]...) \ vec(ρ0.data)
     V0s = [tr(op * V) for V in ℒops]
-    t0, tf = (0.0, 1e-2) ./ γ(1.0, η)
+    t0, tf = (0.0, 1e-1) ./ γ(1.0, η)
     ts = range(t0, tf, length=501)
     ys = real(sum(@. c * V0 * exp(real(s)*ts) for (s, c, V0) in zip(ℒrates, cs, V0s)))
     p0 = [1.0, -1.0 / η]
@@ -381,7 +382,7 @@ plot([reduce((p, η) ->
             init = plot(size=2 .* (400, 300 * 3//2),
                 xlabel=L"Hamiltonian parameter $g$",
                 ylabel=L"Decay rates for $\pauli_1^z$ ($\tilde{\gamma} / \tilde{\gamma}_0$)",
-                legend=:bottomright,
+                legend=:topright,
                 legendtitle=L"\log\eta"))
         for lη in -2:3]...,
     layout=(3,2))
@@ -390,4 +391,3 @@ plot([reduce((p, η) ->
 ```julia
 savefig("$(tempname(pwd(), cleanup=false))-spin-relaxation-$(n).pdf")
 ```
-

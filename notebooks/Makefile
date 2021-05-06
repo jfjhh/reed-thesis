@@ -6,8 +6,7 @@ MINTED_FILTER = minted.py
 SUBDIRS = tex
 CLEANDIRS = $(SUBDIRS:%=clean-%)
 DISTCLEANDIRS = $(SUBDIRS:%=distclean-%)
-
-NOTEBOOKS=$(basename $(wildcard *.ipynb))
+MDS=$(basename $(wildcard *.md))
 
 .PHONY: all
 all: $(SUBDIRS) notebook
@@ -24,12 +23,12 @@ $(SUBDIRS): notebook
 notebook: gentex
 
 .PHONY: gentex
-gentex: $(NOTEBOOKS:%=tex/%.tex)
+gentex: $(MDS:%=tex/%.tex)
 
-# --TagRemovePreprocessor.remove_cell_tags='{"hide"}' \
+%.ipynb: %.md
+	jupytext --to notebook $<
 
 tex/%.tex: %.ipynb $(NBTEMPLATE)
-	# Implicitly uses config file and template
 	$(NBC) \
 		--to latex \
 		--output-dir=$(TEXDIR) \
@@ -45,5 +44,7 @@ $(CLEANDIRS):
 .PHONY: subdirs $(DISTCLEANDIRS)
 .PHONY: distclean
 distclean: clean $(DISTCLEANDIRS)
+	rm -fv *.ipynb
+
 $(DISTCLEANDIRS):
 	$(MAKE) -C $(@:distclean-%=%) distclean
