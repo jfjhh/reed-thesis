@@ -215,8 +215,8 @@ The solution of the model by diagonalizing the Hamiltonian is straightforward
 but somewhat involved, so it is given in \cref{ch:ising}. The idea is to
 formally transform the interacting spins into free fermions. Each of the $N$
 free fermion modes may be occupied or not, and is indexed by numbers $k$ that
-are evenly spaced across the interval the first Brillouin zone $[-\pi,\, \pi]$
-(according to \cref{eq:fourierk}). Each mode has energy
+are evenly spaced across the interval of the first Brillouin zone $[-\pi,\,
+\pi]$ according to \cref{eq:fourierk}. Each mode has energy
 \begin{equation}
   E_k
   = \sqrt{g^2 + 2g\cos k + 1}
@@ -347,7 +347,7 @@ product
   = \tr(\opr{A}^\dag \opr{B}).
 \end{equation}
 An overall magnitude $\sqrt{\abs{\ham_x}\cdot\abs{\ham_z}}$ is reintroduced so
-that systems with diffent numbers of spins may be more easily compared below.
+that systems with different numbers of spins may be more easily compared below.
 Because the energies are symmetric about zero ($\sum_i \tilde{E}_i = 0$), this
 normalization of the Hamiltonians ensures that the energy variance $\sum_i
 \tilde{E}_i^2$ is the same for all $g$. Thus the heat capacities
@@ -404,8 +404,8 @@ The interaction Hamiltonian for electron spins in a magnetic field is\footnote{%
 \end{align}
 where the components of the \term{magnetic field operator} evaluated at
 $\vq{r}_i$ are\footnote{%
-  This operator arises from quantizing the electromagnetic field. The vector
-  $\vq{e}_{\vq{k},\lambda}$ is $\vq{e}_{\vq{k},\pm 1} =
+  This operator arises from quantizing the electromagnetic field. The
+  polarization vector $\vq{e}_{\vq{k},\lambda}$ is $\vq{e}_{\vq{k},\pm 1} =
   \mp\qty(\vu{e}_{\vq{k},x} \pm \im\vu{e}_{\vq{k},y}) / \sqrt{2}$, with
   $\vu{e}_{\vq{k},x}$ and $\vu{e}_{\vq{k},y}$ perpendicular to $\vq{k}$. See the
   discussion of field quantization
@@ -457,11 +457,11 @@ energy scale $J(g)$ so that the rates $\gamma$ and $S$ in the Lindblad equation
 (\cref{eq:microlindblad}) are relative to the system timescale $\tau_S = 1 /
 J(g)$.
 
-In the interaction picture:
+The magnetic field operator in the interaction picture is
 \begin{align}
   \opr{B}_i^\mu(t)
   &= e^{\im\ham_B t} \opr{B}_i^\mu e^{-\im\ham_B t} \\
-  &= \im\mu_B\sum_{\vq{k},\, \lambda} \sqrt{\frac{2\pi}{V\omega_{\vq{k}}}}
+  &= \im\sum_{\vq{k},\, \lambda} \sqrt{\frac{2\pi\mu_B^2}{V\omega_{\vq{k}}}}
   \qty(%
   {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
   e^{\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t)} \opr{a}_{\vq{k},\lambda}
@@ -470,54 +470,54 @@ In the interaction picture:
   ).
   \label{eq:Bint-interaction}
 \end{align}
-
-The spectral correlation tensor is then
+Thus the spectral correlation tensor is
 \begin{align}
   \Gamma_{i\mu,j\nu}(\omega)
   &= \int_0^\infty \dd{s} e^{\im\omega s}
   \ev{\opr{B}_i^\mu{(t)}^\dag \opr{B}_j^\nu(t - s)}
   \\
-  \begin{split}
   &= -\frac{2\pi\mu_B^2}{V} \int_0^\infty \dd{s}
   \sum_{\vq{k},\, \vq{k}',\, \lambda,\, \lambda'}
   \sqrt{\frac{1}{\omega_{\vq{k}} \omega_{\vq{k'}}}}
-  :
   \\
-  &{\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  &\quad\left({\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
     {\qty(\vq{k}' \cross \vq{e}_{\vq{k}',\lambda'})}_\nu
     e^{\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t + \vq{k}'\vdot\vq{r}_j -
     \omega_{\vq{k}'} (t-s) + \omega s)}
   \ev{%
     \opr{a}_{\vq{k},\lambda}\opr{a}_{\vq{k}',\lambda'}
-  } \\
-  &-
+  }\right.
+  \nonumber \\
+  &\quad-
     {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
     {\qty(\vq{k}' \cross \vq{e}^*_{\vq{k}',\lambda'})}_\nu
     e^{\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t - \vq{k}'\vdot\vq{r}_j +
     \omega_{\vq{k}'} (t-s) + \omega s)}
   \ev{%
     \opr{a}_{\vq{k},\lambda}\opr{a}^\dag_{\vq{k}',\lambda'}
-  } \\
-  &-
+  }
+  \nonumber \\
+  &\quad-
     {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
     {\qty(\vq{k}' \cross \vq{e}_{\vq{k}',\lambda'})}_\nu
     e^{-\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t - \vq{k}'\vdot\vq{r}_j +
     \omega_{\vq{k}'} (t-s) - \omega s)}
   \ev{%
     \opr{a}^\dag_{\vq{k},\lambda}\opr{a}_{\vq{k}',\lambda'}
-  } \\
-  &+
+  }
+  \nonumber \\
+  &\quad+ \left.
     {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
     {\qty(\vq{k} \cross \vq{e}^*_{\vq{k}',\lambda'})}_\nu
     e^{-\im(\vq{k}\vdot\vq{r}_i - \omega_{\vq{k}} t + \vq{k}'\vdot\vq{r}_j -
     \omega_{\vq{k}'} (t-s) - \omega s)}
   \ev{%
     \opr{a}^\dag_{\vq{k},\lambda}\opr{a}^\dag_{\vq{k}',\lambda'}
-  }.
-\end{split}
+  }\right).
+  \nonumber
 \end{align}
 
-The thermal state is
+We will consider the bath in the thermal state
 \begin{equation}
   \dop_B
   = \frac{e^{-\beta\ham_B}}{\tr e^{-\beta\ham_B}}
@@ -573,18 +573,20 @@ Then for a thermal bath, the spectral correlation tensor becomes
   &= \frac{2\pi\mu_B^2}{V} \int_0^\infty \dd{s}
   \sum_{\vq{k},\,\lambda}
   \frac{1}{\omega_{\vq{k}}}
-  :
   \\
-  &{\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
+  &\quad\left(
+    {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\mu
     {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\nu
     e^{\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) + s(\omega - \omega_{\vq{k}}))}
     \qty(1 + n_B(\omega_{\vq{k}}))
+    \right.
   \\
-  &+
+  &\quad+ \left.
     {\qty(\vq{k} \cross \vq{e}^*_{\vq{k},\lambda})}_\mu
     {\qty(\vq{k} \cross \vq{e}_{\vq{k},\lambda})}_\nu
     e^{-\im(\vq{k}\vdot(\vq{r}_i - \vq{r}_j) - s(\omega + \omega_{\vq{k}}))}
-    n_B(\omega_{\vq{k}}).
+    n_B(\omega_{\vq{k}})
+    \right).
 \end{split}\label{eq:Gamma-precontinuum}
 \end{align}
 
@@ -655,10 +657,11 @@ correlation tensor for the spin chain is
   &= \delta_{\mu\nu} \frac{2\mu_B^2}{3\pi}
   \int_0^\infty \dd{\omega_k} \omega_k^3
   G_{\nu}\qty(\omega_k \Delta r_{ij})
-  :
   \\
-  &\qty(1 + n_B(\omega_k)) \int_0^\infty \dd{s} e^{\im s(\omega - \omega_k)}
-  + n_B(\omega_k) \int_0^\infty \dd{s} e^{\im s(\omega + \omega_k)}.
+  &\quad\qty(%
+  \qty(1 + n_B(\omega_k)) \int_0^\infty \dd{s} e^{\im s(\omega - \omega_k)}
+  + n_B(\omega_k) \int_0^\infty \dd{s} e^{\im s(\omega + \omega_k)}
+  ).
   \end{split}
 \end{align}
 We now use that
@@ -791,7 +794,7 @@ far above any system frequency, we have the following limits.
       \pv\int_0^{\tilde{\Omega} / \tilde{\omega}} \dd{u}
       \frac{u^2}{1 - u^2} \\
       &= \frac{\tau_0^2}{\tau_B\tau_S} \frac{\tilde{\omega}}{\pi}
-      \qty(\tilde{\omega}\atanh\qty(\frac{\tilde{\omega}}{\tilde{\Omega}})
+      \qty(\tilde{\omega}\acoth\qty(\frac{\tilde{\omega}}{\tilde{\Omega}})
       - \tilde{\Omega}) \\
       &\approx -\frac{\tau_0^2}{\tau_B\tau_S}
       \frac{\tilde{\Omega}}{\pi}\tilde{\omega}.

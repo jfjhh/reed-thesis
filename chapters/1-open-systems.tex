@@ -363,11 +363,7 @@ as a function of time. We expect that $\opr{U}(t)$ changes
 continuously\footnote{%
   More precisely, $\opr{U}(t)$ is \term{strongly continuous} if $\lim_{t \to
   t_0} \opr{U}(t)\ket{v} = \opr{U}(t_0)\ket{v}$ for all real $t_0$ and $\ket{v}
-  \in \hilb$. Stone's theorem is novel since it allows us to consider the time
-  derivative of $\opr{U}(t)$, even though we only assume that the map $t \mapsto
-  \opr{U}(t)$ is strongly continuous. Von Neumann showed that the strong
-  continuity requirement may be relaxed to only being weakly
-  measurable~\cite{neumannUberSatzHerrn1932}.
+  \in \hilb$.
 }
 and satisfies
 \begin{equation}
@@ -378,7 +374,13 @@ for real $t$, $t'$. Then since $\opr{U}(0) = \idopr$ is unitary, $\opr{U}(t)$ is
 unitary. We would like a description of $\opr{U}(t)$ that does not depend on
 time. This is provided by Stone's
 theorem~\cite{stoneOneParameterUnitaryGroups1932}, which states that there is a
-Hermitian operator $\ham$ such that
+Hermitian operator $\ham$ such that\footnote{%
+  Stone's theorem is novel since it allows us to consider the time derivative of
+  $\opr{U}(t)$, even though we only assume that the map $t \mapsto \opr{U}(t)$
+  is strongly continuous. Von Neumann showed that the strong continuity
+  requirement may be relaxed to only being weakly
+  measurable~\cite{neumannUberSatzHerrn1932}.
+}
 \begin{equation}
   \opr{U}(t)
   = e^{-\im\ham t}.
