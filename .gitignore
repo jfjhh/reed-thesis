@@ -24,5 +24,4 @@ _minted*
 *.ipynb_checkpoints
 
 *.pdf
-!thesis.pdf
 
